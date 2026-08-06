@@ -3,6 +3,17 @@
 Thank you for helping improve the Agent Applications paper and the open work
 around it.
 
+## Where to participate
+
+- [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions)
+  are for open-ended proposals, questions, boundary cases, prior art, and early
+  ideas that would benefit from discussion before an edit is written.
+- [GitHub Issues](https://github.com/agentapplication/agentapplication/issues)
+  are for concrete errors, missing evidence, broken links, and other problems
+  with a clear resolution.
+- [Pull requests](https://github.com/agentapplication/agentapplication/pulls)
+  are for focused edits, examples, and corrections that are ready for review.
+
 ## Useful contributions
 
 ### Review the category definition
@@ -43,7 +54,7 @@ integration.
 5. If AI tools materially helped produce the contribution, describe how they
    were used in the pull request.
 
-For open-ended proposals, start with a GitHub issue before investing in a large
+For open-ended proposals, start a GitHub Discussion before investing in a large
 change.
 
 ## License

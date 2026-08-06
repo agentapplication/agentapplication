@@ -44,8 +44,16 @@ npm run check-links
 ## Contributing
 
 The paper is a working draft. Counterexamples, prior art, sharper definitions,
-implementation experience, and documentation improvements are welcome. Read
-[`CONTRIBUTING.md`](CONTRIBUTING.md) before opening an issue or pull request.
+implementation experience, and documentation improvements are welcome.
+
+- Start open-ended proposals and architecture questions in
+  [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions).
+- Report concrete problems through
+  [GitHub Issues](https://github.com/agentapplication/agentapplication/issues).
+- Submit specific edits and examples as
+  [pull requests](https://github.com/agentapplication/agentapplication/pulls).
+
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before preparing a pull request.
 
 You can also send review notes to
 [amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review).
