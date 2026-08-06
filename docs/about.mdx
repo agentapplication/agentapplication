@@ -1,0 +1,64 @@
+---
+title: "About this paper"
+description: "Who the Agent Applications paper is for, what it is trying to establish, and the long-term goal behind it."
+---
+
+This paper gives a name and an architecture to a kind of software that already
+exists. ChatGPT, Claude, Lovable, Replit Agent, OpenClaw, Lightfield, and similar
+products look different, but they share a basic shape: an agent can return to
+ongoing work, use tools, and leave behind results that matter after a session
+ends. We call the whole product an **Agent Application**.
+
+## Who it is for
+
+The paper is written for people building the next layer of agent software:
+
+- Application developers deciding how to package, test, deploy, and update an
+  agent that works over time
+- Harness and framework builders deciding which parts of the application
+  lifecycle their tools need to support
+- Platform builders operating releases, instances, workspaces, permissions,
+  costs, fleets, distribution, and monetization
+- Product teams deciding what deserves its own persistent agent instance and
+  where to draw the privacy boundary around its workspace
+- Protocol and standards authors looking for the boundaries where independent
+  systems need to work together
+
+You do not need to agree with every proposed term or contract. Boundary cases,
+counterexamples, and prior art are useful input to the next draft.
+
+## What the paper is trying to do now
+
+The immediate goal is to make Agent Applications easier to discuss and build.
+The paper defines the main layers of the stack, separates an application from
+its releases and running instances, and explains why durable workspaces,
+artifacts, lineage, privacy, and fleet management belong in the application
+model.
+
+For harness and platform builders, the paper provides a concrete target. A
+harness grows into an Agent Application framework as it supports more of the
+development and operating lifecycle. An Agent Application Platform can run
+projects from different frameworks while sharing common services at the
+boundaries between them.
+
+## The north star
+
+Today, most successful agent products are vertically integrated. The project
+format, runtime, user interface, state, artifacts, and commercial model usually
+belong to one company and move together.
+
+The long-term goal is a broader software industry. Developers should be able to
+build Agent Applications with the framework that suits the work, publish them
+through competing platforms, and earn revenue from a portfolio of applications.
+Platforms should be able to run projects from several frameworks. Users should
+be able to keep the context, artifacts, and completed work that their agent
+instances accumulate over time.
+
+Different frameworks and project formats can coexist. What the industry needs
+is a set of clear contracts at the places where systems meet: tools,
+instructions, identity and authority, releases, workspaces, artifacts, instance
+updates, communication, and commerce. The paper maps the standards that already
+cover some of those boundaries and points to the ones still missing.
+
+Read the [full paper](/paper), see the planned [companion
+documents](/companion-documents), or [review the draft](/review).

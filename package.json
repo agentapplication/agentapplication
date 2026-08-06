@@ -1,0 +1,9 @@
+{
+  "name": "agentapplication",
+  "private": true,
+  "scripts": {
+    "dev": "cd docs && mint dev",
+    "validate": "cd docs && mint validate",
+    "check-links": "cd docs && mint broken-links"
+  }
+}

@@ -1,0 +1,23 @@
+---
+title: "Agent Cloud"
+description: "Specialized cloud infrastructure for persistent agents."
+---
+
+> **Agent Cloud** is specialized cloud infrastructure for persistent agents:
+> durable workspaces, resumable execution, sandboxed tools, model access, event
+> streams, checkpoints, and per-instance metering.
+
+Ordinary cloud infrastructure supplies compute, storage, networking, and
+databases. Agent Cloud services add the runtime needed to preserve agent
+instances and their work across sessions.
+
+An [Agent Application Platform](/concepts/platform) sits above that
+infrastructure. It may use an Agent Cloud, provide the same services itself, or
+assemble them from ordinary cloud components. The platform handles project
+packaging, releases, instances, identity and authority, fleet operations,
+distribution, costs, billing, and monetization.
+
+An Agent Cloud can support more than one model, harness, or framework.
+
+Current platforms cover different parts of this layer. Section 17 of [the
+paper](/paper) compares Karta, Amazon Bedrock AgentCore, Vercel Eve, and Pickaxe.

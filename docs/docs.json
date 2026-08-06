@@ -1,0 +1,55 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Agent Applications",
+  "description": "A working paper defining Agent Applications, native agent projects, durable instances, workspaces, artifacts, lineage, and the Agent Application Platform.",
+  "colors": {
+    "primary": "#5a5a14",
+    "light": "#e8e13a",
+    "dark": "#16181d"
+  },
+  "background": {
+    "color": {
+      "light": "#fdfdfb",
+      "dark": "#161613"
+    }
+  },
+  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/agentapplication/agentapplication"
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": ["index", "examples/hello-world", "paper"]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+          "concepts/framework",
+          "concepts/agent-project",
+          "concepts/instance",
+          "concepts/workspace",
+          "concepts/artifact",
+          "concepts/agent-widget",
+          "concepts/lineage",
+          "concepts/platform"
+        ]
+      },
+      {
+        "group": "About the paper",
+        "pages": ["about", "review", "companion-documents"]
+      }
+    ]
+  },
+  "footer": {
+    "socials": {}
+  },
+  "seo": {
+    "indexing": "all"
+  }
+}

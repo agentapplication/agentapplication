@@ -1,0 +1,141 @@
+---
+title: "Agent Applications"
+sidebarTitle: "Overview"
+description: "A working paper defining Agent Applications, their frameworks, persistent instances, durable workspaces, and the Agent Application Platform."
+---
+
+<Note>
+**A working paper** · Draft 0.7 · August 2026 · [Read the full paper](/paper) ·
+[Hello World](/examples/hello-world) · [Cite](#cite)
+</Note>
+
+> **An Agent Application is a software system whose primary unit of execution
+> is one or more persistent, tool-using agents operating in durable workspaces
+> to accomplish work over time and produce or maintain durable artifacts.**
+
+Desktop, web, and mobile software each developed its own application model.
+Agent software now needs one too. An application that completes work over time
+needs somewhere to keep that work. This affects how the software is written and
+packaged, how its instances are created and governed, and how the product is
+priced.
+
+## The building blocks already exist
+
+By 1994, web applications were beginning to emerge from a few basic pieces.
+HTTP moved requests, HTML described pages, and browsers displayed them.
+JavaScript later added behavior. Frameworks made the work repeatable and helped
+settle what developers meant by a "web application."
+
+Agent developers now have comparable building blocks: the Model Context
+Protocol for tools, portable Agent Skills, sandboxed compute, and harnesses that
+run the agent loop. Today's harnesses are early versions of [Agent Application
+frameworks](/concepts/framework). As they add project structure, development
+tools, evaluations, packaging, and deployment, they make agent development
+repeatable.
+
+## Four defining properties
+
+| Property | What it looks like |
+|---|---|
+| Persistent agent instance | A new message or event returns to the same agent, privacy domain, and ongoing work |
+| Agent-directed control flow | The agent reads the current state and chooses its next action within application guardrails |
+| Durable computational workspace | Files, instructions, memory, code, and other working state remain available to later runs |
+| Durable work | Artifacts, workspace state, external records, or continuing processes outlive the event that created them |
+
+A workspace defines a logical boundary for durable state. A platform may store
+that state in databases, object storage, or retained sessions. In the canonical
+design, each instance gets an isolated persistent virtual filesystem that the
+platform restores on demand. The agent can read everything in its workspace.
+The people, records, and work that can safely share that workspace form its
+**privacy domain**.
+
+[ChatGPT](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex),
+[Claude](https://support.claude.com/en/articles/14116274-organize-your-tasks-with-projects-in-claude-cowork),
+[Gemini](https://support.google.com/gemini/answer/17094507),
+[Lovable](https://docs.lovable.dev/features/agent-mode),
+[Replit Agent](https://docs.replit.com/features/version-control/checkpoints-and-rollbacks),
+[OpenClaw](https://docs.openclaw.ai/start/openclaw), and
+[Lightfield](https://docs.lightfield.app/) already organize ongoing work this
+way. Depending on the product, an instance belongs to a user, project, personal
+agent, company workspace, or customer relationship.
+
+## The agent widget
+
+The **agent widget** is the most common interface for an Agent Application. It
+may fill the screen, sit beside another application, or open in a popup. It
+handles authentication and session switching. Users can choose models and
+harness options, type or talk, upload files, and control the running agent.
+
+The conversation view shows messages alongside progress, reasoning summaries,
+tool calls, and approvals. It also reports errors and other runtime events. The
+widget renders artifacts and interactive UI returned by the agent. [OpenAI
+ChatKit](https://openai.github.io/chatkit-js/),
+[CopilotKit](https://docs.copilotkit.ai/), and [AI SDK
+Elements](https://elements.ai-sdk.dev/examples/chatbot) package many of these
+parts. [AG-UI](https://docs.ag-ui.com/) defines the event stream between an
+agent and its frontend. [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview)
+lets tools place forms, dashboards, viewers, and other interactive controls
+inside the conversation.
+
+## Application models by era
+
+| Era | Application model | What persisted |
+|---|---|---|
+| Personal computing | Desktop application | Local files, installers, the OS |
+| Internet | Web application | Servers, databases, the URL |
+| Mobile | Mobile application | Device identity, sensors, the store |
+| Agent computing | **Agent Application** | Instances, workspaces, durable work, lineage |
+
+## Built as a project, deployed as instances
+
+A developer builds an **agent project** in the native layout of an agent harness
+or Agent Application framework, then publishes it as an immutable release. The
+project declares its runtime requirements. An [Agent Application
+Platform](/concepts/platform) runs it in its native form instead of translating
+every system into a lowest-common-denominator schema.
+
+```text
+account-operator/
+|-- <harness- or framework-native entrypoint>
+|-- skills/
+|   |-- account-review/
+|   `-- renewal-planning/
+|-- agents/
+|   |-- researcher/
+|   `-- reviewer/
+|-- tools/
+|-- policies/
+|   |-- approvals.md
+|   `-- external-actions.md
+|-- knowledge/
+|-- artifacts/
+|-- evals/
+|   |-- behavior/
+|   |-- security/
+|   `-- regression/
+|-- migrations/
+`-- app.yaml
+```
+
+An application may create an instance for a user, team, customer, project,
+ticket, or another continuing relationship. Each instance accumulates its own
+workspace, artifacts, instructions, and history. Instances diverge as they
+work, so updating a fleet involves more than copying the same release over each
+one.
+
+## Cite
+
+```bibtex
+@misc{kelkar2026agentapplications,
+  title  = {Agent Applications: A New Software Architecture for the AI Era},
+  author = {Amol Kelkar},
+  year   = {2026},
+  note   = {Working Draft 0.7},
+  url    = {https://agentapplication.io/paper}
+}
+```
+
+---
+
+Written by Amol Kelkar. Any platform may implement the definitions and
+portability contracts.

@@ -1,0 +1,30 @@
+---
+title: "Agent Application Platform"
+description: "The service that deploys Agent Projects and operates releases, instances, workspaces, fleets, and commercial distribution."
+---
+
+> **Agent Application Platform** is the developer- and publisher-facing service
+> that deploys Agent Projects, operates instances and workspaces, manages fleets
+> and costs, and supports distribution and monetization.
+
+The platform turns a framework-native project into an operating product. It
+packages an immutable release, creates instances at the application's privacy
+boundary, attaches a durable workspace and scoped authority, and runs the
+sessions that perform the work.
+
+It also supplies the shared services that do not belong in each application:
+identity, scheduling, interfaces, artifact delivery, evaluation, fleet
+upgrades, cost controls, distribution, and billing.
+
+## Agent Cloud and platform
+
+Ordinary cloud infrastructure provides compute, storage, networking, and
+databases. [Agent Cloud](/concepts/agent-cloud) adds infrastructure for
+persistent agents, including durable workspaces, resumable execution, sandboxed
+tools, checkpoints, and per-instance metering.
+
+An Agent Application Platform is the larger product layer. It may use an Agent
+Cloud, provide those services itself, or assemble them from ordinary cloud
+services.
+
+See [the paper](/paper), section 17.

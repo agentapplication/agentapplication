@@ -1,0 +1,44 @@
+---
+title: "Instance"
+description: "A persistent copy provisioned from a release for one privacy domain, with its own workspace and lifecycle."
+---
+
+> **Instance** is a persistent copy provisioned from a release for one privacy
+> domain, such as a user, customer, team, project, or job, with its own history
+> and lifecycle.
+
+The people, records, and work that may safely share one workspace form a
+**privacy domain**. The agent can read its entire workspace, so information
+belongs together only when the agent may safely combine it. A Life Coach Agent
+gets one instance per user. A B2B support agent can keep one customer's tickets
+together but needs a separate instance for another customer. A virtual
+marketing employee can share one instance with a team.
+
+This separation limits the damage from prompt injection. A user can try to make
+the agent reveal anything it can read. The instance should therefore contain
+only information that every authorized user may allow the agent to use. The
+same rule applies to tools and retrieval systems: a call made for one user
+should not return information that user cannot access.
+
+Authentication controls who may use an instance. Several teammates can use one
+shared instance, while an administrator may manage many private instances. The
+stable instance identity routes work to the right workspace. It records whom
+the agent represents and what it may do; its history records what it has done.
+
+## Release, instance, and session
+
+An application continues across releases. A release is one fixed version of the
+agent project. Deployment creates instances from that release, and each period
+of activity becomes a session. The instance lasts across those sessions and may
+later move to a newer release.
+
+Instances created from the same release diverge as their workspaces accumulate
+different information and instructions. [Lineage](/concepts/lineage) records
+those changes.
+
+The instance and workspace are different. The instance has identity, ownership,
+authority, a lifecycle, and lineage. It owns one or more computational
+environments. The [Agent Workspace](/concepts/workspace) contains the durable
+working state used inside them.
+
+See [the paper](/paper), sections 6.1, 10, and 11.3.

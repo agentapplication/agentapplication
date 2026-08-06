@@ -1,0 +1,86 @@
+---
+title: "Hello World Agent Application"
+sidebarTitle: "Hello World"
+description: "A minimal Agent Application: one persistent notebook agent, one durable workspace, and work that continues across runs."
+---
+
+# Hello World: a durable notebook
+
+The smallest useful Agent Application can return to work it saved during an
+earlier run. A one-shot task runner cannot.
+
+This example is a notebook agent for one user. It saves notes in its workspace
+and maintains a short briefing that the user can open without reading through
+the conversation.
+
+```text
+durable-notebook/
+|-- instructions.md
+|-- tools/
+|   `-- save-note.ts
+`-- agentapplication.yaml
+```
+
+## The program
+
+`instructions.md` contains the behavior written in natural language:
+
+```markdown
+You maintain a research notebook for one user.
+
+When the user asks you to remember something, append it to notes.md with the
+date and source. When asked for a briefing, read notes.md and update briefing.md.
+Never remove an earlier note unless the user asks you to.
+```
+
+`save-note.ts` provides the deterministic file operation:
+
+```ts
+import { appendFile } from "node:fs/promises";
+
+export async function saveNote(text: string) {
+  await appendFile("notes.md", `- ${new Date().toISOString()}: ${text}\n`);
+  return { saved: "notes.md" };
+}
+```
+
+The deployment declaration asks for a persistent workspace and uses the user ID
+as the instance key:
+
+```yaml
+apiVersion: agentapplication.io/v0alpha1
+kind: AgentApplication
+
+metadata:
+  name: durable-notebook
+
+instance:
+  key: user.id
+
+workspace:
+  durability: required
+  isolation: per-instance
+
+artifacts:
+  - path: briefing.md
+```
+
+This is the portable contract proposed by the paper. A framework can express
+the same requirements in its own format.
+
+## Two runs, one continuing instance
+
+On Monday, Ada says, "Remember that the launch moved to September 18." The
+platform routes the request to Ada's notebook instance. The agent writes the
+fact to `notes.md`, then the runtime suspends.
+
+On Friday, Ada asks for a launch briefing. The platform wakes the same instance
+and restores its workspace. The agent reads Monday's note and writes
+`briefing.md`. Ada can open that file directly, share it, or return next week and
+ask the agent to revise it.
+
+| Defining property | Where it appears |
+|---|---|
+| Persistent agent instance | Ada's stable instance key selects the same notebook on every run and keeps it separate from other users |
+| Durable computational workspace | `notes.md`, `briefing.md`, and the agent's instructions survive suspension |
+| Durable work | The notes and briefing outlive the conversations that created them |

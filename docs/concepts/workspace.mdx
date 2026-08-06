@@ -1,0 +1,35 @@
+---
+title: "Agent Workspace"
+description: "The durable working state an agent returns to across runs."
+---
+
+> **Agent Workspace** is the durable logical working state available to an
+> instance across sessions, whether implemented as a persistent filesystem,
+> database-backed state, object storage, or retained session state.
+
+A later run can use and change the state left by an earlier run. It does not
+have to reconstruct the work from a transcript.
+
+A simple test is to open another session a day later. If the agent can continue
+the earlier work, it has a durable computational workspace.
+
+The workspace is a logical contract rather than a storage product. A platform
+may use databases or object storage. It can also give each session an ephemeral
+filesystem, retain selected changes, and make them available to later sessions.
+
+In the canonical design, every instance has an isolated persistent virtual
+filesystem. The agent can keep documents, code, local databases, installed
+packages, artifacts, and unfinished work there without first defining a schema
+for each kind of state. The platform snapshots and restores the filesystem, so
+an idle instance does not need a machine to keep running.
+
+The workspace is also the privacy boundary. It includes every file, database
+record, object, and session artifact the instance can retrieve. Information that
+must remain separate belongs in separate workspaces. Authentication controls
+who may use the instance, but it does not create private compartments inside
+one workspace.
+
+A context window ends with the model call. The workspace remains available to
+later sessions.
+
+See [the paper](/paper), sections 6.2 and 11.
