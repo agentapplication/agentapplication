@@ -20,4 +20,11 @@ npm run validate
 npm run check-links
 ```
 
+`llms-full.txt` is generated from the navigation order in `docs.json`. After
+changing the navigation or page content, refresh it from the repository root:
+
+```sh
+npm run generate:llms
+```
+
 Mintlify should be configured to publish from this `docs/` directory.

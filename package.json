@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "cd docs && mint dev",
-    "validate": "cd docs && mint validate",
+    "generate:llms": "node scripts/generate-llms-full.mjs",
+    "check:llms": "node scripts/generate-llms-full.mjs --check",
+    "validate": "npm run check:llms && cd docs && mint validate",
     "check-links": "cd docs && mint broken-links"
   }
 }

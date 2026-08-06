@@ -25,6 +25,10 @@ rendered behavior as part of correctness. Run `npm run validate` and
 `npm run check-links` after documentation changes, and preview material layout
 changes in a browser.
 
+`docs/llms-full.txt` is generated from the order in `docs/docs.json`. Run
+`npm run generate:llms` after changing navigation or page content; do not edit
+the generated file by hand.
+
 Use plain language suitable for an undergraduate reader. Keep the main pages
 short and move specialized detail to the paper or a future technical companion.
 
