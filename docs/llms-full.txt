@@ -3177,24 +3177,23 @@ See [the paper](/paper), section 17.
 # Agent Project and Release Specification
 Source: https://agentapplication.io/specifications/agent-project-and-release
 
-Working Draft 0.1. The normative contract for Agent Project roles, the application manifest, plugin dependencies and locks, framework profiles, release closure, workspaces, authority, evaluations, and migrations.
+Working Draft 0.1. Defines the files and records used to build, inspect, and run an Agent Application release.
 
 <Note>
-**Working Draft 0.1** · August 2026 · This document is a companion to the
-[Agent Applications paper](/paper). Implementer feedback may change every part
-of it.
+**Working Draft 0.1** · August 2026 · Companion to the [Agent Applications
+paper](/paper). This draft may change in response to implementer feedback.
 </Note>
 
 ## Status of this document
 
-This is a working draft published for public argument. No implementation
-claims conformance to it yet. Section 15 defines how it changes and when it
-becomes a 1.0 candidate.
+This document is open for review. No implementation claims conformance to it
+yet. Section 15 describes the change process and the requirements for a 1.0
+candidate.
 
-The [paper](/paper) carries the context and justification for every construct
-here. The paper explains why these constructs exist; this document defines
-what an implementation must do. Where the two disagree, that is a defect:
-[report it](/review).
+The [paper](/paper) defines the Agent Application architecture and explains the
+reasoning behind it. This document states the requirements for implementations.
+Any disagreement between the two documents is a defect and should be
+[reported](/review).
 
 The key words MUST, MUST NOT, REQUIRED, SHOULD, SHOULD NOT, RECOMMENDED, MAY,
 and OPTIONAL in this document are to be interpreted as described in RFC 2119
@@ -3202,67 +3201,102 @@ and RFC 8174 when, and only when, they appear in all capitals.
 
 ## 1. Scope
 
-This specification defines the minimum contract needed to turn a
-framework-native Agent Project into an inspectable Agent Application release.
-It covers:
+An Agent Project contains an agent's source files, instructions, tools, and
+configuration in the layout expected by its framework. A release builder turns
+that project into an Agent Application release.
 
-- canonical component roles;
-- the application manifest and dependency lock;
-- framework profiles;
-- plugin resolution and component activation;
-- release contents and runtime requirements;
-- workspace and plugin-data scope;
-- authority declarations, evaluations, and migrations.
+This specification defines requirements for both the project and the release.
+The requirements follow three stages:
 
-It does not replace an agent framework's project format. It does not define a
-plugin registry, a new plugin package, a model protocol, or a portable workspace
-archive. Agent Plugin packages use the [Agent Plugins
+- Sections 4 through 6 define the information an Agent Project must supply,
+  including its required roles, application manifest, runtime requirements,
+  instance rule, workspace contract, and requested authority. A role does not
+  need its own file. The framework profile maps the framework's native files to
+  these roles.
+- Sections 7 through 9 define how a release builder resolves plugins, locks
+  dependencies, interprets the framework profile, and produces an immutable
+  release.
+- Sections 10 through 14 define how a platform handles workspaces, plugin data,
+  authority, evaluations, migrations, lineage, and conformance records.
+
+This specification does not replace a framework's project format or require a
+new project layout. It also does not define a plugin registry, a plugin package
+format, a model protocol, or a portable workspace archive. Agent Plugin
+packages use the [Agent Plugins
 Specification](https://agent-plugins.org/specification). Tool connections use
-MCP where applicable. Section 16 lists the contracts deliberately left open.
+MCP where applicable. Section 16 lists the contracts that version 0.1 leaves
+open.
 
 ## 2. Terms
 
-This document uses the vocabulary from [section 7 of the paper](/paper#7-vocabulary).
-The following terms have specific conformance meanings here.
+The complete vocabulary is in [section 7 of the paper](/paper#7-vocabulary).
+The terms needed to read this specification are repeated here:
 
 | Term | Meaning |
 |---|---|
-| Application manifest | The platform-facing declaration for one Agent Project |
-| Framework profile | A versioned mapping from canonical roles to one framework's native files and runtime behavior |
+| Agent Project | A framework-native source directory containing the code, instructions, declarations, policies, dependencies, and tests used to build a release |
+| Release | An immutable package of one Agent Project and the inputs selected to build, evaluate, and run it |
+| Privacy domain | The people, records, and work that may safely share one workspace |
+| Instance | A persistent copy of a release for one privacy domain, with its own history and lifecycle |
+| Workspace | The durable working state available to one instance across sessions |
+| Agent Application Platform | A service that deploys releases and operates their instances and workspaces |
+| Application manifest | A file that identifies an Agent Project and states what a platform must provide to run it |
+| Framework profile | Versioned rules that map project roles to one framework's native files and runtime behavior |
 | Dependency lock | The exact resolved external content included in a candidate release |
 | Component identity | The stable name used for permissions, activation, evaluation, and lineage |
 | Release closure | All immutable source, dependencies, declarations, runtime contracts, evaluations, and migration rules fixed by a release |
 
-A **production release** is a release intended to create or upgrade instances
-for anyone other than its developers. Several requirements below apply only to
-production releases; development builds MAY relax them. The release class,
-`production` or `development`, is recorded in the release record (section 9)
-and the conformance record (section 14) so a platform can apply the right
-requirements mechanically. A release without a recorded class MUST be treated
-as production.
+A **production release** is intended to create or upgrade instances for people
+other than the release's developers. Requirements that apply only to production
+releases are identified as such. Development builds MAY relax those
+requirements.
+
+Every release has a class of `production` or `development`. The release record
+(section 9) and conformance record (section 14) both record this class so that a
+platform can apply the correct requirements. A platform MUST treat an
+unclassified release as production.
+
+### 2.1 Release path
+
+The documents and systems in this specification are used in the following
+order:
+
+1. A developer works in the framework's native Agent Project layout. The
+   project includes an application manifest.
+2. A framework profile tells the release builder how to find and interpret the
+   project files.
+3. The release builder validates the project, resolves and locks dependencies,
+   runs the required evaluations, and produces an immutable release. It also
+   produces the release record. If the release claims conformance, the builder
+   produces a conformance record as well.
+4. A platform inspects the release and its conformance record. It then creates
+   and operates instances, each with an isolated workspace.
+5. A conforming platform creates an attestation for the deployment. It records
+   later instance-specific changes and migrations in instance lineage.
 
 ## 3. Conformance targets
 
-This specification defines four conformance targets.
+Conformance applies separately to projects, framework profiles, release
+builders, and platforms:
 
-1. A **conforming Agent Project** supplies every required canonical role through
+1. A **conforming Agent Project** supplies each required project role through
    its native files and application manifest.
 2. A **conforming framework profile** maps those roles to a versioned framework
-   layout and defines how a release builder validates and loads them.
+   layout. It also defines how a release builder validates and loads the files.
 3. A **conforming release builder** resolves dependencies, verifies content,
-   evaluates compatibility, and produces an immutable release record that
-   contains the complete release closure.
+   evaluates compatibility, and produces an immutable release record containing
+   the complete release closure.
 4. A **conforming Agent Application Platform** creates and operates instances
-   from conforming releases, enforces the instance, workspace, authority,
-   evaluation, and migration contracts recorded in them, and inspects the
-   conformance evidence they carry (sections 6 and 10 through 14).
+   from conforming releases. It enforces the instance, workspace, authority,
+   evaluation, and migration rules in those releases and inspects their
+   conformance evidence (sections 6 and 10 through 14).
 
 A platform MAY implement the release-builder target itself or accept a release
 produced by another conforming builder.
 
-## 4. Project material
+## 4. Project file types
 
-A project contains four semantic kinds of material.
+Project files serve one or more of the following functions:
 
 | Kind | Examples |
 |---|---|
@@ -3271,31 +3305,32 @@ A project contains four semantic kinds of material.
 | Declaration | Component wiring, triggers, runtime requirements, permissions, package references, and activation |
 | Knowledge and assets | References, schemas, examples, templates, domain data, and user-interface assets |
 
-Framework profiles MUST classify material by function rather than by directory.
-A single package MAY contain all four kinds.
+A framework profile MUST classify a file by what it does, not by the directory
+that contains it. A single package MAY contain all four kinds of material.
 
-## 5. Canonical roles
+## 5. Required project roles
 
-A conforming project MUST provide the following roles:
+A project role describes information or behavior that a release builder must be
+able to find. A conforming project MUST provide these roles:
 
 | Role | Requirement |
 |---|---|
-| Application manifest | Identifies the application and its platform-facing contract |
+| Application manifest | Identifies the application and summarizes the requirements a platform must meet |
 | Primary agent entrypoint | Identifies the root program and initial runtime agent |
 | Harness and runtime declaration | Identifies the interpreter and required runtime features |
 | Tool surface | Lists or points to the capabilities exposed to the runtime agent |
 | Instance rule | Derives a stable instance key from one privacy domain |
 | Workspace contract | Declares persistence, isolation, compute, and filesystem requirements |
 
-A project intended for production MUST also provide:
+A project intended for production MUST also provide these roles:
 
 | Role | Requirement |
 |---|---|
-| Permissions and approvals | Declares requested authority and hard approval points |
+| Permissions and approvals | Declares requested authority and the actions that require human approval |
 | Evaluations | Covers behavior, security, cost, and regression expectations |
 | Dependency lock | Records exact external content, unless the project has no resolved dependencies |
 
-The following roles are conditional:
+Other roles are required only when the project uses the corresponding feature:
 
 - A project with non-interactive entrypoints MUST declare its triggers and
   channels.
@@ -3306,60 +3341,68 @@ The following roles are conditional:
 - A project that uses plugins MUST declare the plugin dependencies and active
   components described in section 7.
 
-Natural-language programs, subagents, hooks, knowledge sources, and custom
-renderers are OPTIONAL as separate roles. A project MAY implement equivalent
-behavior in its primary program or framework runtime.
+A project MAY define natural-language programs, subagents, hooks, knowledge
+sources, and custom renderers as separate roles, but is not required to do so.
+The project MAY instead place the same behavior and content in its primary
+program or framework runtime.
 
-## 6. The application manifest
+## 6. Application manifest
 
-The framework profile MUST identify the application manifest location. A
-profile that does not choose a native location SHOULD use
-`agentapplication.yaml` at the project root.
+The application manifest summarizes the project in a form that any conforming
+platform can read. It identifies the project and framework profile, then states
+the runtime, storage, permission, and evaluation requirements.
+
+The framework profile MUST tell the release builder where to find the manifest.
+If the framework has no native location for it, the profile SHOULD use
+`agentapplication.yaml` in the project root.
 
 The manifest MUST declare:
 
-- application name and manifest format version;
+- application name and version, and manifest format version;
 - framework profile and profile version;
 - the primary agent entrypoint, unless the framework profile already
   determines it;
 - required runtime features;
-- instance rule;
-- workspace durability and isolation;
+- instance privacy domain and key;
+- workspace version, durability, isolation, and background execution policy;
 - requested permissions and approval policy for production use;
 - evaluation locations for production use;
 - migration locations when migrations are required.
 
-The manifest MAY declare optional runtime features, dependencies, component
-activation, artifacts, triggers, retention, and local-evolution policy. When
-`artifacts` is declared, it lists the application's durable output types; each
-entry names a `type` and MAY bind a workspace `path`.
+The manifest MAY also declare optional runtime features, dependencies, active
+components, artifacts, triggers, retention, and local evolution policy. An
+`artifacts` declaration lists the application's durable output types. Each
+entry names a `type` and MAY associate that type with a workspace `path`.
 
-The manifest declares intent and compatibility ranges. It MUST NOT be used as
-the record of exact dependency resolution.
+The manifest records requirements and acceptable version ranges. The dependency
+lock records the exact content selected for a release. The manifest MUST NOT be
+used in place of that lock.
 
-### 6.1 Identity
+### 6.1 Application identity
 
-- `apiVersion` MUST be `agentapplication.io/v0alpha1`. This document defines
-  that schema version.
-- `metadata.name` MUST be a lowercase name of letters, digits, and hyphens,
-  stable across releases.
-- `metadata.version` MUST follow Semantic Versioning and MUST change with
-  every release.
+- `apiVersion` MUST be `agentapplication.io/v0alpha1`, the schema version
+  defined by this document.
+- `metadata.name` MUST contain only lowercase letters, digits, and hyphens. It
+  MUST remain the same across releases of the project.
+- `metadata.version` MUST follow Semantic Versioning. It MUST change for every
+  release.
 
-### 6.2 Runtime
+### 6.2 Runtime requirements
 
-- `runtime.profile` MUST identify the framework profile and profile version
-  that map this project's roles, for example `example-framework/1`.
-- `runtime.entrypoint` MUST identify the primary agent entrypoint when the
-  framework profile does not already determine it.
-- `runtime.requiredFeatures` MUST list every runtime feature the application
-  cannot run without. A release builder or platform MUST refuse a release
-  whose required features it cannot provide. The list MAY be empty.
-- `runtime.optionalFeatures` MAY list features the application uses when
-  available. A platform SHOULD tell the application which optional features
-  are present.
+- `runtime.profile` MUST identify the framework profile and its version. The
+  profile maps the project's native files to the roles in section 5. For
+  example: `example-framework/1`.
+- `runtime.entrypoint` MUST identify the primary agent entrypoint unless the
+  framework profile already determines it.
+- `runtime.requiredFeatures` MUST list every runtime feature needed by the
+  application. The list MAY be empty. A release builder or platform MUST refuse
+  a release if it cannot provide every feature in the list.
+- `runtime.optionalFeatures` MAY list features that the application can use but
+  does not require. A platform SHOULD tell the application which of those
+  features are available.
 
-Feature names are namespaced and filterable. The initial registry:
+Runtime feature names use namespaces so that platforms can group and filter
+them. Version 0.1 defines the following names:
 
 | Feature | Meaning |
 |---|---|
@@ -3372,79 +3415,92 @@ Feature names are namespaced and filterable. The initial registry:
 | `sched.cron` | Scheduled wake-ups |
 | `ckpt.snapshot` | Workspace checkpoints and restore |
 
-New feature names are registered through the change process in section 15.
+Section 15 defines how to register more feature names.
 
-### 6.3 Instance rule
+### 6.3 Instance selection
 
-- `instance.privacyDomain` MUST be one of `user`, `team`, `customer`,
-  `project`, `job`, or `custom`. It names the privacy boundary from section
-  6.1 of the paper.
-- `instance.key` MUST name the identifier whose value selects an instance. A
-  platform MUST route every request, event, and scheduled wake-up to the
-  instance selected by that key and MUST NOT let two key values share mutable
-  workspace state.
-- The framework profile and the platform's invocation contract define how each
-  entrypoint carries the key (section 8). An interactive request or API call
-  MUST carry the key value, an event subscription MUST bind one when it is
-  registered, and a schedule MUST record the key value when it is created. A
-  platform MUST reject work that arrives without a resolvable key.
+The instance rule tells a platform how to route work to an existing instance or
+create a new one.
 
-### 6.4 Workspace contract
+- `instance.privacyDomain` names the privacy boundary described in section 6.1
+  of the paper. It MUST be one of `user`, `team`, `customer`, `project`, `job`,
+  or `custom`.
+- `instance.key` MUST name the identifier whose value selects the instance. A
+  platform MUST route every request, event, and scheduled wake-up according to
+  that value. It MUST NOT allow two key values to share mutable workspace
+  state.
+- The framework profile and the platform's invocation contract define how an
+  entrypoint receives the key (section 8). An interactive request or API call
+  MUST carry the key value. An event subscription MUST bind the value when the
+  subscription is registered. A schedule MUST record it when the schedule is
+  created. A platform MUST reject work for which it cannot resolve the key.
 
-- `workspace.version` MUST be a positive integer. It versions the workspace
-  content contract, not the release.
-- `workspace.durability` MUST be `required` in 0.1. An application without a
-  durable workspace is out of scope for this specification.
-- `workspace.isolation` MUST be `per-instance` in 0.1.
-- `workspace.backgroundExecution` MUST be `allowed` or `denied`. A platform
-  MUST NOT run background processes for an instance that declares `denied`.
-- `workspace.egress.allowlist`, when present, lists the network destinations
-  workspace code may reach. Each entry is a DNS name, normalized to lowercase
-  IDNA 2008 A-label form without a trailing dot, matched exactly; a `*.`
-  prefix matches one or more subdomain labels. An entry covers every port and
-  protocol, and IP literals are not valid entries in 0.1. A platform MUST
-  enforce the allowlist at every name resolution and every redirect, and a
-  connection MUST use the specific address that passed validation. A
-  permitted name that resolves to an address designated in the IANA IPv4 or
-  IPv6 Special-Purpose Address Registries, including loopback, link-local,
-  and private-use ranges, MUST be blocked. A platform MAY override that block
-  for a destination only with the deploying customer's explicit
-  authorization, and MUST record every override, with its scope and
-  authorizer, in the platform attestation (section 14). Port- and
-  protocol-level control is out of scope for 0.1.
-- `workspace.retention` bounds accruing state. The keys defined in 0.1 are
-  `checkpoints`, `runRecords`, and `modelIO`; a release builder MUST reject
-  any other key. Durations are positive integers with the suffix `d`, in
-  days; `0d` is invalid. A platform SHOULD enforce the declared retention and
-  MUST disclose what it cannot enforce in its platform attestation
-  (section 14).
+### 6.4 Workspace requirements
+
+The workspace contract describes the durable state and compute environment of
+one instance.
+
+- `workspace.version` MUST be a positive integer. This field versions the
+  workspace content contract, not the application release.
+- `workspace.durability` MUST be `required` in version 0.1. This specification
+  does not cover applications without a durable workspace.
+- `workspace.isolation` MUST be `per-instance` in version 0.1.
+- `workspace.backgroundExecution` MUST be `allowed` or `denied`. If the value
+  is `denied`, a platform MUST NOT run background processes for that instance.
+- `workspace.egress.allowlist`, when present, lists the DNS names that workspace
+  code may contact. Each name uses lowercase ASCII without a trailing dot. Each
+  label MUST be valid under IDNA 2008 as either an A-label or an NR-LDH label.
+  An entry without a wildcard matches one DNS name exactly. A `*.` prefix
+  matches one or more subdomain labels but does not match the name itself. An
+  entry applies to every port and protocol. IP literals are invalid in version
+  0.1.
+
+  A platform MUST apply the allowlist at every DNS resolution and redirect. A
+  connection MUST use the exact address that passed those checks. The platform
+  MUST block any address listed in the IANA IPv4 or IPv6 Special-Purpose Address
+  Registries, including loopback, link-local, and private-use ranges. It MAY
+  allow such a destination only when the deploying customer explicitly
+  authorizes an override. The platform MUST record the scope and authorizer of
+  every override in the platform attestation described in section 14. Version
+  0.1 does not define port-level or protocol-level controls.
+- `workspace.retention` limits how long accruing state is kept. Version 0.1
+  defines three keys: `checkpoints`, `runRecords`, and `modelIO`. A release
+  builder MUST reject any other key. It MUST also reject a duration unless it
+  consists of a positive integer followed by `d`, which denotes days. For
+  example, `30d` means 30 days, and `0d` is invalid. A platform SHOULD enforce
+  the declared retention period. It MUST disclose any retention setting it
+  cannot enforce in the platform attestation described in section 14.
 
 ### 6.5 Permissions and approvals
 
-- `permissions.requestedTools` MUST name every tool authority the application
-  requests. Grants are made by the customer and platform; see section 11.
-- `permissions.approvals` maps an action to `required` when a person must
-  approve each use. A platform MUST enforce declared approvals in code the
-  agent cannot alter.
+The manifest requests authority but does not grant it.
 
-### 6.6 Evolution
+- `permissions.requestedTools` MUST name every tool authority requested by the
+  application. The customer and platform decide which authorities to grant, as
+  described in section 11.
+- `permissions.approvals` maps an action to `required` if a person must approve
+  every use of that action. A platform MUST enforce these approvals in code
+  that the agent cannot alter.
 
-The `evolution` block is OPTIONAL. When it is absent, `overlays` and
-`promotionToRelease` default to `denied`.
+### 6.6 Local program changes
 
-- `evolution.overlays`, when present, MUST be `allowed` or `denied`, and
-  governs whether an instance may carry local program changes (section 12 of
-  the paper).
+The optional `evolution` block controls whether an instance may carry local
+program changes. If the block is absent, both `overlays` and
+`promotionToRelease` have the value `denied`.
+
+- `evolution.overlays`, when present, MUST be `allowed` or `denied`. It controls
+  whether an instance may carry local program changes (section 12 of the
+  paper).
 - `evolution.promotionToRelease`, when present, MUST be `signal-only` or
-  `denied` in 0.1. `signal-only` means an instance may report evidence that a
-  local change worked, and a developer authors the shared change through a
-  normal release. Direct promotion of instance-authored material into a
-  release is not defined by this specification.
+  `denied` in version 0.1. With `signal-only`, an instance may report evidence
+  that a local change worked. The shared change still requires a developer
+  author and the normal release process. This specification does not define
+  direct promotion of instance-authored material into a release.
 
-Quarantine of changes derived from untrusted content is not declarable: it is
-unconditional platform behavior (section 11).
+Projects cannot configure the quarantine of changes derived from untrusted
+content. Section 11 requires this behavior for every platform.
 
-### 6.7 Example
+### 6.7 Example manifest
 
 ```yaml
 apiVersion: agentapplication.io/v0alpha1
@@ -3493,14 +3549,14 @@ evals:
   behavior: evals/
 ```
 
-Appendix A of the paper shows a larger manifest and lockfile for a fuller
-application.
+Appendix A of the paper contains a larger manifest and its dependency lock.
 
 ## 7. Plugin dependencies
 
-### 7.1 Declaration
+### 7.1 Dependency declaration
 
-Each plugin dependency MUST declare:
+The application manifest lists the plugins used by the project. Each plugin
+dependency MUST declare:
 
 - a plugin identity unique within the project;
 - the package specification and version it targets;
@@ -3508,31 +3564,33 @@ Each plugin dependency MUST declare:
 - an acceptable version requirement or immutable source reference;
 - whether the application can run without it.
 
-Source types and version-range syntax are resolver features. A framework profile
-or release builder MUST document the source types and range syntax it accepts.
+This specification does not define source types or version-range syntax. A
+framework profile or release builder MUST document the forms it accepts.
 
 Agent Plugins 1.0.0 does not define dependencies between plugins. A conforming
 project MUST NOT add dependency fields to the portable `plugin.json`. A release
-builder MAY resolve dependencies through an external package system and record
-the resulting flat set in the Agent Application dependency lock.
+builder MAY use an external package system to resolve dependencies. If it does,
+the builder MUST record the result as a flat set in the Agent Application
+dependency lock.
 
-### 7.2 Resolution, installation, activation, and authorization
+### 7.2 Four separate decisions
 
-A conforming release builder MUST keep four decisions separate:
+A release builder handles plugins in four separate steps:
 
 1. Resolution chooses exact package content.
 2. Installation materializes that content and verifies it.
 3. Activation selects the components exposed to the runtime.
 4. Authorization grants capabilities and governed credential references.
 
-Installation MUST NOT activate components unless the project or an authorized
-operator selected them. Activation MUST NOT grant credentials, network access,
-or other authority. A plugin and its components MUST NOT increase their own
-authority.
+A conforming release builder MUST keep these decisions separate. Installing a
+plugin MUST NOT activate any component unless the project or an authorized
+operator selected it. Activating a component MUST NOT grant credentials,
+network access, or other authority. A plugin and its components MUST NOT
+increase their own authority.
 
-### 7.3 Component identity
+### 7.3 Component identities
 
-Every activated component MUST have a canonical identity in this form:
+Every active component MUST have a canonical identity with this form:
 
 ```text
 <plugin-id>/<component-type>/<component-name>
@@ -3545,14 +3603,15 @@ acme.calendar/skill/schedule-review
 acme.calendar/mcp/calendar
 ```
 
-Project-owned components MUST use the application identity in place of the
-plugin ID. A release builder MUST reject duplicate canonical identities.
-Frameworks MAY display shorter names, but release records, permissions,
-evaluations, and lineage MUST use the canonical identity.
+For a component owned by the project, the first segment MUST be the application
+identity instead of a plugin ID. A release builder MUST reject duplicate
+canonical identities. A framework MAY display a shorter name, but release
+records, permissions, evaluations, and lineage MUST use the canonical identity.
 
-### 7.4 Dependency lock
+### 7.4 Locking resolved plugins
 
-For each resolved plugin, the lock MUST record:
+The dependency lock records the exact plugin content selected for the release.
+For each resolved plugin, it MUST contain:
 
 - canonical plugin identity and exact version, when a version exists;
 - source and immutable source revision;
@@ -3563,8 +3622,8 @@ For each resolved plugin, the lock MUST record:
 - present client-extension namespaces;
 - requested capabilities and known network destinations, when discoverable.
 
-The lock SHOULD also record the resolver name and version. It MAY include
-conventional package locks by digest or reference them as release inputs.
+The lock SHOULD identify the resolver and its version. It MAY either include
+conventional package locks by digest or refer to those locks as release inputs.
 
 ```yaml
 lockVersion: 1
@@ -3588,13 +3647,15 @@ plugins:
       - com.openai.codex
 ```
 
-A release builder MUST fail closed when package content does not match the
-locked digest. Updating a version, revision, digest, component, activation
-selection, or client extension creates a new candidate release.
+A release builder MUST reject package content that does not match the locked
+digest. A change to a version, revision, digest, component, activation
+selection, or client extension creates a new release candidate.
 
 ## 8. Framework profiles
 
-A framework profile MUST have a stable name and version. It MUST define:
+A framework profile tells a release builder and platform how to interpret one
+framework's native project layout. The profile MUST have a stable name and
+version. It MUST define:
 
 - the native location of every required canonical role;
 - instruction and configuration precedence;
@@ -3607,16 +3668,19 @@ A framework profile MUST have a stable name and version. It MUST define:
 - build inputs excluded from a release;
 - the harness version or version range covered by the profile.
 
-A profile SHOULD preserve the framework's native project layout. It MUST NOT
-require source translation when the platform can run that layout faithfully.
+A profile SHOULD preserve the framework's native project layout. If a platform
+can run that layout faithfully, the profile MUST NOT require source
+translation.
 
-A change that alters loading, precedence, component identity, or runtime
-semantics requires a new profile version. Editorial documentation changes do
-not.
+A change to loading, precedence, component identity, or runtime behavior
+requires a new profile version. An editorial change to the profile's
+documentation does not.
 
 ## 9. Release closure
 
-A release MUST fix the following immutable inputs:
+A release fixes the project contents and every input that can affect how the
+project is built, evaluated, or run. Its **release closure** MUST contain
+immutable values for:
 
 - the release class, `production` or `development`;
 - the complete project source selected by the framework profile;
@@ -3630,27 +3694,28 @@ A release MUST fix the following immutable inputs:
 - workspace and plugin-data migrations;
 - artifact, trigger, retention, and local-evolution declarations.
 
-Secrets, raw credentials, user data, and instance workspace contents MUST NOT be
-stored in the release. The release MAY contain governed secret identifiers and
-test fixtures that contain no production credentials.
+The release MUST NOT contain secrets, raw credentials, user data, or instance
+workspace contents. It MAY contain governed secret identifiers and test
+fixtures that contain no production credentials.
 
-The release record MUST include a digest over its closure or a set of digests
-that unambiguously covers every member. It MUST identify the builder and build
-time. Prior release records MUST remain available for inspection and rollback
-for at least the application's rollback retention period.
+The release record MUST identify the closure with either one digest over the
+complete closure or a set of digests that unambiguously covers every member. It
+MUST also identify the builder and the build time. Prior release records MUST
+remain available for inspection and rollback for at least the application's
+rollback retention period.
 
-Version labels do not replace content digests. A plugin update that changes only
-natural-language material still produces a new release candidate and requires
-affected evaluations.
+A version label is not a substitute for a content digest. A plugin update that
+changes only natural-language material still creates a new release candidate
+and requires the affected evaluations to run again.
 
 ## 10. Workspace and plugin data
 
-Each instance MUST have one logical workspace scoped to one privacy domain. The
-platform MUST isolate that workspace from instances in other privacy domains,
-and MUST be able to restore, export, or delete one instance's workspace without
-touching another's.
+Each instance MUST have one logical workspace, and that workspace MUST belong to
+one privacy domain. A platform MUST isolate it from instances in other privacy
+domains. The platform MUST also be able to restore, export, or delete one
+instance's workspace without changing another workspace.
 
-For Agent Plugin dependencies included in a release:
+The following rules apply to Agent Plugin dependencies in a release:
 
 - `PLUGIN_ROOT` MUST refer to immutable package content from that release.
 - `PLUGIN_DATA` MUST refer to writable state scoped by application identity,
@@ -3660,49 +3725,50 @@ For Agent Plugin dependencies included in a release:
 - Secrets MUST remain in a managed secret store and MUST NOT be written to
   either root.
 
-A `PLUGIN_DATA` directory MUST NOT be shared across instances. A
-cross-instance shared-state contract is not defined by this specification. A
-plugin update that changes persistent data MUST supply or reference a
-migration in the release.
+Instances MUST NOT share a `PLUGIN_DATA` directory. Version 0.1 does not define
+a contract for mutable state shared across instances. If a plugin update changes
+persistent data, the release MUST supply or reference a migration.
 
-Runtime plugin installation, when policy allows it, is an instance-local program
-mutation. The platform MUST record the package digest, active components,
-author, source, tests, and approvals in instance lineage. It MUST NOT add that
-package to the shared release.
+If platform policy permits an instance to install a plugin at runtime, that
+installation is a local program change. The platform MUST record the package
+digest, active components, author, source, tests, and approvals in the
+instance's lineage. It MUST NOT add the package to the shared release.
 
 ## 11. Authority and security
 
-The application manifest declares requested authority. A resource owner or
-authorized administrator grants it at deployment or runtime. The effective
-authority is the intersection of the platform ceiling, customer grant, release
-request, and current-session restrictions.
+The application manifest requests authority; it does not grant authority. A
+resource owner or authorized administrator grants authority at deployment or
+runtime. The application receives only the authority allowed by all four of the
+following limits: the platform ceiling, the customer grant, the release
+request, and the current session's restrictions.
 
-Grants MUST be revocable, and revocation MUST apply to suspended instances and
-future runs, not only to live sessions. Permission checks, egress control,
-spending limits, and approval gates MUST be enforced in code outside the
-model's reach.
+Every grant MUST be revocable. A revocation MUST apply to suspended instances
+and future runs as well as to live sessions. Code outside the model's control
+MUST enforce permission checks, egress rules, spending limits, and approval
+gates.
 
 Approval MUST cover the exact plugin content digest and active component set.
-Review MUST include executable code, natural-language instructions, component
-descriptions, tool schemas, declarations, hooks, and client extensions. Hooks
-that can execute without model selection SHOULD require separate approval.
+The review MUST include executable code, natural-language instructions,
+component descriptions, tool schemas, declarations, hooks, and client
+extensions. A hook that can run without the model selecting it SHOULD require
+separate approval.
 
 For a production release, the release builder MUST produce a component
-inventory containing package source, digest, exported components, executable
-files, requested capabilities, known network destinations, and active client
-extensions. The release retains that inventory. Development builds SHOULD
-produce it.
+inventory. The inventory contains the package source and digest, exported
+components, executable files, requested capabilities, known network
+destinations, and active client extensions. It is part of the release.
+Development builds SHOULD also include this inventory.
 
-Content derived from an untrusted source MUST NOT be activated or executed as
-program material, in an instance or in a release, until a trusted reviewer
-clears it, and MUST NOT enter a publisher release before that review. An agent
-MUST NOT promote its own runtime installation or generated component into the
-shared release.
+Program material derived from an untrusted source MUST NOT be activated or
+executed until a trusted reviewer clears it. This rule applies both to local
+instance changes and to releases. The material MUST NOT enter a publisher
+release before the review. An agent MUST NOT promote its own runtime
+installation or generated component into the shared release.
 
 ## 12. Evaluations
 
-A production release MUST include evaluation results for the exact release
-closure. The suite MUST cover:
+A production release MUST include evaluation results for its exact release
+closure. The evaluation suite MUST cover:
 
 - intended behavior and durable results;
 - permission and approval boundaries;
@@ -3711,38 +3777,45 @@ closure. The suite MUST cover:
 - compatibility with each claimed runtime profile;
 - cost and resource limits declared by the project.
 
-A platform MUST NOT create instances from, or upgrade instances to, a
+A platform MUST NOT create an instance from, or upgrade an instance to, a
 production release that has not passed its declared evaluations.
 
-An update MUST rerun evaluations affected by changed application source,
-dependency content, component activation, client extensions, runtime versions,
-or requested authority. A release builder MUST NOT infer behavioral
-compatibility from semantic version labels alone.
+A release builder MUST rerun every evaluation affected by a change to
+application source, dependency content, component activation, client
+extensions, runtime versions, or requested authority. It MUST NOT infer
+behavioral compatibility from Semantic Versioning labels alone.
 
 ## 13. Migrations and lineage
 
-A release that changes structured workspace or plugin-data state MUST declare
-the source versions it can migrate and the target version it produces. It MUST
-identify deterministic migrations separately from agent-performed content
-migrations.
+If a release changes structured workspace or plugin-data state, it MUST declare
+which source versions it can migrate and which target version it produces. The
+release MUST distinguish deterministic migrations from content migrations
+performed by an agent.
 
-The platform MUST checkpoint an instance before a migration that can change
-durable state. It MUST record the source release, target release, dependency
-graph, migration result, evaluation result, and approvals in instance lineage.
-Lineage MUST be written where the runtime agent cannot edit it.
+A platform MUST checkpoint an instance before running a migration that can
+change durable state. In the instance lineage, the platform MUST record the
+source release, target release, dependency graph, migration result, evaluation
+result, and approvals. It MUST store that lineage where the runtime agent cannot
+edit it.
 
-Before upgrading instances to a new release, the platform MUST evaluate the
-candidate against affected instances or representative workspace checkpoints.
-Release-level evaluation alone is not sufficient: a shared release can fail
-for one instance whose workspace contains unusual history (section 12.6 of
-the paper). If an instance also contains local program changes, the platform
-MUST preserve unrelated local behavior. A text merge alone does not establish
-semantic compatibility.
+Before upgrading instances, the platform MUST evaluate the candidate release
+against the affected instances or representative workspace checkpoints. A
+release-level evaluation is not enough because an instance can have workspace
+history that the release evaluation did not cover (section 12.6 of the paper).
+If an instance has local program changes, the platform MUST preserve unrelated
+local behavior. A successful text merge does not by itself establish semantic
+compatibility.
 
-## 14. Conformance record
+## 14. Conformance records
 
-A release claiming conformance MUST publish or retain a machine-readable record
-with:
+Conformance produces two records. The release builder produces a conformance
+record for the release. The platform produces an attestation for each
+deployment.
+
+### 14.1 Release conformance record
+
+A release that claims conformance MUST publish or retain a machine-readable
+record containing:
 
 - this specification version;
 - the release class, `production` or `development`;
@@ -3754,43 +3827,53 @@ with:
 - migration coverage;
 - builder identity and build time.
 
-The record MAY remain private for a private application, but an operating or
-receiving platform MUST be granted access: a platform MUST reject a production
-release when it cannot inspect the record or verify the evaluation evidence
-the record references. An operator or auditor with appropriate access MUST be
-able to inspect it.
+The record MAY remain private when the application is private. An operating or
+receiving platform MUST still have access to it. A platform MUST reject a
+production release if it cannot inspect the record or verify the evaluation
+evidence referenced by the record. An operator or auditor with appropriate
+access MUST also be able to inspect it.
 
-A conforming platform MUST create a machine-readable **platform attestation**
-for each deployment before the first instance runs, and MUST update it when
-its enforcement changes. The attestation MUST record the deployment identity,
-the release-closure digest, the platform's identity and version, the
-specification version it implements, its enforcement exceptions, such as
-declared retention it cannot enforce or declared optional features it does
-not provide, every egress override with its scope and authorizer, and the
-time of issuance or update. In 0.1 it is a self-attestation: the platform
-MUST protect it from modification by the workloads it operates, and
-cross-platform signatures remain open (section 16). It is inspectable on the
-same terms as the conformance record.
+### 14.2 Platform attestation
+
+A conforming platform MUST create a machine-readable platform attestation for
+each deployment. It MUST create the attestation before the first instance runs
+and update it whenever the platform's enforcement changes.
+
+The attestation MUST contain:
+
+- the deployment identity;
+- the release-closure digest or digest set recorded by the release;
+- the platform identity and version;
+- the version of this specification implemented by the platform;
+- any enforcement exception, including a declared retention setting that the
+  platform cannot enforce or an optional feature it does not provide;
+- every egress override, with its scope and authorizer;
+- the time the attestation was issued or last updated.
+
+In version 0.1, the record is a self-attestation. The platform MUST protect it
+from modification by the workloads it operates. Version 0.1 does not define
+cross-platform signatures (section 16). The same access and inspection rules
+that apply to a conformance record also apply to a platform attestation.
 
 ## 15. Versioning and change process
 
-This specification is versioned independently of the paper. The manifest
-schema it defines is `agentapplication.io/v0alpha1`; a breaking schema change
-increments that identifier. Proposals, defects, and feature-name registrations
-go through [GitHub](https://github.com/agentapplication/agentapplication)
-issues and pull requests.
+This specification and the paper have independent versions. The manifest schema
+defined here is `agentapplication.io/v0alpha1`. A breaking schema change
+requires a new schema identifier.
 
-The specification advances to a 1.0 candidate when two independent
-implementations interoperate through it: one conforming framework profile and
-one conforming Agent Application Platform that did not share an author. The
-evidence is one conforming project: a conforming release builder produces its
-release using the conforming profile, and the independent conforming platform
-operates that release.
+Proposals, defect reports, and feature-name registrations use [GitHub
+issues and pull requests](https://github.com/agentapplication/agentapplication).
+
+This specification advances to a 1.0 candidate only after two independent
+implementations demonstrate interoperability. The demonstration requires one
+conforming framework profile and one conforming Agent Application Platform with
+no shared author. The required evidence is a release from one conforming project.
+A conforming release builder produces that release with the profile, and the
+independent platform operates it.
 
 ## 16. Open items for later versions
 
-This draft leaves several contracts open until independent implementations show
-a common need:
+Version 0.1 does not define the following contracts:
 
 - registry discovery and source protocols;
 - a portable transitive plugin dependency model;
@@ -3799,9 +3882,10 @@ a common need:
 - shared capability names and permission vocabulary;
 - cross-platform signature and attestation requirements.
 
-These items belong in later versions or separate standards. Implementations MAY
-experiment through framework profiles and namespaced extensions without adding
-their local choices to the portable core.
+Later versions or separate standards may define these contracts if independent
+implementations show a common need. In the meantime, implementations MAY
+experiment through framework profiles and namespaced extensions. Such
+experiments are not part of the portable core.
 
 
 # About this paper
