@@ -788,7 +788,7 @@ plugin dependencies, installation permissions, or supply-chain verification.
 The Agent Application contract addresses those application-level concerns
 without changing the plugin package format.
 
-A project manifest declares dependency intent: plugin identity, source,
+The application manifest declares dependency intent: plugin identity, source,
 acceptable versions, targeted package specification, and whether the dependency
 is required. A lockfile records the exact package selected for a release,
 including its source revision, integrity digest, exported components, and
@@ -2075,12 +2075,10 @@ permissions:
 evolution:
   overlays: allowed
   promotionToRelease: signal-only
-  quarantineUntrustedDerivation: true
 
 artifacts:
-  types:
-    - personal-plan
-    - progress-review
+  - type: personal-plan
+  - type: progress-review
 
 evals:
   behavior: evals/behavior/
@@ -2111,6 +2109,9 @@ plugins:
         - schedule-review
       mcpServers:
         - calendar
+    active:
+      - acme.calendar/skill/schedule-review
+      - acme.calendar/mcp/calendar
     extensions:
       - com.openai.codex
 ```
