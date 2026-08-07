@@ -767,7 +767,10 @@ life-coach-agent/
 ```
 
 These names illustrate the contract. A framework profile maps each role to the
-framework's native files and supplies any validation or build rules.
+framework's native files and supplies any validation or build rules. The
+[Agent Project and Release
+Specification](https://agentapplication.io/specifications/agent-project-and-release)
+is the normative draft of this contract.
 
 ### 9.1 Plugins are project dependencies
 
@@ -1961,8 +1964,10 @@ without discarding years of context, knowledge, artifacts, and completed work.
 
 # Appendix A: A candidate Agent Project manifest
 
-This appendix is a design proposal, offered as a starting point rather than a
-specification. In ordinary use, *Agent Application* or *agent* can refer to this
+This appendix is illustrative. The normative contract lives in the
+[Agent Project and Release
+Specification](https://agentapplication.io/specifications/agent-project-and-release),
+Working Draft 0.1. In ordinary use, *Agent Application* or *agent* can refer to this
 source or to the complete running product. This appendix describes the source
 form: an agent project in its framework's native layout. The generic names below
 illustrate the contents rather than prescribing one directory structure for
@@ -2012,7 +2017,7 @@ metadata:
   version: 1.1.0
 
 runtime:
-  harness: native
+  profile: example-framework/1
   requiredFeatures:
     - fs.persistent
     - fs.packageInstall
@@ -2023,6 +2028,10 @@ runtime:
     - ckpt.snapshot
   optionalFeatures:
     - exec.background
+
+instance:
+  privacyDomain: user
+  key: end_user_id
 
 dependencies:
   plugins:
@@ -2065,7 +2074,7 @@ permissions:
 
 evolution:
   overlays: allowed
-  promotionToSeed: signal-only
+  promotionToRelease: signal-only
   quarantineUntrustedDerivation: true
 
 artifacts:
@@ -2354,7 +2363,11 @@ August 7, 2026 and should be rechecked before citation.
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and commercial services derived from the application contract |
 
-The current status of these documents is maintained at
+The first normative companion is published: the [Agent Project and Release
+Specification](https://agentapplication.io/specifications/agent-project-and-release),
+Working Draft 0.1, covering the application manifest, plugin dependencies and
+locks, framework profiles, release closure, workspace scoping, and platform
+conformance. The current status of these documents is maintained at
 [agentapplication.io/companion-documents](https://agentapplication.io/companion-documents).
 
 ---

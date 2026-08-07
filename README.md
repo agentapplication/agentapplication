@@ -15,6 +15,8 @@ boundaries where shared contracts may be useful.
 ## What is in this repository?
 
 - The full [Agent Applications working paper](https://agentapplication.io/paper)
+- The [Agent Project and Release Specification](https://agentapplication.io/specifications/agent-project-and-release),
+  Working Draft 0.1, the paper's first normative companion
 - A short [overview](https://agentapplication.io/)
 - A minimal [Hello World Agent Application](https://agentapplication.io/examples/hello-world)
 - Concise pages for the framework, project, instance, workspace, artifact,
