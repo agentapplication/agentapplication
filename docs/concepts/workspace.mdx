@@ -29,6 +29,11 @@ must remain separate belongs in separate workspaces. Authentication controls
 who may use the instance, but it does not create private compartments inside
 one workspace.
 
+Plugin package content belongs to the immutable release. Writable plugin data
+belongs to the instance workspace and is scoped by application, instance, and
+plugin identity. It follows the same isolation, retention, export, checkpoint,
+and deletion rules. Credentials remain in a managed secret store.
+
 A context window ends with the model call. The workspace remains available to
 later sessions.
 

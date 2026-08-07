@@ -5,7 +5,7 @@ description: "A working paper defining Agent Applications, their frameworks, per
 ---
 
 <Note>
-**A working paper** · Draft 0.7 · August 2026 · [Read the full paper](/paper) ·
+**A working paper** · Draft 0.8 · August 2026 · [Read the full paper](/paper) ·
 [Hello World](/examples/hello-world) · [Cite](#cite)
 </Note>
 
@@ -27,8 +27,9 @@ JavaScript later added behavior. Frameworks made the work repeatable and helped
 settle what developers meant by a "web application."
 
 Agent developers now have comparable building blocks: the Model Context
-Protocol for tools, portable Agent Skills, sandboxed compute, and harnesses that
-run the agent loop. Today's harnesses are early versions of [Agent Application
+Protocol for tools, portable Agent Skills, Agent Plugins for packaging reusable
+skills and MCP server configurations, sandboxed compute, and harnesses that run
+the agent loop. Today's harnesses are early versions of [Agent Application
 frameworks](/concepts/framework). As they add project structure, development
 tools, evaluations, packaging, and deployment, they make agent development
 repeatable.
@@ -104,18 +105,25 @@ account-operator/
 |   |-- researcher/
 |   `-- reviewer/
 |-- tools/
+|-- hooks/
 |-- policies/
 |   |-- approvals.md
 |   `-- external-actions.md
 |-- knowledge/
+|-- triggers/
 |-- artifacts/
 |-- evals/
 |   |-- behavior/
 |   |-- security/
 |   `-- regression/
 |-- migrations/
-`-- app.yaml
+|-- agentapplication.yaml
+`-- agentapplication.lock
 ```
+
+Framework profiles map these canonical roles to native layouts. Plugins remain
+dependencies instead of copied application source, and the lockfile fixes their
+exact content for a release.
 
 An application may create an instance for a user, team, customer, project,
 ticket, or another continuing relationship. Each instance accumulates its own
@@ -130,7 +138,7 @@ one.
   title  = {Agent Applications: A New Software Architecture for the AI Era},
   author = {Amol Kelkar},
   year   = {2026},
-  note   = {Working Draft 0.7},
+  note   = {Working Draft 0.8},
   url    = {https://agentapplication.io/paper}
 }
 ```

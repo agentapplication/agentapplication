@@ -11,13 +11,17 @@ earlier run. A one-shot task runner cannot.
 
 This example is a notebook agent for one user. It saves notes in its workspace
 and maintains a short briefing that the user can open without reading through
-the conversation.
+the conversation. The declarations below are harness-neutral conceptual
+pseudocode. A framework profile maps the same roles to real native files and
+APIs.
 
 ```text
 durable-notebook/
 |-- instructions.md
 |-- tools/
 |   `-- save-note.ts
+|-- evals/
+|   `-- persistence.yaml
 `-- agentapplication.yaml
 ```
 
@@ -44,8 +48,9 @@ export async function saveNote(text: string) {
 }
 ```
 
-The deployment declaration asks for a persistent workspace and uses the user ID
-as the instance key:
+The application manifest binds the root instructions and tool implementation to
+the runtime. It also asks for a persistent workspace and uses the user ID as the
+instance key:
 
 ```yaml
 apiVersion: agentapplication.io/v0alpha1
@@ -53,6 +58,22 @@ kind: AgentApplication
 
 metadata:
   name: durable-notebook
+
+runtime:
+  profile: conceptual/reference-0
+  primaryAgent:
+    instructions: instructions.md
+
+tools:
+  - name: save_note
+    description: Append a dated note to the current instance's notebook.
+    inputSchema:
+      type: object
+      required: [text]
+      properties:
+        text:
+          type: string
+    implementation: tools/save-note.ts#saveNote
 
 instance:
   key: user.id
@@ -63,10 +84,36 @@ workspace:
 
 artifacts:
   - path: briefing.md
+
+evals:
+  behavior: evals/
 ```
 
-This is the portable contract proposed by the paper. A framework can express
-the same requirements in its own format.
+The persistence evaluation runs two sessions against the same instance and one
+against a different instance:
+
+```yaml
+name: notes survive suspension
+steps:
+  - run:
+      instance: ada
+      input: Remember that the launch moved to September 18.
+  - suspend: ada
+  - run:
+      instance: ada
+      input: Prepare a launch briefing.
+assert:
+  - workspace: ada
+    fileContains:
+      notes.md: September 18
+      briefing.md: September 18
+  - workspace: bea
+    fileAbsent: notes.md
+```
+
+A runnable framework implementation replaces the conceptual profile and binding
+syntax with its native entrypoint, tool registration, and evaluation API. The
+application-level requirements stay the same.
 
 ## Two runs, one continuing instance
 
@@ -84,3 +131,57 @@ ask the agent to revise it.
 | Persistent agent instance | Ada's stable instance key selects the same notebook on every run and keeps it separate from other users |
 | Durable computational workspace | `notes.md`, `briefing.md`, and the agent's instructions survive suspension |
 | Durable work | The notes and briefing outlive the conversations that created them |
+
+## The same notebook with a plugin
+
+A plugin is optional. The smallest example keeps `save-note.ts` in the project
+to show the full application without an external dependency. A second version
+can take the note tool and briefing procedure from a portable plugin:
+
+```text
+durable-notebook/
+|-- <harness-native entrypoint>
+|-- instructions.md
+|-- evals/
+|   `-- persistence.yaml
+|-- agentapplication.yaml
+`-- agentapplication.lock
+```
+
+The project manifest declares intent and selects the components it needs:
+
+```yaml
+dependencies:
+  plugins:
+    - name: research-notebook-tools
+      specification: agent-plugins/1.0.0
+      source:
+        type: git
+        url: https://example.com/research-notebook-tools.git
+      requirement: "^1.0.0"
+
+activation:
+  components:
+    - research-notebook-tools/mcp/save-note
+    - research-notebook-tools/skill/briefing
+```
+
+The release builder resolves that requirement and writes the exact content to
+the lockfile:
+
+```yaml
+lockVersion: 1
+plugins:
+  research-notebook-tools:
+    version: 1.0.2
+    revision: 7ad31bc
+    digest: sha256:82e1...
+    specification: agent-plugins/1.0.0
+    active:
+      - research-notebook-tools/mcp/save-note
+      - research-notebook-tools/skill/briefing
+```
+
+The plugin version still needs the same instance rule, workspace contract, and
+persistence evaluation. Installing the package does not grant filesystem or
+external credentials, and activating its components does not change that rule.

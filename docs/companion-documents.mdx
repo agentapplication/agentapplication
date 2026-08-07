@@ -3,10 +3,11 @@ title: "Companion documents"
 description: "The document family the working paper anchors: manifesto, technical papers, platform architecture, and the standards that follow."
 ---
 
-The paper anchors five companion documents, each with a different job:
+The paper anchors a family of companion documents, each with a different job:
 
 | Document | Purpose | Status |
 |---|---|---|
+| [Agent Project and Release Specification](/specification) | Canonical project roles, framework profiles, dependency locking, release closure, workspace scope, authority, evaluations, and migrations | Working Draft 0.1 |
 | The Agent Applications Manifesto | A short public argument for software that does the work | Planned |
 | Programming Agent Applications | The programming model, harness interpreter, packaging, runtime feature declarations, and evaluation | Planned |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery | Planned |
@@ -19,9 +20,10 @@ The paper identifies several possible open contracts. A contract is ready for
 standards work when two or more independent implementations need the same
 stable boundary. The likely order is:
 
-1. **Agent Application conformance and package contract.** This would define
-   the minimum portable declaration of programs, capabilities, permissions,
-   evaluations, and workspace requirements.
+1. **Agent Project and release conformance.** [Working Draft
+   0.1](/specification) defines canonical roles, dependencies, release closure,
+   and the minimum platform-facing contract while preserving framework-native
+   projects.
 2. **Agent Artifact contract.** This would cover identity, content and state,
    provenance, permissions, versions, rendering, and actions. See
    [Agent Artifact](/concepts/artifact) for the two-layer model.
@@ -31,6 +33,6 @@ stable boundary. The likely order is:
    principal and cross-system authority models are mature enough to support a
    shared abstraction.
 
-When the first contract is ready, it will appear here as a versioned
-specification with its own change process, following the model established by
-the Model Context Protocol.
+The first contract is now a working specification. It will remain a draft until
+independent framework and platform implementations test the boundary and its
+change process is defined.

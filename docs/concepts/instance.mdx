@@ -27,10 +27,10 @@ the agent represents and what it may do; its history records what it has done.
 
 ## Release, instance, and session
 
-An application continues across releases. A release is one fixed version of the
-agent project. Deployment creates instances from that release, and each period
-of activity becomes a session. The instance lasts across those sessions and may
-later move to a newer release.
+An application continues across releases. A release fixes one version of the
+agent project and its resolved dependency graph. Deployment creates instances
+from that release, and each period of activity becomes a session. The instance
+lasts across those sessions and may later move to a newer release.
 
 Instances created from the same release diverge as their workspaces accumulate
 different information and instructions. [Lineage](/concepts/lineage) records

@@ -41,6 +41,10 @@
         ]
       },
       {
+        "group": "Specifications",
+        "pages": ["specification"]
+      },
+      {
         "group": "About the paper",
         "pages": ["about", "review", "companion-documents"]
       }

@@ -13,6 +13,10 @@ and loads skills or subagents. A framework carries that same runtime into the
 rest of the application lifecycle. It tells developers how to structure a
 project, test it locally, package it, and run it in production.
 
+A framework profile maps canonical application roles to those native files. It
+also defines dependency loading, component identities, manifest and lockfile
+validation, runtime feature names, and the harness versions it covers.
+
 The choice of framework affects the application. Frameworks differ in their
 model support, context management, tool systems, permissions, delegation,
 checkpointing, and debugging. Those choices affect behavior, portability, and
@@ -22,4 +26,5 @@ An [Agent Project](/concepts/agent-project) keeps the native layout of its
 framework. An [Agent Application Platform](/concepts/platform) can support
 several frameworks without translating every project into one generic schema.
 
-See [the paper](/paper), sections 3, 7, 9, and 24.2.
+See [the paper](/paper), sections 3, 7, 9, and 24.2, and the [Agent Project and
+Release Specification](/specification#8-framework-profiles).

@@ -1,10 +1,10 @@
 ---
 title: "Agent Applications: Software Architecture for the AI Era"
 sidebarTitle: "The paper"
-description: "Working Draft 0.7, August 2026. The full paper defining Agent Applications, their lifecycle, and the Agent Application Platform."
+description: "Working Draft 0.8, August 2026. The full paper defining Agent Applications, their lifecycle, and the Agent Application Platform."
 ---
 
-**Working Draft 0.7 · August 2026 · Amol Kelkar** · [Plain text](https://agentapplication.io/llms-full.txt)
+**Working Draft 0.8 · August 2026 · Amol Kelkar** · [Plain text](https://agentapplication.io/llms-full.txt)
 
 Correspondence: [amol@agentapplication.io](mailto:amol@agentapplication.io)
 
@@ -22,7 +22,13 @@ Developers build Agent Applications with Agent Application frameworks, just as t
 
 Once created, each Agent Application instance accumulates different knowledge, artifacts, instructions, and unfinished work. Traditional software follows the program that was deployed. An Agent Application instance can also incorporate local natural-language instructions that change its behavior. Some systems let agents revise their own procedures or incorporate revisions prepared by other agents. These instances diverge in program as well as state. A publisher updating such a fleet must reconcile the update with the program and state of every instance, preserve local work, and test the result against that instance's state. Token consumption can also vary widely from one instance to another, which makes per-instance cost management important. The industry has not yet settled how to price or monetize these applications.
 
-Standards already cover a few components of Agent Applications. MCP connects agents to tools, Agent Skills package reusable instructions, A2A supports communication among agents and agentic applications, and emerging protocols govern commerce and payments. Important gaps remain around artifacts, identity and authority, workspace portability, releases, updates, and the application-instance lifecycle.
+Standards already cover a few components of Agent Applications. MCP connects
+agents to tools. Agent Skills package reusable instructions, and Agent Plugins
+package skills and MCP server configurations so compatible clients can load
+them. A2A supports communication among independent agents and agentic
+applications. Important gaps remain around complete projects, dependency
+resolution, artifacts, identity and authority, workspace portability, releases,
+updates, and the application-instance lifecycle.
 
 This paper defines the Agent Application and describes the architecture required to build and operate one. It maps existing standards to that architecture and identifies the interfaces that still need common contracts. With those contracts in place, developers could reuse components and domain expertise across applications, build customer relationships, and earn revenue from a portfolio. Distributors could run shared infrastructure and catalogs instead of rebuilding the stack for every application. Users would keep the context, knowledge, artifacts, and completed work that accumulate through long-lived agents. This could turn agentic computing from a small set of vertically integrated products into a broad software industry.
 
@@ -40,6 +46,7 @@ flowchart TB
             Developer(["Developer"])
             Framework["Harness / agent app framework"]
             Application["Agent Application"]
+            Plugins["Agent Plugin packages"]
             Publisher(["Publisher"])
       end
       subgraph Workspace["Durable workspace"]
@@ -59,7 +66,9 @@ flowchart TB
       Developer -- uses --> Framework
       Developer -- authors --> Application
       Framework -- defines format --> Application
+      Application -- declares dependencies --> Plugins
       Application -- submits --> Publisher
+      Plugins -- resolved into --> Release
       Release -- provisions --> Instance
       Publisher -- publishes application --> Release
       Framework -- runtime dependency --> Release
@@ -163,7 +172,7 @@ to build applications.
 |---|---|
 | Model and conventional compute | The model interprets natural-language programs and chooses actions. Conventional processors execute code, tools, and filesystem operations. |
 | Agent harness and application framework | A harness assembles context, invokes models and tools, and runs the agent loop. As it accumulates project structure, development tools, evaluations, packaging, deployment, and production runtime capabilities, it evolves into a full Agent Application framework. |
-| Agent project and release | A native project directory contains the developer-authored program, configuration, knowledge setup, and evaluations. Publishing fixes that source and its tested runtime requirements in an immutable release. |
+| Agent project and release | A native project directory contains the developer-authored program, configuration, knowledge setup, dependencies, and evaluations. Publishing fixes that source, the resolved dependency graph, and tested runtime requirements in an immutable release. |
 | Agent Application Platform | Packages releases, provisions instances, attaches workspaces and authority, runs sessions, manages fleets and costs, and supports distribution and monetization. |
 | Agent instance | A long-lived copy created for one privacy domain such as a user, a team or a ticket. It accumulates its own workspace, history, authority, artifacts, and local program changes. |
 | Product surfaces | Agent widgets, APIs, communication channels, and artifact sharing expose the running instances to users and other software. |
@@ -196,7 +205,8 @@ Several boundaries in the stack already have working protocols or products.
 | Primitive | What it provides |
 |---|---|
 | Tool protocol | The [Model Context Protocol](https://modelcontextprotocol.io/specification/2025-11-25/basic) gives agents a common way to discover and call outside capabilities, and to authenticate to protected MCP servers. |
-| Natural language programs | [Agent Skills](https://agentskills.io/specification) and related formats package procedural instructions so a harness can load ane execute them. |
+| Natural-language programs | [Agent Skills](https://agentskills.io/specification) and related formats package procedural instructions so a harness can load and execute them. |
+| Component packages | [Agent Plugins](https://agent-plugins.org/specification) provides a portable package for Agent Skills and MCP server configurations, with namespaced client extensions. |
 | Agent-to-agent protocol | [A2A](https://a2a-protocol.org/latest/specification/) gives independent agents a common way to advertise capabilities, exchange messages and task artifacts, and manage collaborative work. |
 | Sandboxed compute | Vercel Sandbox, E2B, containers, and microVMs let agents run code, install dependencies, and manipulate files. |
 | Agent harness | Claude Code, Codex CLI, Goose, OpenCode, Deepagents and related systems assemble context and tools into a working agent runtime. |
@@ -473,6 +483,11 @@ following terms consistently.
 | **Agent Cloud** | Specialized cloud infrastructure for persistent agents, used when contrasting this runtime with ordinary cloud infrastructure. It may sit beneath or inside an Agent Application Platform. |
 | **Agent Harness** | The runtime around the model that assembles context, calls tools, loads skills and subagents, and runs the agent loop. |
 | **Agent Application Framework** | An agent harness that has evolved to support the complete development and operating lifecycle. It defines the native project structure, extension conventions, evaluations, packaging, deployment, and production runtime. |
+| **Component** | A named unit that a project or dependency contributes, such as a skill, MCP server, tool, hook, subagent, trigger, renderer, or knowledge source. |
+| **Agent Plugin** | An installable extension package that contributes reusable components to an Agent Project or host. A release identifies its exact content by digest and by version when one exists. The plugin does not own the application's product identity, top-level instance, privacy boundary, workspace, or release lifecycle. |
+| **Plugin Dependency** | A project declaration that incorporates a plugin subject to a version, source, and compatibility requirement. |
+| **Plugin Activation** | The decision to expose selected components from an installed plugin to the application runtime. Activation does not grant credentials or other authority. |
+| **Resolved Dependency Graph** | The exact dependency versions and package contents selected for a release, including their sources, integrity digests, components, and host extensions. |
 
 The broad meanings are useful in ordinary discussion. A developer will say, "I
 am building an agent," just as a web developer says, "I am building a web app."
@@ -482,7 +497,9 @@ directly.
 
 An app running inside a host assistant is one delivery form. The host may own the
 continuing instance and workspace while the app supplies tools and a visual
-surface. Appendix B covers earlier uses of the name.
+surface. A plugin installed into that host is usually a dependency or extension,
+not a standalone Agent Application, because the host still owns the product
+identity and lifecycle. Appendix B covers earlier uses of the name.
 
 ---
 
@@ -490,8 +507,12 @@ surface. Appendix B covers earlier uses of the name.
 
 ## 8. A hybrid programming model
 
-An Agent Application combines conventional code, natural-language programs,
-and knowledge. Each behaves differently and needs a different kind of test.
+An Agent Application combines four kinds of project material: conventional
+code, natural-language programs, declarations, and knowledge or assets. The
+material's runtime role determines its class; directory names are insufficient.
+A plugin can span all four kinds. For example, one Agent Skill may contain a
+natural-language `SKILL.md`, executable scripts, reference documents, and
+metadata that tells a client how to load them.
 
 ### 8.1 Conventional code
 
@@ -553,7 +574,7 @@ retry, result, and error for audit.
 Natural language becomes program material when changing the text changes runtime
 behavior. Agent developers already write this material in several common forms:
 
-- Project instruction files such as AGENTS.md`, Claude Code's
+- Project instruction files such as `AGENTS.md`, Claude Code's
   `CLAUDE.md`, Gemini CLI's `GEMINI.md`, and harness-specific equivalents set
   operating rules for an agent working in a particular environment.
 - The [Agent Skills specification](https://agentskills.io/specification)
@@ -576,31 +597,28 @@ the same effect if the runtime mistakes untrusted content for instructions. The
 loading policy identifies which sources may supply instructions, how their
 contents are verified and versioned, and what authority they receive. A document
 loaded as knowledge remains untrusted reference material unless the release
-designates it as an instruction source. Section 19.3 develops these controls.
+designates it as an instruction source. Section 19.4 develops these controls.
 
-These instructions can specify more than preferences or background facts. An
-agent developer can write a multi-step process: inspect the source material,
-draft a change, ask a review subagent to check it, run the required tests, and
-report the result. The developer may also specify a dynamic workflow graph
-that the agent instantiates to execute a complex process:
-a deep research request may use multiple subagents to plan different aspects of a
-decomposed query, second level subagents may research each aspect followed by
-a critic subagent and finally a set of subagents that bring together all findings into a
-report. When executing such dynamically generated process graph, the harness
-loads the relevant instructions, and the LLM
-interprets them against the current state, calls tools, and steers
-the process through contextual course corrections and elaborations.
+These instructions can define a multi-step process. A developer might tell the
+agent to inspect source material, draft a change, send it to a review subagent,
+run tests, and report the result. A research application can generate a larger
+graph in which subagents plan parts of a query, gather evidence, review each
+other's findings, and assemble a report. The harness loads the relevant
+instructions, while the model interprets them against current state and adjusts
+the process as work proceeds.
 
 Frontier models have become better at following detailed instructions and
-chaining tool calls, making longer procedures practical as natural-language
-programs. Direct interpretation is the lightest-weight form. When the work needs
-named steps, compiler checks, and inspectable execution, a system can add more
-structure. [Playbooks](https://www.runplaybooks.ai/#video-intro), a Natural Language programming based harness, developes this by
-compiling structured Markdown programs into an intermediate language to disambiguate intent
-and providing step debugging through instructions with breakpoints, variables, and a call stack,
-thus elevating Natural Language into a full programming language with verifyable execution traces.
-The [Agent Skills specification](https://agentskills.io/specification) does not provide execution guarantees, instead relies on
-[evaluations](https://agentskills.io/skill-creation/evaluating-skills) for reliable execution.
+chaining tool calls, making longer natural-language procedures practical.
+Direct interpretation uses the least machinery. Work that needs named steps,
+compiler checks, and inspectable execution can add structure.
+[Playbooks](https://www.runplaybooks.ai/#video-intro), an early
+natural-language programming harness, compiled structured Markdown into an
+intermediate language and provided a debugger with breakpoints, variables, and
+a call stack. The [Agent Skills
+specification](https://agentskills.io/specification) does not define execution
+guarantees. Its guidance uses
+[evaluations](https://agentskills.io/skill-creation/evaluating-skills) to test
+behavior.
 Appendix B records the prior art and dated sources.
 
 Natural-language programs are versioned, reviewed, and evaluated with the rest
@@ -608,7 +626,22 @@ of the application. Their behavior depends on the model, harness, tools, and
 runtime context, so behavioral tests establish whether the procedure works.
 Section 12.5 explains why text diffs alone cannot settle upgrades.
 
-### 8.3 Knowledge resources
+### 8.3 Declarations
+
+Declarations wire the other material into the running application. They name
+entrypoints and components, select models and harness features, configure tools
+and triggers, request permissions, and declare package dependencies. A client
+reads an Agent Plugin's `plugin.json` and `mcp.json` as declarations. The files
+change runtime behavior, but a conventional processor does not execute them as
+ordinary code and a model does not interpret them as instructions.
+
+Treat declarations as program material. Version and review them with the source
+they connect. Validate them against a schema where one exists, and test the
+assembled behavior after resolution. A syntactically valid MCP declaration can
+still expose the wrong server, while a valid dependency range can resolve to
+plugin content the application has never evaluated.
+
+### 8.4 Knowledge resources
 
 Knowledge supplies the material the application reasons over:
 
@@ -637,9 +670,9 @@ The runtime must preserve the boundary between instructions and knowledge. A
 policy loaded as executable instruction carries more authority than the same
 words retrieved as reference material. External documents may contain hostile
 instructions, so the runtime loads them as untrusted data and keeps that label
-attached. Section 19.3 develops the security consequences.
+attached. Section 19.4 develops the security consequences.
 
-### 8.4 Two kinds of execution
+### 8.5 Two kinds of execution
 
 An Agent Application uses two kinds of execution. A conventional computer
 executes deterministic code, tool implementations,
@@ -656,12 +689,13 @@ against, along with its conventional runtime dependencies. This does not
 guarantee identical answers. It tells an operator which combinations the
 developer has checked. Appendix D gives the fuller runtime contract.
 
-### 8.5 Test the whole application
+### 8.6 Test the whole application
 
-Each part of an Agent Application needs a different test. Developers test code with ordinary software
-tests. They test natural-language instructions by giving the agent representative
-jobs and judging its behavior. They check knowledge for source, freshness, and
-permission.
+Each part of an Agent Application needs a different test. Developers test code
+with ordinary software tests. They test natural-language instructions by giving
+the agent representative jobs and judging its behavior. They validate
+declarations and dependency resolution, then check knowledge for source,
+freshness, and permission.
 
 A tool may work perfectly but the agent may choose it at the wrong time or supply incorrect argument. Release
 testing therefore has to run the whole application, not just its code.
@@ -672,8 +706,8 @@ testing therefore has to run the whole application, not just its code.
 
 An Agent Application begins as a source directory written for one harness or
 framework. This directory is the **agent project**. It packages conventional
-code, natural-language programs, knowledge setup, configuration, and evaluations
-in the native layout of the selected system.
+code, natural-language programs, declarations, knowledge, dependencies, and
+evaluations in the native layout of the selected system.
 
 This works like established web frameworks. A Next.js project keeps its routes,
 components, configuration, and build files where Next.js expects them. A Rails
@@ -689,16 +723,107 @@ and debugging facilities shape the behavior and cost of the application. The
 project therefore preserves its native layout instead of translating the source
 into a generic platform format.
 
-Portability requires a smaller shared contract. Alongside its native files, the
-project declares the tools, permissions, workspace features, tests, and upgrade
-rules it needs. Two platforms can satisfy those requirements while running the
-same native project, although different models or framework versions may still
-produce different behavior.
+Portability requires a smaller shared contract. The contract defines component
+roles and release behavior while each framework decides how to represent them.
+An implementation does not need a literal `skills/`, `agents/`, or `tools/`
+directory if its native format provides the same roles.
+
+| Canonical role | Purpose | Minimum condition |
+|---|---|---|
+| Application manifest | Identifies the application and states its platform-facing contract | Every project |
+| Primary agent entrypoint | Supplies the root program and initial runtime agent | Every project |
+| Harness and runtime declaration | Names the interpreter and features the project expects | Every project |
+| Tool surface | Describes the capabilities available to the runtime agent | Every project |
+| Instance rule | Maps a privacy domain to a stable instance key | Every project |
+| Workspace contract | Declares persistence, isolation, compute, and filesystem needs | Every project |
+| Natural-language programs | Adds skills, procedures, roles, and behavioral policy | As needed |
+| Subagent definitions and hooks | Adds internal delegation and lifecycle interception | As needed |
+| Knowledge and artifact definitions | Declares sources, schemas, durable output types, and rendering | As needed |
+| Plugin dependencies | Incorporates reusable packaged components | As needed |
+| Triggers and channels | Accepts work outside the primary interactive surface | When the application supports them |
+| Permissions and approvals | Requests authority and defines hard enforcement points | Before production use |
+| Evaluations | Tests behavior, security, cost, and regressions | Before production use |
+| Migrations | Evolves release and workspace state | Once state schemas change |
+| Dependency lock | Records exact external package resolution | For reproducible releases |
+
+An illustrative project can expose those roles like this:
+
+```text
+life-coach-agent/
+|-- <harness-native entrypoint>
+|-- skills/
+|-- agents/
+|-- tools/
+|-- hooks/
+|-- policies/
+|-- knowledge/
+|-- triggers/
+|-- artifacts/
+|-- renderers/
+|-- evals/
+|-- migrations/
+|-- agentapplication.yaml
+`-- agentapplication.lock
+```
+
+These names illustrate the contract. A framework profile maps each role to the
+framework's native files and supplies any validation or build rules.
+
+### 9.1 Plugins are project dependencies
+
+An Agent Plugin contributes components to a project or host. The application
+still owns the root program, instance rule, workspace contract, release
+lifecycle, and product identity. A plugin-provided reviewer therefore remains a
+component of the application unless it is deployed as an independently
+addressable application with its own identity and authority boundary.
+
+[Agent Plugins 1.0](https://agent-plugins.org/specification) defines a portable
+package with a root `plugin.json`, Agent Skills under `skills/`, MCP server
+configuration in `mcp.json`, and reverse-domain client extensions. It does not
+define a registry, dependency resolution, a project dependency file, transitive
+plugin dependencies, installation permissions, or supply-chain verification.
+The Agent Application contract addresses those application-level concerns
+without changing the plugin package format.
+
+A project manifest declares dependency intent: plugin identity, source,
+acceptable versions, targeted package specification, and whether the dependency
+is required. A lockfile records the exact package selected for a release,
+including its source revision, integrity digest, exported components, and
+client-specific extensions. Agent Plugins 1.0 does not let plugins depend on
+other plugins. Until a portable dependency model exists, an installer can write
+the flat set it resolved without adding transitive syntax to the plugin
+manifest.
+
+Installation has four distinct stages:
+
+1. Resolution selects an exact package and source.
+2. Installation materializes and verifies that content.
+3. Activation exposes selected components to the runtime.
+4. Authorization grants capabilities, accounts, or credentials under policy.
+
+Completing one stage does not complete the next. A skill can change behavior
+without adding a tool. An MCP server can add capability before it receives an
+external credential, while a hook may execute without the model choosing it.
+
+### 9.2 Stable component identities
+
+Different plugins can export a skill named `review` or an MCP server named
+`github`. Release records, permissions, evaluations, and lineage need an
+unambiguous identity even when a framework displays a shorter name. The
+canonical form is:
+
+```text
+<plugin-id>/<component-type>/<component-name>
+```
+
+For example, `acme.calendar/skill/schedule-review` and
+`acme.calendar/mcp/calendar` identify two components from the same dependency.
+Project-owned components use the application identity in place of a plugin ID.
 
 The [Hello World Agent Application](https://agentapplication.io/examples/hello-world)
 shows a minimal agent project with instructions, one file-writing tool, a
 persistent workspace, and a durable artifact. Appendix A shows a larger
-manifest. Section 18 describes which parts need shared contracts.
+manifest and lockfile. Section 18 describes which parts need shared contracts.
 
 ---
 
@@ -711,10 +836,17 @@ activity becomes a session. Four lifetimes govern the running application.
 **The application** is the product identity: what a company offers and customers
 use. It continues across releases.
 
-**The release** is one immutable version of the agent project, fixing source,
-declared runtime requirements, evaluations, and migration rules. Publishers
-change the application by cutting a release. Prior releases stay available for
-inspection and rollback.
+**The release** is one immutable version of the agent project and its complete
+resolved dependency graph. It fixes application source, plugin and conventional
+package contents, framework and harness versions, host extensions, component
+activation, requested authority, runtime requirements, evaluations, and
+migration rules. Publishers change the application by cutting a release. Prior
+releases stay available for inspection and rollback.
+
+A release records content digests as well as version labels. Semantic versioning
+cannot establish behavioral compatibility for a package that changes
+natural-language instructions. A production update requires evaluation even
+when the plugin publisher labels it a minor or patch release.
 
 **The instance** is the long-lived unit created from a release for one privacy
 domain. Depending on the application, that domain may be a user, team, customer
@@ -725,9 +857,9 @@ release version by directly updating agent project files or semantically merging
 has modified the project files.
 
 **The session** is one period of execution or interaction, lasting one turn or
-many, started by a user, an event, or a schedule. A session may or may not
-have a formal "finished" state. A given session uses application code in the
-agent instance at time time it is invoked.
+many, started by a user, an event, or a schedule. A session may or may not have
+a formal "finished" state. It uses the application release and active local
+changes attached to the instance when the session starts.
 ```text
 Agent Application
   |-- Release 1
@@ -796,6 +928,16 @@ Raw credentials stay in a managed secret store, while the workspace holds
 governed references. An export carries those references and leaves the
 credentials behind.
 
+Agent Plugins names two storage roots. For a dependency published with an
+application, `PLUGIN_ROOT` is immutable release content. `PLUGIN_DATA` is
+writable state in the instance workspace. A platform scopes that data by
+application, instance, and plugin identity, then applies the workspace's
+isolation, retention, export, checkpoint, and deletion rules. It does not share
+plugin data across privacy domains unless the application has defined a shared
+instance. Secrets stay in the managed secret store rather than either root.
+Plugin upgrades that change persistent data include migrations in the release
+plan.
+
 ### 11.2 The workspace is the privacy boundary
 
 The agent can read the whole workspace. Files, memory, indexes, summaries, and
@@ -858,8 +1000,15 @@ advance.
 ### 12.2 Some changes carry more risk than others
 
 Adding a customer document changes what the agent knows. Editing a skill changes
-how it behaves. Installing a tool changes what it can do. Granting a credential
-changes what it may reach. Each step needs stronger review.
+how it behaves. Installing a plugin can change behavior, capability, or
+structure, depending on the components it contributes. Granting a credential
+changes what those components may reach. Each step needs review matched to the
+change.
+
+Installation, activation, and authorization remain separate decisions. A plugin
+cannot authorize itself, and installing it does not approve future updates. A
+behavioral diff covers instructions, descriptions, tool schemas, hooks, and
+other declarations in addition to executable files.
 
 Risk also depends on where the change came from. A support ticket or web page can
 contain instructions written by an attacker. If an agent turns that material
@@ -885,6 +1034,12 @@ reviewer clears them. The platform also writes change history somewhere the
 agent cannot edit. These rules allow improvement without letting one compromised
 instance change the whole fleet.
 
+If policy lets a runtime agent install a plugin, the platform treats the result
+as an instance-local program mutation. It records the package and activation in
+lineage, evaluates it in isolation, and keeps it out of the shared release. A
+plugin derived from untrusted content cannot promote itself into a publisher
+release.
+
 ### 12.4 Recording instance lineage
 
 Version control records changes to the shared application. Lineage records what
@@ -893,6 +1048,7 @@ happened to one instance after it was created:
 - originating release and installed upgrades;
 - active local filesystem overlays;
 - generated code;
+- installed plugins, exact package digests, and active components;
 - the author and source of each change;
 - tests and approvals;
 - artifact history;
@@ -1027,8 +1183,11 @@ happened and decide what remains.
 
 An instance may contain one principal agent and several subagents, or a set of
 peers. Multiple agents inside one instance share its identity, workspace, and
-authority, which keeps accountability intact. Coordination across separate
-instances is a different and open problem, noted in section 23.
+authority, which keeps accountability intact. A plugin can contribute a
+subagent definition, but that subagent still runs under the application's
+instance and delegated limits. An A2A peer is independently addressable and may
+have its own workspace, identity, and authority boundary. Coordination across
+separate instances is a different and open problem, noted in section 23.
 
 ### 14.5 Human authority and approval
 
@@ -1041,7 +1200,7 @@ first, or never act.
 
 Approvals provide oversight and a chance to stop irreversible work. They fail
 under volume: a reviewer approving fifty items an hour eventually rubber-stamps
-them. Code and policy systems must enforce hard limits, as section 19.2 requires.
+them. Code and policy systems must enforce hard limits, as section 19.3 requires.
 
 ---
 
@@ -1207,15 +1366,18 @@ boundaries for platform builders.
 ## 18. Standards, contracts, and portability
 
 Standards already cover several boundaries in the stack. MCP connects agents to
-tools and external data. Agent Skills packages reusable instructions. A2A
-supports collaboration between agents and agentic applications. Commerce and
-payment protocols carry purchase intent, authorization, and settlement. Appendix
-D.4 maps these protocols in detail.
+tools and external data. Agent Skills packages reusable instructions. Agent
+Plugins packages skills and MCP server configurations for compatible clients.
+A2A supports collaboration between independently addressable agents and agentic
+applications. Commerce and payment protocols carry purchase intent,
+authorization, and settlement. Appendix D.4 maps these protocols in detail.
 
-The missing layer is a set of application-level contracts for Agent
-Applications, Agent Artifacts, identity and delegated authority, monetization,
-communication, releases, instances, and workspaces. These contracts can compose
-with existing protocols instead of replacing them.
+The application-level contract composes those components into a product. It
+defines the root program, dependency graph, runtime requirements, releases,
+instances, workspaces, authority, artifacts, evaluations, and evolution. It also
+supplies dependency resolution and locking around Agent Plugins without adding
+those rules to the plugin package format. Other open contracts remain necessary
+for artifact portability, delegated authority, monetization, and communication.
 
 An application can support several models, harnesses, or frameworks by declaring
 what it needs and testing each supported runtime. That declaration gives
@@ -1251,7 +1413,26 @@ intent, checkout state, authorization, payment requirements, and receipts.
 Policy code still enforces those limits and handles revocation. Appendix D.4
 lists the current protocols.
 
-### 19.2 Put hard limits in code
+### 19.2 Review the complete plugin
+
+A plugin is both a software dependency and a source of model behavior. Review
+and approve the complete content digest: executable code, natural-language
+instructions, component descriptions, tool schemas, declarations, hooks, and
+client extensions. A skill can raise risk by steering an existing tool in a new
+way even when the plugin adds no capability. Hooks need extra scrutiny because
+they can execute at lifecycle points without model selection.
+
+The release keeps a component inventory analogous to a software bill of
+materials. For each plugin it records the source, version, digest, exported
+components, executable files, requested capabilities, network destinations, and
+active host extensions. Credentials are instance-scoped governed references.
+Neither a plugin nor one of its components can grant itself access.
+
+Updates show behavioral and capability changes in addition to file changes. The
+platform reruns affected evaluations before activation and keeps the prior
+resolved graph available for rollback.
+
+### 19.3 Put hard limits in code
 
 The model may choose an action. Ordinary code decides whether that action is
 allowed. Keep these controls outside the model's reach:
@@ -1282,7 +1463,7 @@ asking the model to hide unauthorized records defeats this boundary.
 Credentials should be short-lived and limited to the current action whenever
 possible.
 
-### 19.3 Remember where information came from
+### 19.4 Remember where information came from
 
 The runtime distinguishes developer instructions, organization policy, user
 directions, reference material, and outside content. It keeps those source labels
@@ -1296,7 +1477,7 @@ Instance and workspace isolation provide the outer boundary: a misled agent can
 reach only the data in its workspace and through its scoped tools. Appendix D
 describes this mechanism in more detail.
 
-### 19.4 Agent-generated code
+### 19.5 Agent-generated code
 
 During a run, the agent may write a script, execute it, inspect the output, and
 use the result to continue working. It may save that script at a known path in
@@ -1308,7 +1489,7 @@ change the shared application release. If the publisher wants every instance to
 receive the script, a developer reviews and tests it before adding it to a new
 release.
 
-### 19.5 Keep enough evidence to explain and recover
+### 19.6 Keep enough evidence to explain and recover
 
 Someone who was absent should still be able to answer: Which agent acted? What
 was it allowed to do? Which sources did it use? Which tools did it call? What
@@ -1381,9 +1562,10 @@ platform layers without trapping that work.
 
 ### For software developers
 
-A release now includes code, natural-language instructions, knowledge setup, and
-behavior tests. Developers must review instruction changes with the same care as
-code changes because both can alter what the application does. Shared formats
+A release now includes conventional code, natural-language instructions,
+declarations, knowledge setup, resolved dependencies, and behavior tests.
+Developers must review instruction and dependency changes with the same care as
+code changes because each can alter what the application does. Shared formats
 also turn tools, skills, evaluations, and artifact renderers into reusable
 components rather than one-off integrations.
 
@@ -1544,7 +1726,9 @@ life-coach-agent/
 |-- tools/
 |-- knowledge/
 |-- artifacts/
-`-- evals/
+|-- evals/
+|-- agentapplication.yaml
+`-- agentapplication.lock
 ```
 
 `CLAUDE.md` supplies the main project instructions. `.claude/skills/` contains
@@ -1553,7 +1737,9 @@ Project permissions and hook declarations live in
 `.claude/settings.json`; hook scripts can live under `hooks/`. Project-scoped
 MCP servers live in `.mcp.json`. The remaining directories hold
 application-specific tool code, knowledge configuration, artifact definitions,
-and evaluations. Secrets and user data stay outside the source folder.
+and evaluations. The application manifest supplies the platform-facing contract,
+while the lockfile records exact resolved packages. Secrets and user data stay
+outside the source folder.
 
 Other harnesses use other names, such as `AGENTS.md`, `.codex/`, `.goose/`,
 or `.opencode/`. The [Hello World Agent
@@ -1577,7 +1763,22 @@ files, plans, artifacts, permission prompts, failures, and behavior after a
 restart. This local loop exposes missing tools and unclear instructions before a
 fleet exists.
 
-### 24.5 Turn the use case into evaluations
+### 24.5 Resolve and review dependencies
+
+Declare each plugin with its identity, source, acceptable versions, and targeted
+package specification. The resolver selects exact content, verifies its digest,
+validates portable components and supported client extensions, and writes the
+result to the dependency lock. It assigns canonical identities to exported
+components so permissions and evaluation results cannot collide.
+
+Review installation, activation, and authorization separately. Inspect the
+component inventory and behavioral diff before activating only the skills, MCP
+servers, hooks, or other components the application needs. Grant credentials
+and network access under the application's authority policy. A plugin update
+produces a new candidate lock and must pass evaluation before it enters a
+release.
+
+### 24.6 Turn the use case into evaluations
 
 An evaluation starts with a known workspace and request, runs the application,
 and checks the resulting state and behavior. The suite covers:
@@ -1599,7 +1800,7 @@ Run the suite locally against the chosen harness and model combinations. Run it
 again on a candidate platform release, where the sandbox, credentials, network,
 and event delivery differ from the laptop.
 
-### 24.6 Deploy an immutable release
+### 24.7 Deploy an immutable release
 
 Choose an Agent Application Platform by matching the application's declared
 requirements to the services in section 17: native framework support, durable
@@ -1618,15 +1819,16 @@ karta deploy
 vercel deploy
 ```
 
-The platform validates and packages the native folder, records the resolved
-harness and runtime dependencies, and creates an immutable release. It keeps
-secrets outside that release. The developer provisions a staging instance using
-the application's real privacy-boundary rule, attaches test credentials, and
-runs smoke tests through the hosted agent widget. The test covers a fresh
-instance, resume from a populated workspace, tool approvals, schedules, and
-artifact rendering.
+The platform validates the native folder and its lock, verifies package digests,
+and packages the complete resolved dependency graph as an immutable release. It
+records the harness, runtime contract, active components, and authority those
+components request while keeping secrets outside the release. The developer
+provisions a staging instance using the application's real privacy-boundary
+rule, attaches test credentials, and runs smoke tests through the hosted agent
+widget. The test covers a fresh instance, resume from a populated workspace,
+tool approvals, schedules, plugin data, and artifact rendering.
 
-### 24.7 Deliver the application to users
+### 24.8 Deliver the application to users
 
 The Agent Application Platform can expose a hosted URL and agent widget as the
 first product surface. The publisher configures authentication, branding, model
@@ -1645,10 +1847,11 @@ pricing, and who pays. The operating view connects customer count and revenue to
 model, tool, compute, storage, and support costs, so the business can see the
 margin of the application rather than token spend in isolation.
 
-### 24.8 Operate and upgrade the fleet
+### 24.9 Operate and upgrade the fleet
 
-A new version returns to the same local loop: edit the native project, run the
-evaluations, publish a candidate, and roll it out in stages. The platform
+A new version returns to the same local loop: edit the native project, resolve
+and review dependencies, run the evaluations, publish a candidate, and roll it
+out in stages. The platform
 keeps in-flight sessions on their current release, evaluates the candidate
 against representative instance workspaces, applies semantic updates without
 erasing local changes, and preserves rollback points and lineage.
@@ -1660,7 +1863,7 @@ active customers, plan conversion, revenue, refunds, cost of service, and
 publisher payments. These records show whether a release improved both the
 agent's work and the economics of running it.
 
-### 24.9 Deliver and share artifacts
+### 24.10 Deliver and share artifacts
 
 File artifacts such as PDF, Markdown, Word, image, or spreadsheet files can be
 downloaded and used outside the platform. Their metadata still records the
@@ -1733,20 +1936,23 @@ agent rather than a sequence of isolated model calls. The agent returns to the
 same work across sessions, chooses actions within application guardrails, and
 produces results that last.
 
-Developers build these products as hybrid programs of code, natural-language
-instructions, and knowledge. Agent Application frameworks provide the project
-structure and development tools. Agent Application Platforms turn tested
-releases into long-lived instances and operate their workspaces, authority,
-interfaces, fleets, costs, and monetization.
+Developers build these products as hybrid programs of conventional code,
+natural-language instructions, declarations, and knowledge. Agent Plugins can
+contribute reusable components across those forms, while the Agent Project owns
+the complete application and dependency graph. Agent Application frameworks
+provide the project structure and development tools. Agent Application
+Platforms turn tested releases into long-lived instances and operate their
+workspaces, authority, interfaces, fleets, costs, and monetization.
 
 Those instances do not remain equivalent. Each accumulates its own context,
 artifacts, unfinished work, and local instructions, so behavior can diverge
 along with data. Operators must update instances by meaning, test changes against
 affected workspaces, and preserve each instance's lineage.
 
-MCP, Agent Skills, A2A, and commerce protocols cover some interfaces in this
-stack. Contracts for applications, workspaces, artifacts, identity, authority,
-updates, and monetization would connect the rest. Developers could then sell
+MCP, Agent Skills, Agent Plugins, A2A, and commerce protocols cover some
+interfaces in this stack. Contracts for complete projects, dependency locking,
+workspaces, artifacts, identity, authority, updates, and monetization would
+connect the rest. Developers could then sell
 reusable applications across several platforms. Platform operators could
 specialize in running and distributing them. Users could change providers
 without discarding years of context, knowledge, artifacts, and completed work.
@@ -1774,12 +1980,14 @@ life-coach-agent/
 |-- tools/
 |   |-- calendar/
 |   `-- notes/
+|-- hooks/
 |-- policies/
 |   |-- approvals.md
 |   `-- external-actions.md
 |-- knowledge/
 |   |-- sources.yaml
 |   `-- schemas/
+|-- triggers/
 |-- artifacts/
 |   |-- personal-plan/
 |   `-- progress-review/
@@ -1789,7 +1997,8 @@ life-coach-agent/
 |   |-- security/
 |   `-- regression/
 |-- migrations/
-`-- app.yaml
+|-- agentapplication.yaml
+`-- agentapplication.lock
 ```
 
 A small platform manifest could declare:
@@ -1814,6 +2023,21 @@ runtime:
     - ckpt.snapshot
   optionalFeatures:
     - exec.background
+
+dependencies:
+  plugins:
+    - name: acme.calendar
+      specification: agent-plugins/1.0.0
+      source:
+        type: git
+        url: https://github.com/acme/calendar-plugin
+      requirement: "^2.1.0"
+      required: true
+
+activation:
+  components:
+    - acme.calendar/skill/schedule-review
+    - acme.calendar/mcp/calendar
 
 workspace:
   version: 3
@@ -1858,14 +2082,37 @@ migrations:
   from: [1, 2]
   declarative: migrations/schema/
   agentPerformed: migrations/content/
+  pluginData: migrations/plugins/
 ```
 
-Three details carry the weight. `requiredFeatures` uses namespaced, filterable
-names so a platform can decide compatibility mechanically, where a bare
-`filesystem` would be a wish rather than a contract. `migrations` separates the
-declaratively convertible part of a workspace from the part that can only be
-migrated by running the agent. And `evolution` states the promotion policy from
-section 12.3 in a form a platform can enforce.
+The generated lockfile records exact resolution rather than intent:
+
+```yaml
+lockVersion: 1
+
+plugins:
+  acme.calendar:
+    version: 2.1.3
+    source: https://github.com/acme/calendar-plugin
+    revision: 9bc47d2
+    digest: sha256:4c8a...
+    specification: agent-plugins/1.0.0
+    components:
+      skills:
+        - schedule-review
+      mcpServers:
+        - calendar
+    extensions:
+      - com.openai.codex
+```
+
+`requiredFeatures` uses namespaced, filterable names so a platform can decide
+compatibility mechanically. `dependencies`
+declares acceptable inputs, while the lockfile records exact content and
+component identities. `migrations` separates declaratively convertible state
+from content that requires agent interpretation, including plugin-owned data.
+`evolution` states the promotion policy from section 12.3 in a form a platform
+can enforce.
 
 The manifest describes platform-facing requirements. The harness's native files
 remain the application source.
@@ -1874,7 +2121,7 @@ remain the application source.
 
 # Appendix B: Dated evidence
 
-Figures and citations that move. Stated as of August 4, 2026. The body's claims are
+Figures and citations that move. Stated as of August 7, 2026. The body's claims are
 written so that a stale entry here invalidates the entry rather than the
 argument.
 
@@ -1926,6 +2173,30 @@ subagents, channels, and schedules. The runtime supplies checkpointed durable
 sessions, sandboxed compute, approval gates, evaluations, tracing, and channel
 adapters. Section 3 uses **Agent Application framework** as this paper's category
 label for that combination.
+
+**Agent Plugins.** [Agent Plugins
+1.0.0](https://agent-plugins.org/specification) defines an open, vendor-neutral
+package with a root `plugin.json`, Agent Skills in `skills/`, MCP server
+configuration in `mcp.json`, and reverse-domain client extensions. It also
+defines `PLUGIN_ROOT` for installed package content and `PLUGIN_DATA` for
+client-managed writable state that persists across updates. The project's
+initial steering committee includes maintainers from Amazon, Cursor, Microsoft,
+OpenAI, and Vercel. Its [future-considerations
+document](https://github.com/agentplugins/agent-plugins-spec/blob/main/FUTURE_CONSIDERATIONS.md)
+leaves permissions, provenance, secrets, enterprise controls, audit events,
+dependency resolution, and testing outside version 1.0.0. [Codex CLI
+0.147.0](https://developers.openai.com/codex/changelog) added portable Agent
+Plugin installation and catalog search on August 7, 2026.
+
+The portable standard is smaller than the current host formats. [OpenAI
+plugins](https://developers.openai.com/plugins/build/plugins) use a
+`.codex-plugin/plugin.json` manifest and may add skills, MCP connections,
+assets, and lifecycle hooks. OpenAI asks users to review and trust plugin hooks
+before enabling them. [Claude Code
+plugins](https://code.claude.com/docs/en/plugins) may include skills, agents,
+hooks, MCP servers, LSP servers, monitors, binaries, and default settings. The
+paper uses these formats as implementation evidence rather than category
+requirements.
 
 **Agent commerce and payment protocols.** Coinbase announced
 [x402](https://www.coinbase.com/developer-platform/discover/launches/x402) on May
@@ -2070,7 +2341,7 @@ technical prior art rather than as a current framework recommendation.
 
 **Named systems and formats.** Claims about named systems in sections 6, 17, 18,
 and 24, as well as Appendix D, come from each vendor's own documentation as of
-August 4, 2026 and should be rechecked before citation.
+August 7, 2026 and should be rechecked before citation.
 
 ---
 
@@ -2109,9 +2380,11 @@ behavior = f(
 
 A runtime contract records the model and harness versions, context limits, tool
 protocols, filesystem features, execution features, scheduling support, policy
-hooks, and fallback routes against which the release was tested. Compatibility
-means that the required features exist. It does not mean that two runtimes will
-produce identical behavior.
+hooks, supported plugin specifications and client extensions, and fallback
+routes against which the release was tested. The `release` input includes the
+resolved dependency graph and active components, so the equation does not need a
+separate plugin term. Compatibility means that the required features exist. It
+does not mean that two runtimes will produce identical behavior.
 
 ## D.2 Change classes and semantic upgrades
 
@@ -2122,14 +2395,20 @@ them.
 |---|---|---|
 | Knowledge | Documents, retrieved facts, examples | User or application policy |
 | Preferences | Tone, format, defaults | User or organization |
-| Behavior | Skills, procedures, planning rules | Approved author after evaluation |
-| Capability | Tools, connectors, generated code, packages | Administrator after review and sandbox testing |
-| Structure | New agents, schedules, event loops | Administrator |
+| Behavior | Skills, procedures, planning rules, plugin instructions | Approved author after evaluation |
+| Capability | Tools, connectors, generated code, plugin MCP servers | Administrator after review and sandbox testing |
+| Structure | New agents, schedules, event loops, plugin hooks | Administrator |
 | Authority | Credentials, spending, publication, legal limits | Resource owner; never the agent itself |
 
 Risk rises when a change is derived from untrusted material or can reach more
 resources. Approval binds the exact tool definition, including its code,
 description, and input schema. Editing any of those parts requires a new review.
+
+A plugin installation can span several rows. The platform classifies the
+components it activates rather than assigning one risk class to the package.
+Installing content is a local program change; activation changes the running
+application, and authorization changes what it may reach. The lineage record
+keeps those events separate.
 
 A semantic upgrade has three steps: identify the behavior the publisher intended
 to change, apply that change while preserving unrelated local behavior, and run
@@ -2162,6 +2441,9 @@ Several current formats cover part of the contract:
 |---|---|
 | [MCP](https://modelcontextprotocol.io/specification/2025-11-25/basic) | Discovery and invocation of tools, resources, and prompts across agent hosts and external servers |
 | [Agent Skills](https://agentskills.io/specification) | Portable instructions, scripts, references, and assets |
+| [Agent Plugins 1.0](https://agent-plugins.org/specification) | Portable packaging and discovery of Agent Skills and MCP server configurations, plus namespaced client extensions |
+| [OpenAI plugin format](https://developers.openai.com/plugins/build/plugins) | OpenAI-specific packaging for skills, MCP connections, hooks, assets, metadata, and distribution |
+| [Claude Code plugin format](https://code.claude.com/docs/en/plugins) | Claude-specific skills, agents, hooks, MCP and LSP servers, monitors, binaries, settings, and marketplaces |
 | [A2A](https://a2a-protocol.org/latest/specification/) | Agent discovery, messages, collaborative tasks, task artifacts, and protocol security between independent agents |
 | [UCP](https://ucp.dev/documentation/core-concepts/) and [ACP](https://www.agenticcommerce.dev/docs) | Commerce capabilities and checkout exchange between agents and businesses |
 | [AP2](https://ap2-protocol.org/ap2/specification/) and [Verifiable Intent](https://verifiableintent.dev/spec/) | Signed mandates and delegation chains that bind an agent's purchase and payment actions to user-approved constraints, with receipts that support verification and disputes |
@@ -2170,6 +2452,7 @@ Several current formats cover part of the contract:
 | [x402](https://docs.cdp.coinbase.com/x402/welcome) | Programmatic payment requirements and settlement for HTTP services |
 | [FIDO agentic standards work](https://fidoalliance.org/fido-alliance-agentic-ai/) | Agent authentication, verifiable user instructions, and trusted delegation for commerce |
 | [Docker Agent](https://github.com/docker/docker-agent) | Agent configuration packaged and shared through OCI registries |
+| [Oracle Agent Spec](https://oracle.github.io/agent-spec/) | Declarative representation of agents and workflows across supported frameworks |
 | [Letta AgentFile](https://docs.letta.com/guides/core-concepts/agent-file) | Serialized stateful agents for transfer between runtimes |
 | [AG-UI](https://docs.ag-ui.com/) | Typed events between an agent backend and a user-facing application |
 | [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview) | Interactive interfaces delivered by tools and rendered inside an agent host |
@@ -2178,10 +2461,11 @@ Several current formats cover part of the contract:
 | [SPIFFE](https://spiffe.io/docs/latest/spiffe/concepts/) | Workload identity |
 | C2PA | Content provenance |
 
-No current format carries the complete agent project, workspace requirements,
-behavior tests, identity and authority record, monetization data, communication
-events, artifacts, and instance lineage together. New contracts will form at
-the exchange boundaries that existing formats do not cover.
+No widely adopted format carries the complete framework-native agent project,
+resolved dependency graph, workspace requirements, behavior tests, identity and
+authority record, communication events, artifacts, and instance lineage
+together. New contracts will form at the exchange boundaries that existing
+formats do not cover.
 
 ## D.5 Authority and source tracking
 
