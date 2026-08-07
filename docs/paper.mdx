@@ -840,11 +840,13 @@ activity becomes a session. Four lifetimes govern the running application.
 use. It continues across releases.
 
 **The release** is one immutable version of the agent project and its complete
-resolved dependency graph. It fixes application source, plugin and conventional
-package contents, framework and harness versions, host extensions, component
-activation, requested authority, runtime requirements, evaluations, and
-migration rules. Publishers change the application by cutting a release. Prior
-releases stay available for inspection and rollback.
+resolved dependency graph. It fixes the release class, production or
+development, chosen when the release is published, along with application
+source, plugin and conventional package contents, framework and harness
+versions, host extensions, component activation, requested authority, runtime
+requirements, evaluations, and migration rules. Publishers change the
+application by cutting a release. Prior releases stay available for inspection
+and rollback.
 
 A release records content digests as well as version labels. Semantic versioning
 cannot establish behavioral compatibility for a package that changes
@@ -935,9 +937,10 @@ Agent Plugins names two storage roots. For a dependency published with an
 application, `PLUGIN_ROOT` is immutable release content. `PLUGIN_DATA` is
 writable state in the instance workspace. A platform scopes that data by
 application, instance, and plugin identity, then applies the workspace's
-isolation, retention, export, checkpoint, and deletion rules. It does not share
-plugin data across privacy domains unless the application has defined a shared
-instance. Secrets stay in the managed secret store rather than either root.
+isolation, retention, export, checkpoint, and deletion rules. Plugin data is
+shared only inside one instance: a team that shares an instance shares its
+plugin data, and separate instances never share it. Secrets stay in the
+managed secret store rather than either root.
 Plugin upgrades that change persistent data include migrations in the release
 plan.
 
@@ -1425,8 +1428,8 @@ client extensions. A skill can raise risk by steering an existing tool in a new
 way even when the plugin adds no capability. Hooks need extra scrutiny because
 they can execute at lifecycle points without model selection.
 
-The release keeps a component inventory analogous to a software bill of
-materials. For each plugin it records the source, version, digest, exported
+A production release keeps a component inventory analogous to a software bill
+of materials. For each plugin it records the source, version, digest, exported
 components, executable files, requested capabilities, network destinations, and
 active host extensions. Credentials are instance-scoped governed references.
 Neither a plugin nor one of its components can grant itself access.
@@ -1962,7 +1965,7 @@ without discarding years of context, knowledge, artifacts, and completed work.
 
 ---
 
-# Appendix A: A candidate Agent Project manifest
+# Appendix A: A candidate application manifest and lockfile
 
 This appendix is illustrative. The normative contract lives in the
 [Agent Project and Release
@@ -2006,7 +2009,7 @@ life-coach-agent/
 `-- agentapplication.lock
 ```
 
-A small platform manifest could declare:
+A small application manifest could declare:
 
 ```yaml
 apiVersion: agentapplication.io/v0alpha1
@@ -2026,8 +2029,6 @@ runtime:
     - agent.subagents
     - sched.cron
     - ckpt.snapshot
-  optionalFeatures:
-    - exec.background
 
 instance:
   privacyDomain: user

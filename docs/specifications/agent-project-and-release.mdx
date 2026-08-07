@@ -78,9 +78,9 @@ This specification defines four conformance targets.
    evaluates compatibility, and produces an immutable release record that
    contains the complete release closure.
 4. A **conforming Agent Application Platform** creates and operates instances
-   from conforming releases and enforces the instance, workspace, authority,
-   evaluation, and migration contracts recorded in them (sections 6 and 10
-   through 13).
+   from conforming releases, enforces the instance, workspace, authority,
+   evaluation, and migration contracts recorded in them, and inspects the
+   conformance evidence they carry (sections 6 and 10 through 14).
 
 A platform MAY implement the release-builder target itself or accept a release
 produced by another conforming builder.
@@ -224,14 +224,20 @@ New feature names are registered through the change process in section 15.
 - `workspace.backgroundExecution` MUST be `allowed` or `denied`. A platform
   MUST NOT run background processes for an instance that declares `denied`.
 - `workspace.egress.allowlist`, when present, lists the network destinations
-  workspace code may reach. Each entry is a DNS name matched exactly, or a
-  `*.` prefix that covers subdomains; an entry covers every port and protocol.
-  A platform MUST enforce the allowlist. Finer-grained control such as ports,
-  protocols, and IP literals is out of scope for 0.1.
-- `workspace.retention` bounds accruing state such as checkpoints and run
-  records. Durations use the form `<integer>d`, in days. A platform SHOULD
-  enforce the declared retention and MUST disclose in the conformance record
-  where it cannot.
+  workspace code may reach. Each entry is a DNS name, normalized to lowercase
+  A-label form without a trailing dot, matched exactly; a `*.` prefix matches
+  one or more subdomain labels. An entry covers every port and protocol, and
+  IP literals are not valid entries in 0.1. A platform MUST enforce the
+  allowlist at every name resolution and every redirect, and MUST block a
+  permitted name that resolves to a loopback, link-local, private, or
+  otherwise reserved address unless the platform grants that destination
+  through a separate explicit policy. Port- and protocol-level control is out
+  of scope for 0.1.
+- `workspace.retention` bounds accruing state. The keys defined in 0.1 are
+  `checkpoints`, `runRecords`, and `modelIO`; durations use the form
+  `<integer>d`, in days. A platform SHOULD enforce the declared retention and
+  MUST disclose what it cannot enforce in its platform attestation
+  (section 14).
 
 ### 6.5 Permissions and approvals
 
@@ -507,9 +513,11 @@ files, requested capabilities, known network destinations, and active client
 extensions. The release retains that inventory. Development builds SHOULD
 produce it.
 
-Content derived from an untrusted source MUST remain quarantined from publisher
-releases until a trusted reviewer clears it. An agent MUST NOT promote its own
-runtime installation or generated component into the shared release.
+Content derived from an untrusted source MUST NOT be activated or executed as
+program material, in an instance or in a release, until a trusted reviewer
+clears it, and MUST NOT enter a publisher release before that review. An agent
+MUST NOT promote its own runtime installation or generated component into the
+shared release.
 
 ## 12. Evaluations
 
@@ -566,8 +574,18 @@ with:
 - migration coverage;
 - builder identity and build time.
 
-The record MAY remain private for a private application. An operator, auditor,
-or receiving platform with appropriate access MUST be able to inspect it.
+The record MAY remain private for a private application, but an operating or
+receiving platform MUST be granted access: a platform MUST reject a production
+release when it cannot inspect the record or verify the evaluation evidence
+the record references. An operator or auditor with appropriate access MUST be
+able to inspect it.
+
+A platform operating the release additionally keeps a **platform attestation**
+for the deployment: the platform's identity, the specification version it
+implements, and its enforcement exceptions, such as declared retention it
+cannot enforce or declared optional features it does not provide. The
+attestation is associated with the deployed release and inspectable on the
+same terms as the conformance record.
 
 ## 15. Versioning and change process
 
@@ -579,9 +597,10 @@ issues and pull requests.
 
 The specification advances to a 1.0 candidate when two independent
 implementations interoperate through it: one conforming framework profile and
-one conforming Agent Application Platform that did not share an author,
-demonstrated by publishing and operating the same conforming project through
-both.
+one conforming Agent Application Platform that did not share an author. The
+evidence is one conforming project: a release builder produces its release
+using the conforming profile, and the independent conforming platform
+operates that release.
 
 ## 16. Open items for later versions
 
