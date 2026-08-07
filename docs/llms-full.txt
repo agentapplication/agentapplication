@@ -262,6 +262,55 @@ This paper defines the Agent Application and describes the architecture required
 
 ---
 
+*Figure 1. The Agent Application lifecycle.*
+
+```mermaid placement="top-right"
+---
+config:
+  layout: dagre
+---
+flowchart TB
+      subgraph SupplyChain["Software supply-chain boundary"]
+            Developer(["Developer"])
+            Framework["Harness / agent app framework"]
+            Application["Agent Application"]
+            Publisher(["Publisher"])
+      end
+      subgraph Workspace["Durable workspace"]
+            State["Files, memory, instructions"]
+            Artifact["Agent artifact"]
+      end
+      subgraph Instance["Agent Application instance"]
+            Process["Harness/framework runtime process"]
+            ProjectCopy["Agent project copy"]
+            Workspace
+      end
+      subgraph Platform["Agent Application Platform"]
+            Release["Immutable release"]
+            Instance
+      end
+
+      Developer -- uses --> Framework
+      Developer -- authors --> Application
+      Framework -- defines format --> Application
+      Application -- submits --> Publisher
+      Release -- provisions --> Instance
+      Publisher -- publishes application --> Release
+      Framework -- runtime dependency --> Release
+      Process <-- inference --> LLM["LLM"]
+      User(["User"]) <-- authenticated/anonymous use --> UI["Agent widget / custom UI / communication channel"] -- API --> Instance
+      Artifact -- authorized interaction --> OtherUser(["Another user"])
+      Process <-- MCP --> External["External services"]
+      Process <-- Filesystem / shell access --> Workspace
+      Process -- Generates --> Artifact
+      Release --> ProjectCopy
+      ProjectCopy --> Process
+
+      style SupplyChain fill:transparent,stroke-dasharray:7 5
+```
+
+---
+
 # Part I: Recognizing the category
 
 ## 1. What is an Agent Application?
@@ -352,53 +401,6 @@ to build applications.
 | Agent Application Platform | Packages releases, provisions instances, attaches workspaces and authority, runs sessions, manages fleets and costs, and supports distribution and monetization. |
 | Agent instance | A long-lived copy created for one privacy domain such as a user, a team or a ticket. It accumulates its own workspace, history, authority, artifacts, and local program changes. |
 | Product surfaces | Agent widgets, APIs, communication channels, and artifact sharing expose the running instances to users and other software. |
-
-Figure 1 follows one application from development to use.
-
-```mermaid placement="top-right"
----
-config:
-  layout: dagre
----
-flowchart TB
-      subgraph SupplyChain["Software supply-chain boundary"]
-            Developer(["Developer"])
-            Framework["Harness / agent app framework"]
-            Application["Agent Application"]
-            Publisher(["Publisher"])
-      end
-      subgraph Workspace["Durable workspace"]
-            State["Files, memory, instructions"]
-            Artifact["Agent artifact"]
-      end
-      subgraph Instance["Agent Application instance"]
-            Process["Harness/framework runtime process"]
-            ProjectCopy["Agent project copy"]
-            Workspace
-      end
-      subgraph Platform["Agent Application Platform"]
-            Release["Immutable release"]
-            Instance
-      end
-
-      Developer -- uses --> Framework
-      Developer -- authors --> Application
-      Framework -- defines format --> Application
-      Application -- submits --> Publisher
-      Release -- provisions --> Instance
-      Publisher -- publishes application --> Release
-      Framework -- runtime dependency --> Release
-      Process <-- inference --> LLM["LLM"]
-      User(["User"]) <-- authenticated/anonymous use --> UI["Agent widget / custom UI / communication channel"] -- API --> Instance
-      Artifact -- authorized interaction --> OtherUser(["Another user"])
-      Process <-- MCP --> External["External services"]
-      Process <-- Filesystem / shell access --> Workspace
-      Process -- Generates --> Artifact
-      Release --> ProjectCopy
-      ProjectCopy --> Process
-
-      style SupplyChain fill:transparent,stroke-dasharray:7 5
-```
 
 An artifact can be shared outside its instance under its own access policy.
 That access does not open the workspace that produced it.
@@ -1401,7 +1403,7 @@ An Agent Application Platform has to provide these shared lifecycle services.
 | Instances and workspaces | Creates the continuing agent, isolates its files, and restores or deletes its state |
 | Models, harnesses, and frameworks | Runs the native application project on a tested combination of model, harness or framework, conventional runtime, and tools |
 | Scheduling | Wakes agents for messages, events, and recurring work; pauses and retries long jobs |
-| Identity and authority | Gives each instance scoped credentials, approval rules, limits, and revocation |
+| Identity and authority | Attaches scoped credentials, enforces platform limits, carries approval decisions, and supports revocation |
 | Interfaces and event delivery | Authenticates agent widgets, streams and replays run events, and delivers artifacts and generated UI |
 | Artifacts | Stores, versions, shares, renders, and exports durable work products |
 | Evaluation and operations | Records what happened, detects failures, tests upgrades, and supports recovery |
@@ -1466,9 +1468,10 @@ the damage.
 
 ### 19.1 The agent cannot choose its own authority
 
-The developer asks for permissions. The customer and platform decide what to
-grant. The agent can use that authority but cannot expand it. Permissions can
-expire or be revoked while the instance is suspended or running.
+The developer declares the permissions the application may need. The user,
+organization, or resource owner decides what to grant. The agent can use that
+authority but cannot expand it. Permissions can expire or be revoked while the
+instance is suspended or running.
 
 The platform itself must also use a narrow execution identity. Otherwise, an
 agent with limited permissions could borrow the platform's broader access.
@@ -1478,9 +1481,9 @@ negotiate does not imply permission to place an order, and permission to place
 an order does not imply permission to move money. A commercial grant can limit
 the merchant, what may be bought, maximum price, time window, payment
 instrument, and confirmation rules. Commerce and payment protocols can carry
-intent, checkout state,
-authorization, payment requirements, and receipts. Policy code still enforces
-those limits and handles revocation. Appendix D.4 lists the current protocols.
+intent, checkout state, authorization, payment requirements, and receipts.
+Policy code still enforces those limits and handles revocation. Appendix D.4
+lists the current protocols.
 
 ### 19.2 Put hard limits in code
 
@@ -1497,9 +1500,10 @@ allowed. Keep these controls outside the model's reach:
 - artifact sharing;
 - retention and deletion.
 
-A permission such as `crm.write` is too broad by itself. The platform must also
-check which customer account the agent is changing. A persuaded agent then
-cannot reach another account or send private files to an unapproved server.
+A permission such as `crm.write` is too broad by itself. The system that controls
+the resource must also check which customer account the agent is changing. A
+persuaded agent then cannot reach another account or send private files to an
+unapproved server.
 
 Reads need the same control. A database, document connector, search index, or RAG
 service must enforce access before returning data to the agent. When that
@@ -2386,7 +2390,7 @@ bound.
 
 ## D.4 Existing formats and protocols
 
-Several current formats cover part of the portability contract:
+Several current formats cover part of the contract:
 
 | Existing work | Relevant part |
 |---|---|
@@ -2394,7 +2398,10 @@ Several current formats cover part of the portability contract:
 | [Agent Skills](https://agentskills.io/specification) | Portable instructions, scripts, references, and assets |
 | [A2A](https://a2a-protocol.org/latest/specification/) | Agent discovery, messages, collaborative tasks, task artifacts, and protocol security between independent agents |
 | [UCP](https://ucp.dev/documentation/core-concepts/) and [ACP](https://www.agenticcommerce.dev/docs) | Commerce capabilities and checkout exchange between agents and businesses |
-| [AP2](https://ap2-protocol.org/) and [x402](https://docs.cdp.coinbase.com/x402/welcome) | Verifiable payment intent and authorization; programmatic payment requirements and settlement |
+| [AP2](https://ap2-protocol.org/ap2/specification/) and [Verifiable Intent](https://verifiableintent.dev/spec/) | Signed mandates and delegation chains that bind an agent's purchase and payment actions to user-approved constraints, with receipts that support verification and disputes |
+| [Visa Trusted Agent Protocol](https://developer.visa.com/capabilities/trusted-agent-protocol/trusted-agent-protocol-specifications/) | Signed agent identification and commerce-intent signals that merchants can verify over HTTP |
+| [Stripe Shared Payment Tokens](https://docs.stripe.com/agentic-commerce/concepts/shared-payment-tokens) | Payment credentials limited to a seller, amount, currency, and expiry without exposing the underlying payment method |
+| [x402](https://docs.cdp.coinbase.com/x402/welcome) | Programmatic payment requirements and settlement for HTTP services |
 | [FIDO agentic standards work](https://fidoalliance.org/fido-alliance-agentic-ai/) | Agent authentication, verifiable user instructions, and trusted delegation for commerce |
 | [Docker Agent](https://github.com/docker/docker-agent) | Agent configuration packaged and shared through OCI registries |
 | [Letta AgentFile](https://docs.letta.com/guides/core-concepts/agent-file) | Serialized stateful agents for transfer between runtimes |
@@ -2408,7 +2415,7 @@ Several current formats cover part of the portability contract:
 No current format carries the complete agent project, workspace requirements,
 behavior tests, identity and authority record, monetization data, communication
 events, artifacts, and instance lineage together. New contracts will form at
-the exchange boundaries that existing formats cannot cover.
+the exchange boundaries that existing formats do not cover.
 
 ## D.5 Authority and source tracking
 
