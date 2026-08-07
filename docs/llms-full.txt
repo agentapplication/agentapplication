@@ -3400,17 +3400,22 @@ New feature names are registered through the change process in section 15.
   MUST NOT run background processes for an instance that declares `denied`.
 - `workspace.egress.allowlist`, when present, lists the network destinations
   workspace code may reach. Each entry is a DNS name, normalized to lowercase
-  A-label form without a trailing dot, matched exactly; a `*.` prefix matches
-  one or more subdomain labels. An entry covers every port and protocol, and
-  IP literals are not valid entries in 0.1. A platform MUST enforce the
-  allowlist at every name resolution and every redirect, and MUST block a
-  permitted name that resolves to a loopback, link-local, private, or
-  otherwise reserved address unless the platform grants that destination
-  through a separate explicit policy. Port- and protocol-level control is out
-  of scope for 0.1.
+  IDNA 2008 A-label form without a trailing dot, matched exactly; a `*.`
+  prefix matches one or more subdomain labels. An entry covers every port and
+  protocol, and IP literals are not valid entries in 0.1. A platform MUST
+  enforce the allowlist at every name resolution and every redirect, and a
+  connection MUST use the specific address that passed validation. A
+  permitted name that resolves to an address designated in the IANA IPv4 or
+  IPv6 Special-Purpose Address Registries, including loopback, link-local,
+  and private-use ranges, MUST be blocked. A platform MAY override that block
+  for a destination only with the deploying customer's explicit
+  authorization, and MUST record every override, with its scope and
+  authorizer, in the platform attestation (section 14). Port- and
+  protocol-level control is out of scope for 0.1.
 - `workspace.retention` bounds accruing state. The keys defined in 0.1 are
-  `checkpoints`, `runRecords`, and `modelIO`; durations use the form
-  `<integer>d`, in days. A platform SHOULD enforce the declared retention and
+  `checkpoints`, `runRecords`, and `modelIO`; a release builder MUST reject
+  any other key. Durations are positive integers with the suffix `d`, in
+  days; `0d` is invalid. A platform SHOULD enforce the declared retention and
   MUST disclose what it cannot enforce in its platform attestation
   (section 14).
 
@@ -3755,11 +3760,16 @@ release when it cannot inspect the record or verify the evaluation evidence
 the record references. An operator or auditor with appropriate access MUST be
 able to inspect it.
 
-A platform operating the release additionally keeps a **platform attestation**
-for the deployment: the platform's identity, the specification version it
-implements, and its enforcement exceptions, such as declared retention it
-cannot enforce or declared optional features it does not provide. The
-attestation is associated with the deployed release and inspectable on the
+A conforming platform MUST create a machine-readable **platform attestation**
+for each deployment before the first instance runs, and MUST update it when
+its enforcement changes. The attestation MUST record the deployment identity,
+the release-closure digest, the platform's identity and version, the
+specification version it implements, its enforcement exceptions, such as
+declared retention it cannot enforce or declared optional features it does
+not provide, every egress override with its scope and authorizer, and the
+time of issuance or update. In 0.1 it is a self-attestation: the platform
+MUST protect it from modification by the workloads it operates, and
+cross-platform signatures remain open (section 16). It is inspectable on the
 same terms as the conformance record.
 
 ## 15. Versioning and change process
@@ -3773,8 +3783,8 @@ issues and pull requests.
 The specification advances to a 1.0 candidate when two independent
 implementations interoperate through it: one conforming framework profile and
 one conforming Agent Application Platform that did not share an author. The
-evidence is one conforming project: a release builder produces its release
-using the conforming profile, and the independent conforming platform
+evidence is one conforming project: a conforming release builder produces its
+release using the conforming profile, and the independent conforming platform
 operates that release.
 
 ## 16. Open items for later versions
