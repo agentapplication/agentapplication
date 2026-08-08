@@ -13,21 +13,23 @@ and loads skills or subagents. A framework carries that same runtime into the
 rest of the application lifecycle. It tells developers how to structure a
 project, test it locally, package it, and run it in production.
 
-The paper's capability model describes the pieces a framework may provide:
-agent programs, instructions, tools, workflows, state, interfaces, artifacts,
-triggers, policy, evaluations, and lifecycle operations. It is a design
-vocabulary, not a required API or directory layout.
+Section 9 of the paper uses a capability model to compare frameworks that expose
+different APIs and arrange projects differently. It covers agent programs,
+instructions, tools, workflows, state, interfaces, artifacts, triggers, policy,
+evaluations, and lifecycle operations. A framework can provide these
+capabilities through code, configuration, hosted services, or any combination
+of them.
 
 The choice of framework affects the application. Frameworks differ in their
 model support, context management, tool systems, permissions, delegation,
 checkpointing, and debugging. Those choices affect behavior, portability, and
 cost.
 
-Frameworks can still meet on standard boundaries. MCP connects hosts to tools
-and data. Agent Skills carries reusable instructions. Agent Plugins packages
-skills and MCP configuration. AG-UI connects a backend to a frontend, and A2A
-connects independently deployed agents. None of these standards requires
-frameworks to share a project or release format.
+Frameworks can interoperate where one system meets another. MCP connects hosts
+to tools and data. Agent Skills packages reusable instructions, and Agent
+Plugins packages skills with MCP configuration. AG-UI connects a backend to a
+frontend. A2A connects independently deployed agents. These standards leave
+each framework free to use its own project and release formats.
 
 An [Agent Project](/concepts/agent-project) keeps the native layout of its
 framework. An [Agent Application Platform](/concepts/platform) can support

@@ -89,11 +89,11 @@ inside the conversation.
 
 ## Built as a project, deployed as instances
 
-A developer builds an **agent project** in the native layout of an agent harness
-or Agent Application framework, then publishes it as an immutable release. The
-framework decides how the project is configured, built, and released. An [Agent
-Application Platform](/concepts/platform) runs it in that native form instead
-of translating every system into a lowest-common-denominator schema.
+A developer writes an **agent project** in the native layout of an agent harness
+or Agent Application framework. When it is ready to deploy, the publisher
+creates a fixed release using that framework's build and release process. An
+[Agent Application Platform](/concepts/platform) runs the native project rather
+than translating every framework into one generic schema.
 
 ```text
 account-operator/
@@ -109,13 +109,14 @@ account-operator/
 `-- application-lifecycle
 ```
 
-This is a logical map, not a folder convention. A framework may express these
-capabilities in code, Markdown, configuration, platform settings, or a mix of
-all four. Existing standards fit at specific boundaries: MCP connects tools and
-data, Agent Skills carries reusable instructions, Agent Plugins bundles skills
-and MCP configuration, AG-UI connects agent backends to frontends, and A2A
-connects independent agents. [Section 9 of the paper](/paper#9-the-agent-project-and-capability-model)
-maps the capabilities and compares current frameworks.
+The names in this diagram describe responsibilities, not folders. A framework
+may implement them in code, Markdown, configuration files, platform settings,
+or a mixture of these. Standards apply where the application meets another
+system. MCP connects tools and data. Agent Skills packages reusable
+instructions. Agent Plugins bundles skills and MCP configuration. AG-UI
+connects agent backends to frontends, and A2A connects independent agents.
+[Section 9 of the paper](/paper#9-the-agent-project-and-capability-model) explains
+the model and compares current frameworks.
 
 An application may create an instance for a user, team, customer, project,
 ticket, or another continuing relationship. Each instance accumulates its own

@@ -11,8 +11,8 @@ earlier run. A one-shot task runner cannot.
 
 This example is a notebook agent for one user. It saves notes in its workspace
 and maintains a short briefing that the user can open without reading through
-the conversation. The files below are illustrative. A real implementation uses
-the project layout and APIs of its chosen framework.
+the conversation. This example uses generic filenames. A runnable version would
+use its framework's own project layout and APIs.
 
 ```text
 durable-notebook/
@@ -46,8 +46,8 @@ export async function saveNote(text: string) {
 }
 ```
 
-The framework wires these pieces together. Whatever its API or configuration
-looks like, the implementation needs to make these choices:
+The framework connects these pieces. Every implementation still has to make the
+following choices:
 
 | Choice | Notebook behavior |
 |---|---|
@@ -59,7 +59,7 @@ looks like, the implementation needs to make these choices:
 | Background work | None for this example |
 
 Claude Agent SDK, Google ADK, LangGraph, OpenAI Agents SDK, and Vercel AI SDK
-would express this wiring differently. That variation is expected.
+use different APIs and configuration for this setup.
 
 The persistence evaluation runs two sessions against the same instance and one
 against a different instance:
@@ -86,9 +86,9 @@ assert:
     fileAbsent: notes.md
 ```
 
-A runnable implementation uses its framework's native agent definition, tool
-registration, state service, and evaluation API. The observable behavior in the
-test stays the same.
+A runnable implementation would use its framework's agent definition, tool
+registration, state service, and evaluation API. The test still checks the same
+behavior: Ada's note survives a restart, and Bea cannot see it.
 
 ## Two runs, one continuing instance
 
@@ -109,9 +109,9 @@ ask the agent to revise it.
 
 ## The same notebook with a plugin
 
-A plugin is optional. The smallest example keeps `save-note.ts` in the project
-to show the full application without an external dependency. A second version
-can take the note tool and briefing procedure from a portable plugin:
+The notebook does not need a plugin. The example above keeps `save-note.ts` in
+the project so all of its code is visible. Another version could get the note
+tool and briefing procedure from a portable plugin:
 
 ```text
 research-notebook-tools/
@@ -127,8 +127,8 @@ package format. Its skill contains the briefing procedure, while `mcp.json`
 describes the server that exposes the note tool. The notebook project installs
 and selects those components through its framework's plugin mechanism.
 
-The framework should record the exact plugin version, source, and digest using
-its own package or release system. Installation still does not grant filesystem
-or external credentials, and activation still does not authorize them. The
-plugin version also needs the same instance routing, workspace isolation, and
-persistence evaluation as the project-owned tool version.
+The framework's package or release system should record the exact plugin
+version, source, and digest. Installing or activating the plugin does not grant
+it filesystem access or external credentials. The plugin version must use the
+same instance routing and workspace isolation as the project-owned version, and
+it must pass the same persistence test.

@@ -15,7 +15,8 @@ boundaries where shared contracts may be useful.
 ## What is in this repository?
 
 - The full [Agent Applications working paper](https://agentapplication.io/paper)
-- The Agent Application capability model and a comparison of current frameworks
+- The Agent Application capability model and a comparison of how current
+  frameworks support it
 - A short [overview](https://agentapplication.io/)
 - A minimal [Hello World Agent Application](https://agentapplication.io/examples/hello-world)
 - Concise pages for the framework, project, instance, workspace, artifact,
