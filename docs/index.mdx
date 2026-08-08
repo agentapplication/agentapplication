@@ -91,41 +91,31 @@ inside the conversation.
 
 A developer builds an **agent project** in the native layout of an agent harness
 or Agent Application framework, then publishes it as an immutable release. The
-project declares its runtime requirements. An [Agent Application
-Platform](/concepts/platform) runs it in its native form instead of translating
-every system into a lowest-common-denominator schema.
+framework decides how the project is configured, built, and released. An [Agent
+Application Platform](/concepts/platform) runs it in that native form instead
+of translating every system into a lowest-common-denominator schema.
 
 ```text
 account-operator/
-|-- <harness- or framework-native entrypoint>
-|-- skills/
-|   |-- account-review/
-|   `-- renewal-planning/
-|-- agents/
-|   |-- researcher/
-|   `-- reviewer/
-|-- tools/
-|-- hooks/
-|-- policies/
-|   |-- approvals.md
-|   `-- external-actions.md
-|-- knowledge/
-|-- triggers/
-|-- artifacts/
-|-- evals/
-|   |-- behavior/
-|   |-- security/
-|   `-- regression/
-|-- migrations/
-|-- agentapplication.yaml
-`-- agentapplication.lock
+|-- agent-program
+|-- instructions-and-knowledge
+|-- tools-and-integrations
+|-- agents-and-workflows
+|-- state-and-workspace
+|-- interfaces-and-artifacts
+|-- triggers-and-background-work
+|-- policy-and-approvals
+|-- evaluations-and-observability
+`-- application-lifecycle
 ```
 
-Framework profiles map these canonical roles to native layouts. Plugins remain
-dependencies instead of copied application source, and the lockfile fixes their
-exact content for a release. The [Agent Project and Release
-Specification](/specifications/agent-project-and-release) defines this
-contract.
+This is a logical map, not a folder convention. A framework may express these
+capabilities in code, Markdown, configuration, platform settings, or a mix of
+all four. Existing standards fit at specific boundaries: MCP connects tools and
+data, Agent Skills carries reusable instructions, Agent Plugins bundles skills
+and MCP configuration, AG-UI connects agent backends to frontends, and A2A
+connects independent agents. [Section 9 of the paper](/paper#9-the-agent-project-and-capability-model)
+maps the capabilities and compares current frameworks.
 
 An application may create an instance for a user, team, customer, project,
 ticket, or another continuing relationship. Each instance accumulates its own

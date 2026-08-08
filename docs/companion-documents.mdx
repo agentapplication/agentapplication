@@ -7,32 +7,34 @@ The paper anchors a family of companion documents, each with a different job:
 
 | Document | Purpose | Status |
 |---|---|---|
-| [Agent Project and Release Specification](/specifications/agent-project-and-release) | Canonical project roles, framework profiles, dependency locking, release closure, workspace scope, authority, evaluations, and migrations | Working Draft 0.1 |
 | The Agent Applications Manifesto | A short public argument for software that does the work | Planned |
-| Programming Agent Applications | The programming model, harness interpreter, packaging, runtime feature declarations, and evaluation | Planned |
+| Programming Agent Applications | The capability model, framework design patterns, harness interpreter, and evaluation | Planned |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery | Planned |
-| The Agent Application Platform: A Platform Architecture | Production infrastructure and commercial services derived from the application contract | Planned |
+| The Agent Application Platform: A Platform Architecture | Production infrastructure and commercial services for long-lived agent instances | Planned |
 | Agent Artifact Standard | A portable contract for artifact content, identity, provenance, permissions, versions, rendering, and actions | Planned |
 
 ## From contracts to standards
 
 The paper identifies several possible open contracts. A contract is ready for
-standards work when two or more independent implementations need the same
-stable boundary. The likely order is:
+standards work when two or more independent implementations need to exchange
+the same information across a stable boundary.
 
-1. **Agent Project and Release conformance.** [Working Draft
-   0.1](/specifications/agent-project-and-release) defines canonical roles,
-   dependencies, release closure, and the minimum platform-facing contract
-   while preserving framework-native projects.
-2. **Agent Artifact contract.** This would cover identity, content and state,
+The Agent Application capability model is not such a contract. It helps
+developers compare frameworks and helps framework authors see the expected
+surface area, but it does not prescribe project files, APIs, builds, or release
+artifacts.
+
+Likely candidates for future standards include:
+
+1. **Agent Artifact contract.** This would cover identity, content and state,
    provenance, permissions, versions, rendering, and actions. See
    [Agent Artifact](/concepts/artifact) for the two-layer model.
-3. **Workspace and lineage export.** This would carry portable state and its
+2. **Workspace and lineage export.** This would carry portable state and its
    release and overlay history, using secret references instead of credentials.
-4. **Agent identity and delegated authority.** This work comes later, after
+3. **Agent identity and delegated authority.** This work comes later, after
    principal and cross-system authority models are mature enough to support a
    shared abstraction.
 
-The first contract is now a working specification with its own change process,
-defined in the specification itself. It will remain a draft until independent
-framework and platform implementations test the boundary.
+Each proposal should begin with implementation evidence and a concrete exchange
+problem. The standard should cover that boundary without absorbing the native
+project model of every framework on either side.

@@ -13,28 +13,26 @@ Claude Code project, for example, may use `CLAUDE.md`, `.claude/`, and
 `.mcp.json`. Other frameworks have their own files and conventions. The project
 stays in that native form when it moves from local development to production.
 
-The shared contract defines roles instead of fixed folders: an application
-manifest, primary agent entrypoint, harness declaration, tool surface, instance
-rule, workspace contract, permissions, evaluations, and migrations when state
-evolves. A framework profile maps those roles to the framework's native files.
+The paper describes capabilities instead of fixed folders. An application can
+have a primary agent program, reusable instructions, tools, workflows,
+state, interfaces, artifacts, triggers, policy, evaluations, and lifecycle
+configuration. This is a capability model, not a portable project schema. A
+small project may need only a few of these pieces.
 
-A full [Agent Application framework](/concepts/framework) connects the project
-layout to local development, evaluation, packaging, deployment, and the
-production runtime. The project also declares what it needs from an
-[Agent Application Platform](/concepts/platform), including models, tools,
-workspace features, permissions, schedules, evaluations, artifact support,
-dependencies, and upgrade rules. Plugins are versioned dependencies that may
-contribute skills, MCP servers, hooks, or other components. The application
-manifest declares acceptable inputs; its dependency lock records exact package content,
-digests, components, and activation. Publishing fixes that complete graph and
-its tested runtime requirements in an immutable release.
+A full [Agent Application framework](/concepts/framework) connects its native
+project layout to local development, evaluation, packaging, deployment, and the
+production runtime. It may also describe what the project needs from an [Agent
+Application Platform](/concepts/platform), including models, tools, workspace
+features, permissions, schedules, artifact support, and upgrade behavior.
+Plugins may contribute skills, MCP servers, hooks, or other components through
+the framework's own dependency mechanism. Publishing records the source,
+dependencies, runtime, and tests in whatever release form that framework and
+platform support.
 
 Developers will usually say they are "building an agent." The more precise term
 *agent project* matters when the source directory has to be distinguished from
 an [instance](/concepts/instance), a session, or the runtime agent doing the
 work.
 
-See [the paper](/paper), sections 7, 9, and 10. Appendix A contains a candidate
-application manifest and lockfile. The [Agent Project and Release
-Specification](/specifications/agent-project-and-release) gives the current
-conformance proposal.
+See [the paper](/paper), sections 7, 9, and 10. Appendix A shows one
+non-normative project layout.
