@@ -16,7 +16,15 @@ An Agent Application uses one or more persistent, tool-using AI agents to produc
 
 For personal use cases, each user receives a separate instance of the Agent Application. Team and enterprise applications may instead assign an instance to a team, customer, project, ticket, or another long-lived ownership and privacy boundary. Each instance runs in an isolated virtual machine or equivalent environment. It maintains its own history and logical workspace, including knowledge, artifacts, instructions, and unfinished work. Compute may stop and restart, but the identity and state of the instance persist. The instance becomes more useful over time because it preserves completed work, resumes unfinished responsibilities, and adapts to its owner.
 
-Developers build Agent Applications with Agent Application frameworks, just as they build web applications with web application frameworks. Today's agent harnesses are early versions of these frameworks. As they mature, they will cover application formats, coding conventions, development tools, evaluations, connections to external systems, audit trails, and alerting. Developers deploy a tested project to an Agent Application Platform. The platform packages the project as an immutable release, creates and operates long-lived instances from that release, and provides fleet management, cost management, authentication, authorization, and monetization support.
+Developers build Agent Applications with a harness / Agent Application framework,
+just as they build web applications with web application frameworks. Today's
+agent harnesses are early versions of these frameworks. As they mature, they
+will cover application formats, coding conventions, development tools,
+evaluations, connections to external systems, audit trails, and alerting.
+Developers deploy a tested project to an Agent Application Platform. The
+platform packages the project as an immutable release, creates and operates
+long-lived instances from that release, and provides fleet management, cost
+management, authentication, authorization, and monetization support.
 
 Once created, each Agent Application instance accumulates different knowledge, artifacts, instructions, and unfinished work. Traditional software follows the program that was deployed. An Agent Application instance can also incorporate local natural-language instructions that change its behavior. Some systems let agents revise their own procedures or incorporate revisions prepared by other agents. These instances diverge in program as well as state. A publisher updating such a fleet must reconcile the update with the program and state of every instance, preserve local work, and test the result against that instance's state. Token consumption can also vary widely from one instance to another, which makes per-instance cost management important. The industry has not yet settled how to price or monetize these applications.
 
@@ -28,9 +36,11 @@ shape when developers assemble them.
 
 The paper documents that application shape and points to framework tooling,
 cloud services, and standards that could make Agent Applications easier to
-build, deploy, and manage. As a working paper, it also gives the community a
-place to revise the model as agents take on harder work, including running
-large businesses and conducting frontier research.
+build, deploy, and manage. It also introduces Agent Application Programming:
+the discipline of decomposing a use case across code, instructions, tools,
+agents, workflows, state, and policy. As a working paper, it gives the
+community a place to revise the model as agents take on harder work, including
+running large businesses and conducting frontier research.
 
 ---
 
@@ -44,7 +54,7 @@ config:
 flowchart TB
       subgraph SupplyChain["Software supply-chain boundary"]
             Developer(["Developer"])
-            Framework["Harness / agent app framework"]
+            Framework["Harness / Agent Application framework"]
             Application["Agent Application"]
             Plugins["Agent Plugin packages"]
             Publisher(["Publisher"])
@@ -54,7 +64,7 @@ flowchart TB
             Artifact["Agent artifact"]
       end
       subgraph Instance["Agent Application instance"]
-            Process["Harness/framework runtime process"]
+            Process["Harness / Agent Application framework runtime"]
             ProjectCopy["Agent project copy"]
             Workspace
       end
@@ -159,7 +169,7 @@ Here, the person states the goal and the agent performs the intermediate work.
 | Personal computing | Desktop application | Native code, operating systems, GUI toolkits, local files, installers |
 | Internet computing | Web application | HTTP, browsers, servers, databases, cloud infrastructure |
 | Mobile computing | Mobile application | Mobile SDKs, touch interfaces, sensors, app stores, device identity |
-| Agent computing | Agent Application | Models and conventional compute, Agent Application frameworks, native projects, Agent Application Platforms, durable instances and workspaces |
+| Agent computing | Agent Application | Models and conventional compute, harnesses / Agent Application frameworks, native projects, Agent Application Platforms, durable instances and workspaces |
 
 New application models initially resemble the software that came before them.
 Early commercial websites reproduced brochures and catalogs. Many early mobile
@@ -179,7 +189,7 @@ to build applications.
 | Layer | Responsibility |
 |---|---|
 | Model and conventional compute | The model interprets natural-language programs and chooses actions. Conventional processors execute code, tools, and filesystem operations. |
-| Agent harness and application framework | A harness assembles context, invokes models and tools, and runs the agent loop. As it accumulates project structure, development tools, evaluations, packaging, deployment, and production runtime capabilities, it evolves into a full Agent Application framework. |
+| Harness / Agent Application framework | A harness assembles context, invokes models and tools, and runs the agent loop. As it accumulates project structure, development tools, evaluations, packaging, deployment, and production runtime capabilities, it evolves into a full Agent Application framework. |
 | Agent project and release | A native project directory contains the developer-authored program, configuration, knowledge setup, dependencies, and evaluations. The chosen framework and platform turn it into a fixed, inspectable version for deployment. |
 | Agent Application Platform | Packages releases, provisions instances, attaches workspaces and authority, runs sessions, manages fleets and costs, and supports distribution and monetization. |
 | Agent instance | A long-lived copy created for one privacy domain such as a user, a team or a ticket. It accumulates its own workspace, history, authority, artifacts, and local program changes. |
@@ -200,9 +210,10 @@ and operating lifecycle they handle. A harness becomes a full Agent Application
 framework when it also provides a coherent way to structure, develop, debug,
 test, deploy, and operate the application.
 
-The harness or framework choice shapes the application. Each carries opinions
-about models, context management, tools, permissions, delegation, checkpointing,
-and debugging. Those choices affect portability, reliability, and task cost.
+The harness / Agent Application framework choice shapes the application. Each
+carries opinions about models, context management, tools, permissions,
+delegation, checkpointing, and debugging. Those choices affect portability,
+reliability, and task cost.
 Directory conventions are part of the programming model. An Agent Application
 Platform can support several frameworks by running their native projects and
 standardizing the boundaries between layers. It does not need to force every
@@ -462,7 +473,7 @@ Several adjacent systems have a different primary unit:
 | Stateless or transcript-only chatbot | Request or conversation | No instance carries working state from one session to the next |
 | Fixed workflow automation | Predefined workflow and run | The developer fixes the control flow in advance, even if one step calls a model |
 | Autonomous task runner | Task run | The worker and its scratch state end with the task. These can be converted to full agent applications if needed.        |
-| Agent harness or framework | Development and runtime machinery | It can be used to build an Agent Application, but is not itself the application delivered to a user |
+| Harness / Agent Application framework | Development and runtime machinery | It can be used to build an Agent Application, but is not itself the application delivered to a user |
 
 A conventional n8n or Zapier flow remains workflow automation when its graph
 determines the next step. [Dependabot](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file)
@@ -485,7 +496,7 @@ following terms consistently.
 | Term | Meaning |
 |---|---|
 | **Agent Application** | Like *web application*, the term may mean the developer-authored application or the complete running product. Its full lifecycle includes the project source, releases, instances, interfaces, artifacts, and operations. |
-| **Agent Project** | The harness- or framework-native source directory a developer commonly calls an "agent" or "Agent Application." It contains the code, natural-language programs, declarations, policies, dependencies, and tests used to create releases. |
+| **Agent Project** | The native source directory for a harness / Agent Application framework that a developer commonly calls an "agent" or "Agent Application." It contains the code, natural-language programs, declarations, policies, dependencies, and tests used to create releases. |
 | **Privacy Domain** | The people, records, and work that may safely share one workspace. Information that must not mix belongs to a different domain and instance |
 | **Instance** | A persistent copy provisioned from an Agent Application release for one privacy domain, such as a user, customer, team, project, or job, with its own history and lifecycle. |
 | **Agent** | An intentionally overloaded industry term. It may mean the developer-authored agent project or a model-driven actor executing inside an instance. |
@@ -717,14 +728,60 @@ A tool may work perfectly, yet the agent may choose it at the wrong time or
 supply an incorrect argument. Release testing therefore has to run the whole
 application, not just its code.
 
+### 8.7 Agent Application Programming
+
+Building an Agent Application requires more than writing prompts or connecting
+tools. Someone has to decide which work the model may judge, which behavior
+code must guarantee, how agents divide and hand off work, what state persists,
+and which outside components the application can trust. This work is **Agent
+Application Programming**.
+
+The discipline operates at two scales. At the local scale, a programmer decides
+whether a behavior belongs in agent instructions, a skill, a tool, a hook, a
+subagent, memory, or the agent loop itself. At the application scale, the
+programmer composes those primitives into a product. This includes:
+
+- breaking a use case into model judgments and deterministic operations;
+- deciding what belongs in the primary agent, reusable instructions, skills,
+  tools, hooks, specialist agents, and runtime policy;
+- practicing graph engineering: designing dynamic workflows and deciding which
+  transitions are fixed by code and which the model chooses at runtime;
+- bringing in external capabilities through plugins, MCP servers, libraries,
+  APIs, and other dependencies;
+- assigning state to sessions, instances, workspaces, memory, and artifacts;
+- designing interfaces, triggers, permissions, evaluations, observability,
+  and cost controls around the resulting system.
+
+The placement of each behavior matters as much as its wording. A guarantee
+hidden in an instruction can be ignored. A task that needs judgment can become
+brittle when forced into a fixed graph. A subagent can protect the main agent's
+context, but it also adds cost and another place for coordination to fail. A
+plugin can save months of work, but it also expands the application's code,
+instructions, dependencies, and authority. Good decomposition is what makes an
+Agent Application effective, efficient, and secure.
+
+AI coding agents are likely to become the main practitioners of this craft.
+They can inspect an entire project, propose a decomposition, write both code and
+natural-language programs, run evaluations, study execution traces and costs,
+and revise the design as models and application runtimes change. Humans will
+still set the goals, authority, risk limits, and acceptance criteria, and review
+consequential choices. Much of the day-to-day work, however, may be agents
+programming other agents.
+
+The planned *Programming Agent Applications* companion document will develop
+this discipline in detail: its design principles, decomposition methods,
+patterns, testing practices, security model, and relationship to harnesses /
+Agent Application frameworks. The capability model in the next section provides
+the common vocabulary for that work.
+
 ---
 
 ## 9. The agent project and capability model
 
-An Agent Application begins as a source directory written for one harness or
-framework. This directory is the **agent project**. It contains the code,
-instructions, knowledge, configuration, and tests used to build and run the
-application.
+An Agent Application begins as a source directory written for a particular
+harness / Agent Application framework. This directory is the **agent project**.
+It contains the code, instructions, knowledge, configuration, and tests used to
+build and run the application.
 
 The project stays in the framework's native form. Next.js and Rails both build
 web applications, but they use different route files, project conventions, and
@@ -1345,12 +1402,12 @@ permission review, upgrade channels, billing, and an enterprise approval path.
 
 ## 17. The Agent Application Platform
 
-An **Agent Application Platform** turns a harness- or framework-native project
-into an operating product. It packages an immutable release, provisions
-instances at the application's privacy boundary, attaches a durable workspace
-and scoped authority to each instance, and runs the sessions that perform the
-work. It also supplies the interfaces, fleet controls, cost controls, and
-commercial services needed to distribute the application.
+An **Agent Application Platform** turns a native project for a harness / Agent
+Application framework into an operating product. It packages an immutable
+release, provisions instances at the application's privacy boundary, attaches a
+durable workspace and scoped authority to each instance, and runs the sessions
+that perform the work. It also supplies the interfaces, fleet controls, cost
+controls, and commercial services needed to distribute the application.
 
 Ordinary cloud infrastructure supplies compute, storage, networking, and
 databases. An **Agent Cloud** adds infrastructure designed for persistent
@@ -1366,7 +1423,7 @@ An Agent Application Platform has to provide these shared lifecycle services.
 |---|---|
 | Packages and releases | Identifies the publisher, signs releases, checks requirements, and supports rollback |
 | Instances and workspaces | Creates the continuing agent, isolates its files, and restores or deletes its state |
-| Models, harnesses, and frameworks | Runs the native application project on a tested combination of model, harness or framework, conventional runtime, and tools |
+| Models and application runtimes | Runs the native application project on a tested combination of model, harness / Agent Application framework, conventional runtime, and tools |
 | Scheduling | Wakes agents for messages, events, and recurring work; pauses and retries long jobs |
 | Identity and authority | Attaches scoped credentials, enforces platform limits, carries approval decisions, and supports revocation |
 | Interfaces and event delivery | Authenticates agent widgets, streams and replays run events, and delivers artifacts and generated UI |
@@ -1740,7 +1797,7 @@ This decision becomes the instance-creation rule. The application brief records
 the privacy domain, who may use the instance, which systems it can reach, its
 retention policy, and the consequential actions that require approval.
 
-### 24.2 Select a harness or agent application framework
+### 24.2 Select a harness / Agent Application framework
 
 The harness runs the reasoning loop. Candidates vary in how much of the larger
 framework layer they supply, including the programming model, project structure,
@@ -1764,9 +1821,9 @@ choice is the smallest profile that can perform the job reliably.
 
 ### 24.3 Create a native agent project
 
-Install the chosen harness or framework on a local development machine, create a
-version-controlled folder, and make the smallest useful agent run. Preserve its
-native layout. A Claude Code project might begin like this:
+Install the chosen harness / Agent Application framework on a local development
+machine, create a version-controlled folder, and make the smallest useful agent
+run. Preserve its native layout. A Claude Code project might begin like this:
 
 ```text
 life-coach-agent/
@@ -2314,7 +2371,7 @@ documentation as of August 9, 2026 and should be rechecked before citation.
 | Document | Purpose |
 |---|---|
 | The Agent Applications Manifesto | A short public argument for software that does the work |
-| Programming Agent Applications | The capability model, framework design patterns, harness interpreter, and evaluation |
+| Programming Agent Applications | How to decompose a use case across code, natural-language programs, tools, agents, workflows, dependencies, state, policy, and evaluation |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and commercial services for long-lived agent instances |
 
