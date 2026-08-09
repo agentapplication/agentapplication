@@ -90,12 +90,20 @@ flowchart TB
 
 ## 1. What is an Agent Application?
 
-ChatGPT, Claude, Lovable, and Lightfield look similar at first because each uses
-an agent widget. Their jobs differ. ChatGPT and Claude are general assistants,
-Lovable builds software, and Lightfield works with customer data. In every case,
-the agent can return to the same body of work across multiple sessions.
-*Chatbot*, *copilot*, and *workflow* each describe one aspect of these products,
-but none names the whole application.
+ChatGPT and Claude use agent widgets. An
+[OpenClaw](https://docs.openclaw.ai/concepts/main-session) agent may appear as a
+WhatsApp or Telegram contact. [GitHub Copilot's coding
+agent](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github)
+and [Cursor Cloud Agents](https://cursor.com/docs/cloud-agent) can start from an
+issue or pull request and return their work there. A [Microsoft Copilot Studio
+autonomous agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers-about)
+can wake in response to a business event without presenting a conversational
+interface at all.
+
+What do these systems have in common? Each gives a tool-using agent a continuing
+scope of work. Later messages or events return to that work, and the results
+remain after a run ends. They have different interfaces and jobs, but the same
+underlying application shape. We call it an Agent Application.
 
 An **Agent Application** uses one or more persistent, tool-using AI agents to
 produce or maintain durable results. A request, schedule, or outside event can
@@ -311,11 +319,13 @@ marketing system, where it can use the current brief, brand assets, audience,
 approval flow, and publishing destinations to create related formats or schedule
 campaign work. The host keeps the resulting material editable.
 
-Claude Code and Codex meet developers in terminals and desktop workspaces. GitHub
-Copilot's cloud agent can also start from an issue, pull request, or IDE and
-continue in the background. A developer can work with these agents
-synchronously, delegate a task, or return later to review a branch and its
-execution log. Lovable and Replit Agent put the same relationship inside a
+Claude Code and Codex meet developers in terminals and desktop workspaces.
+[GitHub Copilot's cloud
+agent](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github)
+can start from an issue or pull request, while [Cursor Cloud
+Agents](https://cursor.com/docs/cloud-agent) can also start from Slack, Linear,
+or an API. Both work in the background and return changes through branches and
+pull requests. Lovable and Replit Agent put a similar relationship inside a
 browser-based product builder, where the continuing object is the application
 project itself.
 
@@ -327,9 +337,12 @@ OpenClaw personal agent, a Telegram or WhatsApp contact can be the entire
 user-facing product; the gateway, tools, and persistent state stay out of view.
 
 Some agents work mainly in the backend. They wake on schedules, tickets, API
-calls, webhooks, queue events, or requests from other agents. People encounter
-the result as an updated record, report, notification, or approval request. An
-operations dashboard may be the only visible surface.
+calls, webhooks, queue events, or requests from other agents. [Copilot Studio
+autonomous agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers-about),
+for example, can react to a new SharePoint item, a OneDrive file, a completed
+Planner task, or a recurring timer. People encounter the result as an updated
+record, report, notification, or approval request. An operations dashboard may
+be the only visible surface.
 
 One agent can span several of these surfaces. A copilot can be backed by an Agent
 Application; a channel only determines where the person and agent interact.
@@ -364,11 +377,10 @@ domains.
 |---|---|---|
 | [ChatGPT](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex) | A user or project | Project files, instructions, memory, scheduled work, and finished documents or sites |
 | [Claude Cowork](https://support.claude.com/en/articles/14116274-organize-your-tasks-with-projects-in-claude-cowork) | A Cowork project | Local files, project memory, scheduled tasks, and persistent artifacts |
-| |
 | [Lovable](https://docs.lovable.dev/features/agent-mode) | A software project | Source code, project instructions, assets, deployment state, and change history |
 | [Replit Agent](https://docs.replit.com/features/version-control/checkpoints-and-rollbacks) | A software project | Code, installed packages, databases, agent memory, and restorable checkpoints |
-| [OpenClaw](https://docs.openclaw.ai/start/openclaw) | OpenClaw installation       | Workspace files, memory, skills, schedules, and tool-created results |
-| [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, CRM records, generated analysis, and scheduled automations | |
+| [OpenClaw](https://docs.openclaw.ai/start/openclaw) | An OpenClaw agent | Workspace files, memory, skills, schedules, and tool-created results |
+| [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, CRM records, generated analysis, and scheduled automations |
 | [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
 
 ### 6.1 The instance follows the privacy boundary
@@ -453,10 +465,14 @@ Several adjacent systems have a different primary unit:
 | Agent harness or framework | Development and runtime machinery | It can be used to build an Agent Application, but is not itself the application delivered to a user |
 
 A conventional n8n or Zapier flow remains workflow automation when its graph
-determines the next step. A simple Q&A bot remains a chatbot when each
-conversation stands alone. An Agent Application may contain deterministic
-workflows and answer questions, but its continuing unit is a persistent agent
-that chooses actions from the current state and leaves durable work behind.
+determines the next step. [Dependabot](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file)
+is another boundary case: it monitors configured package ecosystems and opens
+pull requests according to schedules and update rules. The pull request is
+durable, but the configuration determines the control flow. A simple Q&A bot
+remains a chatbot when each conversation stands alone. An Agent Application may
+contain deterministic workflows and answer questions, but its continuing unit
+is a persistent agent that chooses actions from the current state and leaves
+durable work behind.
 
 ---
 
@@ -2058,7 +2074,7 @@ exist somewhere in the project or platform.
 
 # Appendix B: Dated evidence
 
-Figures and citations that move. Stated as of August 8, 2026. The body's claims are
+Figures and citations that move. Stated as of August 9, 2026. The body's claims are
 written so that a stale entry here invalidates the entry rather than the
 argument.
 
@@ -2287,9 +2303,9 @@ site](https://www.runplaybooks.ai/#video-intro) describes the compiler and
 debugger. The project was sunset in April 2026; section 8.2 cites it as early
 technical prior art rather than as a current framework recommendation.
 
-**Named systems and formats.** Claims about named systems in sections 6, 9, 17,
-18, and 24, as well as Appendix D, come from each vendor's own documentation as
-of August 8, 2026 and should be rechecked before citation.
+**Named systems and formats.** Claims about named systems in sections 1, 5, 6,
+9, 17, 18, and 24, as well as Appendix D, come from each vendor's own
+documentation as of August 9, 2026 and should be rechecked before citation.
 
 ---
 
