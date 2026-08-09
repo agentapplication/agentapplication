@@ -371,7 +371,7 @@ flowchart TB
 
 ---
 
-# Part I: Recognizing the category
+# Part I: What makes an Agent Application
 
 ## 1. What is an Agent Application?
 
