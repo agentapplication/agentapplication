@@ -13,28 +13,28 @@ description: "A working paper defining Agent Applications, their frameworks, per
 > is one or more persistent, tool-using agents operating in durable workspaces
 > to accomplish work over time and produce or maintain durable artifacts.**
 
-Desktop, web, and mobile software each developed its own application model.
-Agent software now needs one too. An application that completes work over time
-needs somewhere to keep that work. This affects how the software is written and
-packaged, how its instances are created and governed, and how the product is
-priced.
+ChatGPT, Claude, OpenClaw, Lovable, and Replit Agent have different interfaces
+and do different jobs. Underneath, each gives a persistent agent a place to
+work, tools it can use, and state it can return to later. This paper calls the
+whole product an Agent Application.
 
-## The building blocks already exist
+Keeping an agent's work changes the application lifecycle. Developers need to
+decide how to structure and package the project, where each instance keeps its
+state, who may use that state, how updates reach existing instances, and how to
+price the running product.
 
-By 1994, web applications were beginning to emerge from a few basic pieces.
-HTTP moved requests, HTML described pages, and browsers displayed them.
-JavaScript later added behavior. Frameworks made the work repeatable and helped
-settle what developers meant by a "web application."
+| Era | Application model | What persisted |
+|---|---|---|
+| Personal computing | Desktop application | Local files, installers, the OS |
+| Internet | Web application | Servers, databases, the URL |
+| Mobile | Mobile application | Device identity, sensors, the store |
+| Agent computing | **Agent Application** | Instances, workspaces, durable work, lineage |
 
-Agent developers now have comparable building blocks: the Model Context
-Protocol for tools, portable Agent Skills, Agent Plugins for packaging reusable
-skills and MCP server configurations, sandboxed compute, and harnesses that run
-the agent loop. Today's harnesses are early versions of [Agent Application
-frameworks](/concepts/framework). As they add project structure, development
-tools, evaluations, packaging, and deployment, they make agent development
-repeatable.
+## What makes it an Agent Application
 
-## Four defining properties
+The interface does not define the category. The execution model does. Four
+properties distinguish an Agent Application from a model endpoint, a stateless
+chatbot, or a fixed workflow:
 
 | Property | What it looks like |
 |---|---|
@@ -60,12 +60,15 @@ The people, records, and work that can safely share that workspace form its
 way. Depending on the product, an instance belongs to a user, project, personal
 agent, company workspace, or customer relationship.
 
-## The agent widget
+## Where Agent Applications appear
 
-The **agent widget** is the most common interface for an Agent Application. It
-may fill the screen, sit beside another application, or open in a popup. It
-handles authentication and session switching. Users can choose models and
-harness options, type or talk, upload files, and control the running agent.
+The **agent widget** is the most common interface today. An Agent Application
+may instead appear through an API, a communication channel, or an event that
+starts work without opening a conversation.
+
+The widget may fill the screen, sit beside another application, or open in a
+popup. It handles authentication and session switching. Users can choose models
+and harness options, type or talk, upload files, and control the running agent.
 
 The conversation view shows messages alongside progress, reasoning summaries,
 tool calls, and approvals. It also reports errors and other runtime events. The
@@ -78,20 +81,46 @@ agent and its frontend. [MCP Apps](https://modelcontextprotocol.io/extensions/ap
 lets tools place forms, dashboards, viewers, and other interactive controls
 inside the conversation.
 
-## Application models by era
+## How the pieces fit together
 
-| Era | Application model | What persisted |
-|---|---|---|
-| Personal computing | Desktop application | Local files, installers, the OS |
-| Internet | Web application | Servers, databases, the URL |
-| Mobile | Mobile application | Device identity, sensors, the store |
-| Agent computing | **Agent Application** | Instances, workspaces, durable work, lineage |
+By 1994, web applications were beginning to emerge from a few basic pieces.
+HTTP moved requests, HTML described pages, and browsers displayed them.
+JavaScript later added behavior. Frameworks gave developers a repeatable way to
+assemble those pieces into applications.
 
-## Built as a project, deployed as instances
+Agent developers are working with a similar collection of parts. The Model
+Context Protocol connects agents to tools. Reusable instructions can travel as
+Agent Skills, while Agent Plugins package skills and MCP server configurations.
+Sandboxed compute gives agents a place to run code and work with files. A
+harness runs the agent loop around the model.
 
-A developer writes an **agent project** in the native layout of an agent harness
-or Agent Application framework. When it is ready to deploy, the publisher
-creates a fixed release using that framework's build and release process. An
+A harness becomes an [Agent Application framework](/concepts/framework) as it
+takes on more of the development and operating lifecycle: project structure,
+local tools, evaluations, packaging, deployment, and the production runtime.
+The framework still keeps its own programming model and native project layout.
+
+## Agent Application Programming
+
+Agent Application Programming starts with a use case and decides where each
+part of the work belongs. Some behavior belongs in conventional code; other
+behavior belongs in instructions, skills, tools, hooks, specialist agents,
+dynamic workflows, state, or policy. The design also determines which
+transitions code guarantees and which ones the model chooses while it works.
+
+The paper calls this discipline **Agent Application Programming**. It includes
+the design of dependencies, permissions, evaluations, observability, and cost
+controls around the agent. AI coding agents are likely to do much of this work.
+They can inspect a project and propose a decomposition, then write code and
+natural-language programs, run evaluations, and revise the design from the
+results. Humans still set the goals, authority, risk limits, and acceptance
+criteria. [Section 8.7 of the
+paper](/paper#8-7-agent-application-programming) develops the idea.
+
+## From an agent project to running instances
+
+A developer writes an **agent project** in the native layout of a harness /
+Agent Application framework. When the project is ready, the publisher creates a
+fixed release using the framework's own build and release process. An
 [Agent Application Platform](/concepts/platform) runs the native project rather
 than translating every framework into one generic schema.
 
@@ -112,9 +141,10 @@ account-operator/
 The names in this diagram describe responsibilities, not folders. A framework
 may implement them in code, Markdown, configuration files, platform settings,
 or a mixture of these. Standards apply where the application meets another
-system. MCP connects tools and data. Agent Skills packages reusable
-instructions. Agent Plugins bundles skills and MCP configuration. AG-UI
-connects agent backends to frontends, and A2A connects independent agents.
+system. MCP connects tools and data. Agent Skills is a format for reusable
+instructions. The Agent Plugins format bundles skills with MCP configuration.
+AG-UI connects agent backends to frontends, and A2A connects independently
+deployed agents.
 [Section 9 of the paper](/paper#9-the-agent-project-and-capability-model) explains
 the model and compares current frameworks.
 
@@ -140,5 +170,4 @@ Correspondence: [amol@agentapplication.io](mailto:amol@agentapplication.io)
 
 ---
 
-Written by Amol Kelkar. Any platform may implement the definitions and
-portability contracts.
+Any platform may implement the definitions and proposed portability contracts.
