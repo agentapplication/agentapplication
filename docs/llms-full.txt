@@ -141,6 +141,8 @@ one.
 }
 ```
 
+Correspondence: [amol@agentapplication.io](mailto:amol@agentapplication.io)
+
 ---
 
 Written by Amol Kelkar. Any platform may implement the definitions and
@@ -287,9 +289,7 @@ Source: https://agentapplication.io/paper
 
 Working Draft 0.8, August 2026. The full paper defining Agent Applications, their lifecycle, and the Agent Application Platform.
 
-**Working Draft 0.8 · August 2026 · Amol Kelkar** · [Plain text](https://agentapplication.io/llms-full.txt)
-
-Correspondence: [amol@agentapplication.io](mailto:amol@agentapplication.io)
+**Working Draft 0.8 · August 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
 
 ---
 
