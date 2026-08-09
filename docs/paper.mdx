@@ -22,15 +22,17 @@ Developers build Agent Applications with Agent Application frameworks, just as t
 
 Once created, each Agent Application instance accumulates different knowledge, artifacts, instructions, and unfinished work. Traditional software follows the program that was deployed. An Agent Application instance can also incorporate local natural-language instructions that change its behavior. Some systems let agents revise their own procedures or incorporate revisions prepared by other agents. These instances diverge in program as well as state. A publisher updating such a fleet must reconcile the update with the program and state of every instance, preserve local work, and test the result against that instance's state. Token consumption can also vary widely from one instance to another, which makes per-instance cost management important. The industry has not yet settled how to price or monetize these applications.
 
-Standards already cover a few components of Agent Applications. MCP connects
-agents to tools. Agent Skills package reusable instructions, and Agent Plugins
-package skills and MCP server configurations so compatible clients can load
-them. A2A supports communication among independent agents and agentic
-applications. Important gaps remain around complete projects, dependency
-resolution, artifacts, identity and authority, workspace portability, releases,
-updates, and the application-instance lifecycle.
+The industry is rapidly developing the building blocks for these applications:
+MCP, Agent Skills, Agent Plugins, hooks, agent loops, and common runtime tools
+for shell and filesystem access, code generation, and code execution. This paper
+steps back from the individual pieces to describe the application that takes
+shape when developers assemble them.
 
-This paper defines the Agent Application and describes the architecture required to build and operate one. It maps existing standards to that architecture and identifies the interfaces that still need common contracts. With those contracts in place, developers could reuse components and domain expertise across applications, build customer relationships, and earn revenue from a portfolio. Distributors could run shared infrastructure and catalogs instead of rebuilding the stack for every application. Users would keep the context, knowledge, artifacts, and completed work that accumulate through long-lived agents. This could turn agentic computing from a small set of vertically integrated products into a broad software industry.
+The paper documents that application shape and points to framework tooling,
+cloud services, and standards that could make Agent Applications easier to
+build, deploy, and manage. As a working paper, it also gives the community a
+place to revise the model as agents take on harder work, including running
+large businesses and conducting frontier research.
 
 ---
 
@@ -1397,6 +1399,12 @@ between independently addressable agents. Commerce and payment protocols carry
 purchase intent, authorization, and settlement. Section 9.3 and Appendix D.4
 map these protocols in more detail.
 
+Other common work belongs in tools and services. Frameworks can simplify local
+development, evaluation, and deployment. Cloud platforms can provide durable
+workspaces, identity, scheduling, fleet operations, and cost controls. A
+standard becomes useful when independent implementations need to exchange
+information or commands.
+
 This paper does not propose a common Agent Project or release format. Current
 frameworks do not share enough structure to justify one. A project written for
 Claude Agent SDK, Google ADK, LangGraph, OpenAI Agents SDK, or Vercel AI SDK
@@ -1627,6 +1635,12 @@ each application keeps its own behavior and user experience.
 ---
 
 ## 23. Open questions
+
+The category will change as implementations take on work that lasts longer and
+carries more responsibility. The questions below mark places where the current
+model may need to grow. Implementation experience and counterexamples are
+especially useful, including from attempts to build agents that run large
+businesses or conduct frontier research.
 
 ### 23.1 How should related workspaces share context?
 
