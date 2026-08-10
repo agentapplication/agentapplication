@@ -9,10 +9,11 @@ description: "A persistent copy provisioned from a release for one privacy domai
 
 The people, records, and work that may safely share one workspace form a
 **privacy domain**. The agent can read its entire workspace, so information
-belongs together only when the agent may safely combine it. A Life Coach Agent
-gets one instance per user. A B2B support agent can keep one customer's tickets
-together but needs a separate instance for another customer. A virtual
-marketing employee can share one instance with a team.
+belongs together only when the agent may safely combine it. A Financial Advisor
+Agent gets one instance per person or household, depending on who is authorized
+to share financial records. A business-to-business (B2B) support agent can keep
+one customer's tickets together but needs a separate instance for another
+customer. A virtual marketing employee can share one instance with a team.
 
 This separation limits the damage from prompt injection. A user can try to make
 the agent reveal anything it can read. The instance should therefore contain

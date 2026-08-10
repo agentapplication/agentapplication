@@ -18,12 +18,12 @@ Terms such as *chatbot*, *copilot*, and *agent harness* describe parts of these
 products. This paper calls the complete product an **Agent Application**.
 
 An Agent Application uses one or more persistent, tool-using AI agents to
-produce or maintain durable results. A request, event, or schedule can start the
+produce work. A request, event, or schedule can start the
 work. The agent evaluates the current state, chooses intermediate steps, and
-uses tools to carry them out. Examples include a life coach that supports one
-person for years, a virtual marketing employee that works across a team's
-campaigns, and a SaaS assistant that guides a customer from onboarding to a
-mature program.
+uses tools to carry them out. Examples include a financial advisor that
+maintains one person's financial history and retirement plan over time, a
+virtual marketing employee that works across a team's campaigns, and a SaaS
+copilot that guides a customer from onboarding to a mature program.
 
 Each user of a personal application may receive a separate instance. Team and
 enterprise applications may instead assign an instance to a team, customer,
@@ -31,16 +31,16 @@ project, ticket, or another ownership and privacy boundary. Every instance has
 its own history, authority, and logical workspace, isolated from other
 instances. Compute may stop and restart, but the instance and its work persist.
 
-Developers build these products with a harness / Agent Application framework.
+Developers build these products with a **harness / Agent Application framework**.
 The framework supplies the agent loop and may also supply project conventions,
-development tools, evaluations, packaging, and deployment. An Agent Application
-Platform turns a tested project into a fixed release, creates long-lived
+development tools, evaluations, packaging, and deployment. An **Agent Application
+Platform** turns a tested project into a fixed release, creates long-lived
 instances from that release, and provides the services needed to operate them.
 
-Instances accumulate different knowledge, artifacts, instructions, and
+Over time, instances may accumulate different knowledge, artifacts, instructions, and
 unfinished work. Some applications also let an instance adopt local
-instructions or generated code. The instances can therefore diverge in program
-as well as state. Updating a fleet may require reconciling a new release with
+instructions or generated code. The instances can therefore **diverge in program
+as well as state**. Updating a fleet may require reconciling a new release with
 each instance's local changes, preserving its work, and testing the result
 against its workspace. Operating costs can vary just as widely across
 instances.
@@ -138,25 +138,34 @@ and other guardrails. Within those limits, the agent inspects the current state
 and chooses what to do next. Its work can continue across sessions, and the
 results outlive the model call that produced them.
 
-Consider a Life Coach Agent that works with Maya. On Monday, Maya asks it to help
-her prepare for a career change. It reads her goals, prior reflections, and
-existing commitments, then updates her plan and asks before adding two check-ins
-to her calendar. On Friday, Maya returns with an update after an interview. Six
-months later, the agent can show which facts informed its advice, which actions
-Maya approved, and how her plan changed.
+Consider a Financial Advisor Agent that works with Maya. She uploads tax
+returns, account statements, and retirement plan documents, then authorizes
+read access to accounts at her financial institutions. The agent periodically
+retrieves new records, reconciles them with the material she uploaded, and
+alerts her when it finds a change worth reviewing.
 
-Carrying Maya's work from Monday to Friday, then explaining it six months later,
-requires more than a model response or transcript. The application routes each
-event back to Maya's agent instance. Its workspace preserves the files, memory,
-and unfinished analysis needed to resume. The harness / Agent Application
-framework runs the reasoning loop, while tools connect the agent to her
-calendar, notes, documents, and messages.
+When Maya considers taking a year away from work, she asks how the change could
+affect her retirement plan. The agent draws on the financial history in her
+workspace, writes code to run cash-flow analyses and retirement simulations,
+records its assumptions, and presents the results. Months later, it can show
+which records, assumptions, and simulations informed its analysis.
+
+Doing this over years requires more than a model response or transcript. The
+application routes Maya's messages, scheduled reviews, and retrieved records
+back to the same agent instance. Its workspace preserves uploaded documents,
+account snapshots, analysis code, assumptions, reports, and unfinished work.
+The harness / Agent Application framework runs the reasoning loop. Tools give
+the agent read-only access to financial institutions, and a sandbox executes
+its analysis code.
 
 Compute can stop when Maya's instance is idle, but the instance and its work
-remain. Delegated credentials let it act when a later request or schedule wakes
-it. Policy can require approval for consequential actions, and an audit record
-preserves how it produced each artifact. New releases can improve the
-application without discarding Maya's accumulated work.
+remain. Its scoped credentials permit read-only retrieval when a request or
+schedule wakes it. The application can analyze data, produce reports, and
+notify Maya, but it exposes no tools for changing accounts or moving money. An
+audit record preserves how it produced each report. New releases can improve
+the application without discarding the context it has accumulated with Maya.
+Its persistent instance, durable workspace, tool use, scheduled work, and
+lasting analyses make it an Agent Application.
 
 ---
 
@@ -274,10 +283,11 @@ agent reads the current state and selects the next action. It can plan, define
 workflows, invoke tools, create and revise artifacts, delegate work, and
 continue until it reaches an outcome or a boundary that requires outside input.
 
-The definition does not require a person to approve every action. A life coach
-may ask before changing a calendar. A backend operations agent may process a
-low-risk record without waiting for anyone. In both cases, code defines the
-allowed space and the agent chooses a path through it.
+The definition does not require a person to approve every action. A Financial
+Advisor Agent may retrieve read-only account data and run scheduled analyses
+without asking each time. A backend operations agent may process a low-risk
+record without waiting for anyone. In both cases, code defines the allowed
+space and the agent chooses a path through it.
 
 | Conventional application | Agent Application |
 |---|---|
@@ -428,12 +438,13 @@ The same boundary extends to data reachable through tools and retrieval systems.
 A user-initiated call should not return information that the authenticated user
 cannot access.
 
-The Life Coach Agent therefore gets one instance per user. A human resources
-(HR) helper that handles personal employee matters also gets one per employee.
-A business-to-business (B2B) support agent can keep many tickets for one
-customer in the same workspace, while different customers get different
-instances. A virtual marketing employee can have one instance shared by a whole
-team because the team itself is the privacy boundary.
+The Financial Advisor Agent therefore gets one instance per person or household,
+depending on who is authorized to share financial records. A human resources
+(HR) helper that handles personal employee matters gets one per employee. A
+business-to-business (B2B) support agent can keep many tickets for one customer
+in the same workspace, while different customers get different instances. A
+virtual marketing employee can have one instance shared by a whole team because
+the team itself is the privacy boundary.
 
 Authentication answers who may use an instance. It does not decide how work is
 divided among instances. Several teammates can authenticate into the same
@@ -1807,13 +1818,15 @@ make the same underlying decisions.
 
 Start with the work. Name the user, the outcome, the source systems the agent
 will read, the actions it may take, the artifacts it will produce, and how long
-the work continues. A Life Coach Agent, for example, maintains goals and plans,
-uses a calendar, and produces personal reviews over several years.
+the work continues. A Financial Advisor Agent, for example, maintains a
+financial history and retirement plan, retrieves account data on a schedule,
+runs analyses, and sends alerts over many years.
 
 Next decide what one workspace represents. The agent can read its whole
 workspace, so information that must remain private from another person or
-customer belongs in another instance. The Life Coach Agent gets one instance per
-person. A team-owned Marketing Agent can have one workspace for the virtual
+customer belongs in another instance. The Financial Advisor Agent gets one
+instance per person or household whose members have agreed to share financial
+data. A team-owned Marketing Agent can have one workspace for the virtual
 employee shared by that team. A back-office agent can handle many tickets for
 one customer in one workspace. Tickets from different customers go to separate
 instances when their data may not be exposed to each other.
@@ -1852,17 +1865,17 @@ agent running. Preserve the framework's native layout. A Claude Code project
 might begin like this:
 
 ```text
-life-coach-agent/
+financial-advisor-agent/
 |-- CLAUDE.md
 |-- .claude/
 |   |-- settings.json
 |   |-- agents/
-|   |   |-- planner.md
-|   |   `-- reviewer.md
+|   |   |-- data-reviewer.md
+|   |   `-- plan-reviewer.md
 |   `-- skills/
-|       |-- goal-review/
+|       |-- records-review/
 |       |   `-- SKILL.md
-|       `-- weekly-planning/
+|       `-- retirement-analysis/
 |           `-- SKILL.md
 |-- .mcp.json
 |-- hooks/
@@ -2023,52 +2036,61 @@ access.
 
 ## 25. A reference lifecycle
 
-A company builds the **Life Coach Agent** introduced in section 1. Its agent
-project contains:
+A company builds the **Financial Advisor Agent** introduced in section 1. Its
+agent project contains:
 
-- instructions for reviewing goals and running weekly check-ins;
-- skills for reflection and action planning;
-- tools for calendars, notes, reminders, and document creation;
-- planning and review subagents;
-- renderers for personal plans and progress reviews;
-- evaluations for plan quality and faithful use of the user's history;
-- approval rules for calendar changes and outbound messages.
+- instructions for reviewing financial records, explaining assumptions, and
+  maintaining a retirement plan;
+- skills for record intake, account review, and retirement analysis;
+- read-only connections to financial institutions, document-processing tools,
+  a code-execution environment, and report-generation tools;
+- data-review and plan-review subagents;
+- renderers for financial summaries and retirement scenarios;
+- evaluations for calculation accuracy, faithful use of records, and clear
+  disclosure of assumptions;
+- policies that limit the agent to reading data, analyzing it, and notifying
+  the user.
 
 The company publishes release `1.0`.
 
-Each user gets a separate agent instance and workspace containing goals,
-reflections, commitments, personal plans, progress reviews, and checkpoints.
+Each user gets a separate agent instance and workspace containing uploaded
+records, account snapshots, goals, assumptions, analysis code, retirement
+plans, scenario reports, and checkpoints.
 
-Maya's request from section 1 wakes her instance. Her career plan and follow-up
-tasks remain after the chat ends, and Friday's review continues from the same
-workspace.
+Maya uploads her records, connects accounts with read-only access, and asks how
+taking a year away from work could affect her retirement plan. The agent
+refreshes the account data, writes code to simulate several scenarios, records
+its assumptions, and produces a report. A later scheduled review retrieves new
+data and notifies Maya when it finds a change worth discussing.
 
-The company later publishes `1.1` with a better goal-planning skill. It passes
-every release evaluation. After a staged rollout, new sessions use it while
-existing workspaces stay in place.
+The company later publishes `1.1` with a better retirement-analysis skill. It
+passes every release evaluation. After a staged rollout, new sessions use it
+while existing workspaces stay in place.
 
-Release `1.1` still fails for one instance. Its workspace contains a `goals.md`
-file from eighteen months earlier that says the user wants to become a manager.
-More recent reflections say that the user wants to remain an individual
-contributor. Version `1.1` gives the old file too much weight and builds the next
-plan around a management track. The test workspaces never contained conflicting
-goals. The release improved for most users but made this instance worse.
+Release `1.1` still fails for one instance. Its workspace contains a
+`retirement-assumptions.md` file from eighteen months earlier that says the user
+plans to retire at 62. A more recent discussion records a plan to retire at 67.
+Version `1.1` gives the old file too much weight and produces scenarios around
+the wrong retirement date. The test workspaces never contained conflicting
+dates. The release improved for most users but made this instance worse.
 
-The operator checks the run record and sees that the agent treated the stale
-goal as current. If the record were inconclusive, they could restore a copy of
-the earlier workspace checkpoint in an isolated environment and investigate it
-there.
+An authorized reviewer checks the run record and sees that the agent treated the
+stale assumption as current. If the record were inconclusive, they could restore
+a copy of the earlier workspace checkpoint in an isolated environment and
+investigate it there.
 
-Because the publisher's skill is sound, the operator keeps `1.1`. They remove the
-stale goal from that workspace, record the change in the instance lineage, and
-add a goal-freshness check before future upgrades for this user. A global
-rollback would remove a useful improvement from the other users.
+Because the publisher's skill is sound, the operator keeps `1.1`. Maya confirms
+the newer retirement date, the application marks the old assumption as
+superseded, and the operator adds an assumption-freshness check before future
+upgrades for this user. The lineage records each change. A global rollback would
+remove a useful improvement from the other users.
 
-Maya later requests an export. It contains her goals, reflections, personal
-plans, progress reviews, configuration, checkpoints, lineage, and authority
-record. The plans open without the vendor's runtime. The export carries a secret
-reference for her calendar but leaves the credential behind, so Maya must grant
-fresh access on the receiving platform.
+Maya later requests an export. It contains her uploaded records, account
+snapshots, assumptions, analysis code, retirement plans, reports,
+configuration, checkpoints, lineage, and authority record. The reports open
+without the vendor's runtime. The export carries governed references to her
+financial connections but leaves the credentials behind, so Maya must grant
+fresh read access on the receiving platform.
 
 ---
 
@@ -2110,31 +2132,31 @@ filenames, keep several capabilities in one module, or store operational
 configuration outside the repository.
 
 ```text
-life-coach-agent/
+financial-advisor-agent/
 |-- src/
 |   |-- agent.ts
 |   |-- workflows/
-|   |   |-- weekly-plan.ts
-|   |   `-- progress-review.ts
+|   |   |-- account-review.ts
+|   |   `-- retirement-review.ts
 |   `-- tools/
-|       |-- calendar.ts
-|       `-- notes.ts
+|       |-- financial-data.ts
+|       `-- analysis.ts
 |-- skills/
-|   |-- goal-review/
+|   |-- records-review/
 |   |   `-- SKILL.md
-|   `-- weekly-planning/
+|   `-- retirement-analysis/
 |       `-- SKILL.md
 |-- policies/
 |   |-- approvals.md
-|   `-- external-actions.md
+|   `-- data-access.md
 |-- knowledge/
 |   |-- sources.ts
 |   `-- schemas/
 |-- triggers/
-|   `-- weekly-review.ts
+|   `-- account-review.ts
 |-- artifacts/
-|   |-- personal-plan.ts
-|   `-- progress-review.ts
+|   |-- financial-summary.ts
+|   `-- retirement-scenario.ts
 |-- evals/
 |   |-- behavior/
 |   |-- security/
@@ -2146,7 +2168,7 @@ life-coach-agent/
 
 `src/agent.ts` is the primary program. The `skills/` directories use the Agent
 Skills format, while the tools and workflows use framework-native TypeScript.
-The policy files explain approval and external-action rules to developers and
+The policy files explain data-access and report-sharing rules to developers and
 the agent; enforceable limits still live in code and platform configuration.
 The project keeps knowledge, artifact definitions, triggers, evaluations, and
 migrations near the source that uses them.
