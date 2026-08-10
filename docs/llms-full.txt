@@ -14,16 +14,18 @@ The Agent Applications working paper, examples, companion documents, and communi
 [Review the draft](/review) · [Cite](#cite)
 </Note>
 
-[MCP](https://modelcontextprotocol.io/) standardizes how agents connect to tools
-and data. [Agent Skills](https://agentskills.io/) is an open format for packaging
-instructions, scripts, and reference material. Developers combine these with
-plugins, hooks, agent loops, and built-in tools such as shell access and code
-execution.
+[Model Context Protocol
+(MCP)](https://modelcontextprotocol.io/) standardizes how agents connect to
+tools and data. The [Agent Skills
+specification](https://agentskills.io/specification) defines an open format for
+packaging instructions, scripts, and supporting material. Developers combine
+them with plugins, hooks, agent loops, and built-in tools such as shell access
+and code execution.
 
-The Agent Applications project looks at the complete software product built
-from these parts. The [working paper](/paper) calls that product an Agent
-Application and proposes vocabulary and an architecture for building,
-deploying, and operating it.
+The Agent Applications project asks what the complete software product looks
+like when developers put these parts together. The [working paper](/paper)
+calls the result an Agent Application and proposes shared vocabulary and an
+architecture for building, deploying, and operating one.
 
 The paper is a working draft, not a finished standard. Its claims need to be
 tested against real products, implementation experience, prior art, and
@@ -31,41 +33,39 @@ counterexamples.
 
 ## Project goals
 
-The project has three goals:
+- Describe the typical shape of an agent application as its components mature.
+- Identify the framework capabilities, developer tools, standards, and cloud
+  services that could make these applications easier to build, deploy, and
+  manage.
+- Give practitioners a shared place to revise the model as agent applications
+  take on difficult work such as running businesses and conducting frontier
+  research.
 
-1. Document the typical shape of an agent application as these components
-   mature.
-2. Help developers of frameworks, tools, standards, and cloud services see what
-   is still missing from the process of building, deploying, and managing these
-   applications.
-3. Give the community a place to refine the model as agent applications take on
-   difficult work such as running businesses and conducting frontier research.
+The paper describes capabilities, not a mandatory framework or project layout.
+A standards proposal should start with independent implementations that need
+to exchange information across a stable boundary.
 
-The project does not prescribe one framework or folder layout. Proposed
-standards should address an interoperability problem between independent
-implementations, rather than turn the design of one product into a requirement
-for the category.
+## Core terms
 
-## Terms defined in the paper
-
-- **[Agent Application](/paper#1-what-is-an-agent-application):** Software built
-  around persistent, tool-using agents whose work can continue across sessions
-  and leave durable results.
-- **[Harness / Agent Application framework](/concepts/framework):** The
-  development and runtime system used to build, test, deploy, and run an Agent
-  Application.
+- **[Agent Application](/paper#1-what-is-an-agent-application):** Software that
+  uses one or more persistent, tool-using AI agents to produce or maintain
+  durable results.
+- **[Harness / Agent Application framework](/concepts/framework):** A system
+  that runs the agent loop and supports project structure, testing,
+  packaging, deployment, and the production runtime.
 - **[Agent Application Programming](/paper#8-7-agent-application-programming):**
-  The practice of deciding how code, instructions, skills, tools, hooks, other
-  agents, workflows, state, and policy work together for a particular use case.
-- **[Agent Application Platform](/concepts/platform):** The service used to
-  package, deploy, operate, update, and distribute Agent Applications.
+  The discipline of deciding which behavior belongs in code, instructions,
+  skills, tools, hooks, agents, workflows, state, or policy, then composing
+  those parts for a use case.
+- **[Agent Application Platform](/concepts/platform):** A service that deploys
+  and operates Agent Applications, manages fleets, updates, and costs, and
+  supports distribution and monetization.
 
 ## Read the work
 
-- The paper: [Agent Applications: Software Architecture for the AI Era](/paper) presents
-  the full argument, category definition, and architecture.
-- [Hello World](/examples/hello-world) makes the ideas concrete with a small
-  application.
+- [The paper](/paper) presents the full argument, category definition, and
+  architecture.
+- [Hello World](/examples/hello-world) shows the model in a small application.
 - [About this paper](/about) explains the audience, scope, and status of the
   work.
 - [Companion documents](/companion-documents) lists the practical and technical
@@ -73,9 +73,9 @@ for the category.
 
 ## Contribute
 
-The most useful feedback is specific. Tell us about a product that does not fit
-the proposed category, an implementation that contradicts a claim, relevant
-prior art, or a term that conflicts with established usage.
+Useful feedback includes a product the definition gets wrong, a claim
+contradicted by an implementation, relevant prior art, or a term with an
+established meaning elsewhere.
 
 - Use [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions)
   for open-ended proposals, architecture questions, and boundary cases.
@@ -85,15 +85,14 @@ prior art, or a term that conflicts with established usage.
   for a focused correction, example, or documentation improvement.
 
 [Read the review guide](/review) for the questions the draft most needs help
-answering. The full contribution process is in
+answering. Before preparing a pull request, read
 [CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md).
-Private feedback can be sent to the correspondence address below.
 
 ## Cite
 
 ```bibtex
 @misc{kelkar2026agentapplications,
-  title  = {Agent Applications: A New Software Architecture for the AI Era},
+  title  = {Agent Applications: Software Architecture for the AI Era},
   author = {Amol Kelkar},
   year   = {2026},
   note   = {Working Draft 0.8},
