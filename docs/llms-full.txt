@@ -23,37 +23,46 @@ and do different jobs. Underneath, each gives a persistent agent a place to
 work, tools it can use, and state it can return to later. This shared shape is
 what the paper calls an Agent Application.
 
-Keeping an agent's work changes the application lifecycle. Developers need to
-decide how to structure and package the project, where each instance keeps its
-state, who may use that state, how updates reach existing instances, and how to
-price the running product.
+Each persistent copy of the application is an **instance**. Its **workspace**
+holds the files, instructions, memory, and other state the agent can use across
+runs. An **artifact** is a durable, portable work product with its own identity
+and history.
+
+Because an instance returns to the same workspace across runs, the application
+must manage that workspace for as long as the instance exists. Developers need
+to decide how to package the application source, where each workspace is stored,
+who may use the instance and its workspace, how updates reach existing
+instances, and how to price the running product.
+
+Desktop applications, web applications, mobile applications, and Agent
+Applications are associated with different durable elements:
 
 | Era | Application model | What persisted |
 |---|---|---|
 | Personal computing | Desktop application | Local files, installers, the OS |
 | Internet | Web application | Servers, databases, the URL |
 | Mobile | Mobile application | Device identity, sensors, the store |
-| Agent computing | **Agent Application** | Instances, workspaces, durable work, lineage |
+| Agent computing | **Agent Application** | Instances, workspaces, and durable work |
 
 ## What makes it an Agent Application
 
-The interface does not define the category. The execution model does. Four
-properties distinguish an Agent Application from a model endpoint, a stateless
-chatbot, or a fixed workflow:
+The products named above do not share one interface, so the paper defines the
+category by how they run. Four properties describe that execution model:
 
 | Property | What it looks like |
 |---|---|
-| Persistent agent instance | A new message or event returns to the same agent, privacy domain, and ongoing work |
+| Persistent agent instance | A new message or event returns to the same instance and ongoing work |
 | Agent-directed control flow | The agent reads the current state and chooses its next action within application guardrails |
 | Durable computational workspace | Files, instructions, memory, code, and other working state remain available to later runs |
 | Durable work | Artifacts, workspace state, external records, or continuing processes outlive the event that created them |
 
-A workspace defines a logical boundary for durable state. A platform may store
-that state in databases, object storage, or retained sessions. In the canonical
-design, each instance gets an isolated persistent virtual filesystem that the
-platform restores on demand. The agent can read everything in its workspace.
-The people, records, and work that can safely share that workspace form its
-**privacy domain**.
+The durable computational workspace in the table is a logical boundary for
+state, not a particular storage technology. Its contents may reside in
+databases, object storage, or retained sessions. In the paper's canonical
+design, each instance gets an isolated persistent virtual filesystem that is
+restored on demand. The agent can read everything in its workspace. The people,
+records, and work that can safely share that workspace form its **privacy
+domain**. Each instance belongs to one privacy domain.
 
 [ChatGPT](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex),
 [Claude](https://support.claude.com/en/articles/14116274-organize-your-tasks-with-projects-in-claude-cowork),
@@ -61,24 +70,24 @@ The people, records, and work that can safely share that workspace form its
 [Lovable](https://docs.lovable.dev/features/agent-mode),
 [Replit Agent](https://docs.replit.com/features/version-control/checkpoints-and-rollbacks),
 [OpenClaw](https://docs.openclaw.ai/start/openclaw), and
-[Lightfield](https://docs.lightfield.app/) already organize ongoing work this
-way. Depending on the product, an instance belongs to a user, project, personal
-agent, company workspace, or customer relationship.
+[Lightfield](https://docs.lightfield.app/) assign their continuing instances to
+different units. Depending on the product, an instance belongs to a user,
+project, personal agent, company workspace, or customer relationship.
 
 ## Where Agent Applications appear
 
-The **agent widget** is the most common interface today. An Agent Application
-may instead appear through an API, a communication channel, or an event that
-starts work without opening a conversation.
+The **agent widget** is the most common interface for a running instance today.
+Other applications expose the instance through an API or communication channel,
+or wake it in response to an event without opening a conversation.
 
 The widget may fill the screen, sit beside another application, or open in a
 popup. It handles authentication and session switching. Users can choose models
-and harness options, type or talk, upload files, and control the running agent.
+and runtime settings, type or talk, upload files, and control the running agent.
 
 The conversation view shows messages alongside progress, reasoning summaries,
-tool calls, and approvals. It also reports errors and other runtime events. The
-widget renders artifacts and interactive UI returned by the agent. [OpenAI
-ChatKit](https://openai.github.io/chatkit-js/),
+tool calls, and approvals. It also reports errors and other events from the
+running agent. The widget renders artifacts and interactive UI returned by the
+agent. [OpenAI ChatKit](https://openai.github.io/chatkit-js/),
 [CopilotKit](https://docs.copilotkit.ai/), and [AI SDK
 Elements](https://elements.ai-sdk.dev/examples/chatbot) package many of these
 parts. [AG-UI](https://docs.ag-ui.com/) defines the event stream between an
@@ -86,48 +95,47 @@ agent and its frontend. [MCP Apps](https://modelcontextprotocol.io/extensions/ap
 lets tools place forms, dashboards, viewers, and other interactive controls
 inside the conversation.
 
-## How the pieces fit together
+## Components and frameworks
 
-By 1994, web applications were beginning to emerge from a few basic pieces.
-HTTP moved requests, HTML described pages, and browsers displayed them.
-JavaScript later added behavior. Frameworks gave developers a repeatable way to
-assemble those pieces into applications.
-
-Agent developers are working with a similar collection of parts. The Model
-Context Protocol connects agents to tools. Reusable instructions can travel as
-Agent Skills, while Agent Plugins package skills and MCP server configurations.
+Together, the four properties describe the application. Developers implement
+them with components that have their own names and boundaries. The Model Context
+Protocol connects agents to tools. Reusable instructions can travel as Agent
+Skills, while Agent Plugins package skills and MCP server configurations.
 Sandboxed compute gives agents a place to run code and work with files. A
-harness runs the agent loop around the model.
+harness assembles context, calls the model and tools, and carries the agent from
+one action to the next.
 
 A harness becomes an [Agent Application framework](/concepts/framework) as it
 takes on more of the development and operating lifecycle: project structure,
 local tools, evaluations, packaging, deployment, and the production runtime.
-The framework still keeps its own programming model and native project layout.
+Each framework defines its own programming model and native project layout.
 
 ## Agent Application Programming
 
-Agent Application Programming starts with a use case and decides where each
-part of the work belongs. Some behavior belongs in conventional code; other
-behavior belongs in instructions, skills, tools, hooks, specialist agents,
-dynamic workflows, state, or policy. The design also determines which
-transitions code guarantees and which ones the model chooses while it works.
+Agent Application Programming applies these components to a use case. It decides
+which behavior belongs in conventional code and which belongs in instructions,
+skills, tools, hooks, specialist agents, dynamic workflows, state, or policy. It
+also determines which transitions code guarantees and which ones the model
+chooses while it works.
 
-The paper calls this discipline **Agent Application Programming**. It includes
-the design of dependencies, permissions, evaluations, observability, and cost
-controls around the agent. AI coding agents are likely to do much of this work.
-They can inspect a project and propose a decomposition, then write code and
-natural-language programs, run evaluations, and revise the design from the
-results. Humans still set the goals, authority, risk limits, and acceptance
-criteria. [Section 8.7 of the
+The discipline covers the dependencies, permissions, evaluations,
+observability, and cost controls around the agent. AI coding agents are likely
+to do much of this work because they can inspect a project, propose a
+decomposition, write code and natural-language programs, run evaluations, and
+revise the design from the results. Humans still set the goals, authority, risk
+limits, and acceptance criteria. [Section 8.7 of the
 paper](/paper#8-7-agent-application-programming) develops the idea.
 
 ## From an agent project to running instances
 
-A developer writes an **agent project** in the native layout of a harness /
-Agent Application framework. When the project is ready, the publisher creates a
-fixed release using the framework's own build and release process. An
-[Agent Application Platform](/concepts/platform) runs the native project rather
-than translating every framework into one generic schema.
+The developer implements these choices in an **agent project**, using the native
+layout of a harness / Agent Application framework. To deploy the project, the
+publisher creates a fixed version called a **release**. An [Agent Application
+Platform](/concepts/platform) deploys that release and runs the project in its
+native form. A platform can support projects from several frameworks without
+translating them into one generic schema.
+
+The paper groups the possible project responsibilities as follows:
 
 ```text
 account-operator/
@@ -143,21 +151,23 @@ account-operator/
 `-- application-lifecycle
 ```
 
-The names in this diagram describe responsibilities, not folders. A framework
+The labels in this diagram describe responsibilities, not folders. A framework
 may implement them in code, Markdown, configuration files, platform settings,
-or a mixture of these. Standards apply where the application meets another
-system. MCP connects tools and data. Agent Skills is a format for reusable
-instructions. The Agent Plugins format bundles skills with MCP configuration.
-AG-UI connects agent backends to frontends, and A2A connects independently
-deployed agents.
+or a mixture of these. Frameworks make these internal choices; standards define
+the boundaries where the application meets another system. MCP connects tools
+and data. Agent Skills is a format for reusable instructions. The Agent Plugins
+format bundles skills with MCP configuration. AG-UI connects agent backends to
+frontends, and A2A connects independently deployed agents.
+Standards at these integration boundaries let frameworks keep their native
+project layouts.
 [Section 9 of the paper](/paper#9-the-agent-project-and-capability-model) explains
 the model and compares current frameworks.
 
-An application may create an instance for a user, team, customer, project,
-ticket, or another continuing relationship. Each instance accumulates its own
-workspace, artifacts, instructions, and history. Instances diverge as they
-work, so updating a fleet involves more than copying the same release over each
-one.
+Deployment creates one instance for each privacy domain. A privacy domain may be
+a user, team, customer, project, ticket, or another continuing relationship.
+Each instance accumulates its own workspace, artifacts, instructions, and
+history. Because those instances diverge as they work, an update must account
+for the state and local changes in each one.
 
 ## Cite
 
@@ -172,10 +182,6 @@ one.
 ```
 
 Correspondence: [amol@agentapplication.io](mailto:amol@agentapplication.io)
-
----
-
-Any platform may implement the definitions and proposed portability contracts.
 
 
 # Hello World Agent Application
