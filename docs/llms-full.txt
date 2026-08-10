@@ -20,8 +20,8 @@ A working paper defining Agent Applications, their frameworks, persistent instan
 
 ChatGPT, Claude, OpenClaw, Lovable, and Replit Agent have different interfaces
 and do different jobs. Underneath, each gives a persistent agent a place to
-work, tools it can use, and state it can return to later. This paper calls the
-whole product an Agent Application.
+work, tools it can use, and state it can return to later. This shared shape is
+what the paper calls an Agent Application.
 
 Keeping an agent's work changes the application lifecycle. Developers need to
 decide how to structure and package the project, where each instance keeps its
