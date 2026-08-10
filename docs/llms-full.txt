@@ -73,9 +73,7 @@ to exchange information across a stable boundary.
 
 ## Contribute
 
-Useful feedback includes a product the definition gets wrong, a claim
-contradicted by an implementation, relevant prior art, or a term with an
-established meaning elsewhere.
+We welcome community engagement as the paper evolves.
 
 - Use [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions)
   for open-ended proposals, architecture questions, and boundary cases.
