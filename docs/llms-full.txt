@@ -10,73 +10,44 @@ Source: https://agentapplication.io/
 The Agent Applications working paper, examples, companion documents, and community review.
 
 <Note>
-**A working paper** · Draft 0.8 · August 2026 · [Read the paper](/paper) ·
-[Review the draft](/review) · [Cite](#cite)
+  **A working paper** · Draft 0.8 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
 </Note>
 
-[Model Context Protocol
-(MCP)](https://modelcontextprotocol.io/) standardizes how agents connect to
-tools and data. The [Agent Skills
-specification](https://agentskills.io/specification) defines an open format for
-packaging instructions, scripts, and supporting material. Developers combine
-them with plugins, hooks, agent loops, and built-in tools such as shell access
-and code execution.
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/) standardizes how agents connect to tools and data. The [Agent Skills specification](https://agentskills.io/specification) defines an open format for packaging instructions, scripts, and supporting material. Developers combine them with plugins, hooks, agent loops, and built-in tools such as shell access and code execution.
 
-The Agent Applications project asks what the complete software product looks
-like when developers put these parts together. The [working paper](/paper)
-calls the result an Agent Application and proposes shared vocabulary and an
-architecture for building, deploying, and operating one.
+The Agent Applications project asks what the complete software product looks like when developers put these parts together. The [working paper](/paper) calls the result an Agent Application and proposes shared vocabulary and an architecture for building, deploying, and operating one.
 
-The paper is a working draft. We invite readers to test its claims against real
-products, implementation experience, prior art, and counterexamples.
+The paper is a working draft. We invite readers to test its claims against real products, implementation experience, prior art, and counterexamples.
 
 ## Project goals
 
 - Describe the typical shape of an agent application as its components mature.
-- Identify the framework capabilities, developer tools, standards, and cloud
-  services that could make these applications easier to build, deploy, and
-  manage.
+- Identify the framework capabilities, developer tools, standards, and cloud services that could make these applications easier to build, deploy, and manage.
 - Give practitioners a shared place to discuss the evolving nature of agent applications as agents gain widespread adoption.
 
 ## Core terms
 
-- **[Agent Application](/paper#1-what-is-an-agent-application):** Software that
-  uses one or more persistent, tool-using AI agents to produce work over time.
-- **[Harness / Agent Application framework](/concepts/framework):** A system
-  that runs the agent loop and supports project structure, testing,
-  packaging, deployment, and the production runtime.
-- **[Agent Application Programming](/paper#8-7-agent-application-programming):**
-  The discipline of deciding which behavior belongs in code, instructions,
-  skills, tools, hooks, agents, workflows, state, or policy, then composing
-  those parts for a use case.
-- **[Agent Application Platform](/concepts/platform):** A service that deploys
-  and operates Agent Applications, manages fleets, updates, and costs, and
-  supports distribution and monetization.
+- **[Agent Application](/paper#1-what-is-an-agent-application):** Software that uses one or more persistent, tool-using AI agents to produce work over time.
+- **[Harness / Agent Application framework](/concepts/framework):** A system that runs the agent loop and supports project structure, testing, packaging, deployment, and the production runtime.
+- **[Agent Application Programming](/paper#8-7-agent-application-programming):** The discipline of deciding which behavior belongs in code, instructions, skills, tools, hooks, agents, workflows, state, or policy, then composing those parts for a use case.
+- **[Agent Application Platform](/concepts/platform):** A service that deploys and operates Agent Applications, manages fleets, updates, and costs, and supports distribution and monetization.
 
 ## Read the work
 
-- [The paper](/paper) presents the full argument, category definition, and
-  architecture.
+- [The paper](/paper) presents the full argument, category definition, and architecture.
 - [Hello World](/examples/hello-world) shows the model in a small application.
-- [About this paper](/about) explains the audience, scope, and status of the
-  work.
-- [Companion documents](/companion-documents) lists the practical and technical
-  documents planned around the paper.
+- [About this paper](/about) explains the audience, scope, and status of the work.
+- [Companion documents](/companion-documents) lists the practical and technical documents planned around the paper.
 
 ## Contribute
 
 We welcome community engagement as the paper evolves.
 
-- Use [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions)
-  for open-ended proposals, architecture questions, and boundary cases.
-- Open an [issue](https://github.com/agentapplication/agentapplication/issues)
-  for a concrete error, missing source, or broken page.
-- Send a [pull request](https://github.com/agentapplication/agentapplication/pulls)
-  for a focused correction, example, or documentation improvement.
+- Use [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions) for open-ended proposals, architecture questions, and boundary cases.
+- Open an [issue](https://github.com/agentapplication/agentapplication/issues) for a concrete error, missing source, or broken page.
+- Send a [pull request](https://github.com/agentapplication/agentapplication/pulls) for a focused correction, example, or documentation improvement.
 
-[Read the review guide](/review) for the questions the draft most needs help
-answering. Before preparing a pull request, read
-[CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md).
+[Read the review guide](/review) for the questions the draft most needs help answering. Before preparing a pull request, read [CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md).
 
 ## Cite
 
@@ -260,7 +231,7 @@ project, ticket, or another ownership and privacy boundary. Every instance has
 its own history, authority, and logical workspace, isolated from other
 instances. Compute may stop and restart, but the instance and its work persist.
 
-Developers build these products with a **harness / Agent Application framework**.
+Developers build agent applications with a **harness / Agent Application Framework**.
 The framework supplies the agent loop and may also supply project conventions,
 development tools, evaluations, packaging, and deployment. An **Agent Application
 Platform** turns a tested project into a fixed release, creates long-lived
@@ -481,7 +452,7 @@ Several boundaries in the stack already have working protocols or products.
 
 | Primitive | What it provides |
 |---|---|
-| Tool protocol | The [Model Context Protocol](https://modelcontextprotocol.io/specification/2025-11-25/basic) gives agents a common way to discover and call outside capabilities, and to authenticate to protected MCP servers. |
+| Tool protocol | The [Model Context Protocol](https://modelcontextprotocol.io/specification/2026-07-28/basic) gives agents a common way to discover and call outside capabilities, and to authenticate to protected MCP servers. |
 | Natural-language programs | [Agent Skills](https://agentskills.io/specification) and related formats package procedural instructions so a harness can load and execute them. |
 | Component packages | [Agent Plugins](https://agent-plugins.org/specification) defines a portable package for Agent Skills and MCP server configurations, with namespaced client extensions. |
 | Agent-to-agent protocol | [Agent2Agent (A2A)](https://a2a-protocol.org/latest/specification/) gives independent agents a common way to advertise capabilities, exchange messages and task artifacts, and manage collaborative work. |
@@ -541,8 +512,6 @@ It fills the main window in ChatGPT, Claude, and Gemini. Lovable and Replit plac
 it beside the project under construction. Other products open it as a sidebar,
 panel, or popup. Here, *widget* means a reusable interface component; it may
 occupy any amount of screen space.
-
-The text box is only one part of the widget.
 
 | Area | What the widget does |
 |---|---|
@@ -604,7 +573,7 @@ example, can meet a customer through web chat, email, phone, WhatsApp, SMS,
 social messaging, or Slack while the support case continues behind those
 channels. To the user, a voice agent may simply be a phone number. With an
 OpenClaw personal agent, a Telegram or WhatsApp contact can be the entire
-user-facing product; the gateway, tools, and persistent state stay out of view.
+user-facing interface; the gateway, tools, and persistent state stay out of view.
 
 Some agents work mainly in the backend. They wake on schedules, tickets, API
 calls, webhooks, queue events, or requests from other agents. [Copilot Studio
@@ -649,13 +618,13 @@ domains.
 | [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, customer relationship management (CRM) records, generated analysis, and scheduled automations |
 | [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
 
-### 6.1 The instance follows the privacy boundary
+### 6.1 How to decide who gets an agent instance
 
-Privacy decides what gets an agent instance. The base contract gives the agent
-access to its entire workspace. If one workspace contains information about
+An agent instance has access to its entire workspace. If a workspace contains information about
 several people, customers, or cases, the agent can combine that information in
 its reasoning, summaries, and artifacts. Those entities belong in the same
-instance only when that mixing is acceptable.
+instance only when that mixing is acceptable. Thus, privacy boundary decides
+who gets an agent instance.
 
 This boundary limits prompt-injection damage. A user may try to make the agent
 ignore its rules and quote or summarize other information in the workspace. If
@@ -671,31 +640,27 @@ The Financial Advisor Agent therefore gets one instance per person or household,
 depending on who is authorized to share financial records. A human resources
 (HR) helper that handles personal employee matters gets one per employee. A
 business-to-business (B2B) support agent can keep many tickets for one customer
-in the same workspace, while different customers get different instances. A
+in the same workspace, and so each customer gets an instance. A
 virtual marketing employee can have one instance shared by a whole team because
 the team itself is the privacy boundary.
 
-Authentication answers who may use an instance. It does not decide how work is
-divided among instances. Several teammates can authenticate into the same
-marketing instance, while one HR administrator may manage many employee
-instances without combining their workspaces.
-
-After the application chooses the boundary, a stable instance identifier routes
-each message or event to the right instance. The agent resumes with the same
-permissions and history. It can remain suspended between events; persistence
-does not require a process to run continuously.
+An agent application builder decides the boundary and assigns appropriate
+stable instance identifiers. For instance, a Finanical Advisor agent may use
+household_id as the agent instance id, thus creating a new instance per household.
+All users from one household use the same instance id and thus interact with the
+same agent instance and access the same workspace.
 
 ### 6.2 A durable computational workspace
 
-The workspace holds the state the agent needs to continue: instructions, files,
-memory, artifacts, code, configuration, and any derived data. It is a logical
-durability contract, not a particular storage technology. A platform may keep
-the state in a database or object store. It may give each session an ephemeral
+The workspace holds the state the agent needs to continue with: instructions, files,
+memory, artifacts, code, configuration, and any derived data. The runtime may keep
+the state in a database or object store. Alternatively, it may give each session an ephemeral
 filesystem, then retain selected file changes and artifacts under that session
-so the instance can retrieve them later.
+so the instance can retrieve them later. Durable workspace can be implemented using
+a variety of underlying storage mechanisms.
 
-The canonical design exposes an isolated persistent virtual filesystem for each
-instance. It can hold arbitrary documents, code, local databases, installed
+The canonical design exposes an **isolated persistent virtual filesystem for each
+instance**. It can hold arbitrary documents, code, local databases, installed
 packages, and work in progress without requiring a schema for every new kind of
 state. The platform can restore compute around that filesystem when the agent
 wakes, or preserve a complete environment when the application needs one.
@@ -710,18 +675,24 @@ an external system of record cannot represent. Section 13 draws that boundary.
 
 ### 6.3 Durable work
 
-Durable work may be an artifact, a workspace change, a record in an external
-system, or a continuing process. Someone must still be able to find it after the
-session that produced it ends.
+Durable work may be an agent created artifact, a workspace change, a record in an external
+system, or a continuing process. The work persists after the session that produced it ends.
+It can be accessed in another session or via direct state access APIs.
 
 ### 6.4 What is not an Agent Application?
 
-A chat interface does not necessarily indicate an Agent Application. A copilot
-can qualify when a persistent instance carries its work across sessions. The
-same interface can front a stateless service that forgets everything when the
-conversation ends.
+The boundary of what is and isn't an agent application is fuzzy, similar to the boundary
+between a webpage and a web application. Many use cases may be appropriately served
+without a full agent application, but may be enhanced by conversion to an agent application.
 
-Several adjacent systems have a different primary unit:
+A chat interface does not necessarily indicate an Agent Application. A simple Q&A chatbot
+and a Financial Advisor agent both use a conversational chat interface, but the Q&A chatbot
+does not retain context of previous sessions, nor it produces durable work that persists. As
+a result, the Q&A chatbot is not an agent application. Depending on the use cases, if it is
+converted to an agent application, then it can deliver capabilities beyond simple answers,
+such as personalization of the answers based on previous interactions with the user.
+
+Several adjacent systems do not qualify as agent applications:
 
 | System | Primary unit | Why it falls outside this category |
 |---|---|---|
@@ -733,7 +704,7 @@ Several adjacent systems have a different primary unit:
 
 A conventional n8n or Zapier flow remains workflow automation when its graph
 determines the next step. [Dependabot](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file)
-is another boundary case: it monitors configured package ecosystems and opens
+is a boundary case: it monitors configured package ecosystems and opens
 pull requests according to schedules and update rules. The pull request is
 durable, but the configuration determines the control flow. A simple Q&A bot
 remains a chatbot when each conversation stands alone. An Agent Application may
@@ -780,30 +751,20 @@ When architecture or operations require precision, this paper names the agent
 project, release, instance, session, runtime agent, workspace, or interface
 directly.
 
-An app running inside a host assistant is one delivery form. The host may own the
-continuing instance and workspace while the app supplies tools and a visual
-surface. A plugin installed into that host is usually a dependency or extension,
-not a standalone Agent Application, because the host still owns the product
-identity and lifecycle. Appendix B covers earlier uses of the name.
-
 ---
 
 # Part II: Building Agent Applications
 
 ## 8. A hybrid programming model
 
-An Agent Application combines four kinds of project material: conventional
-code, natural-language programs, declarations, and knowledge or assets. The
-material's runtime role determines its class; directory names are insufficient.
-A plugin can span all four kinds. For example, one Agent Skill may contain a
-natural-language `SKILL.md`, executable scripts, reference documents, and
-metadata that tells a client how to load them.
+An Agent Application combines four kinds of project material: **conventional
+code, natural-language programs, declarations, and knowledge or assets**.
 
 ### 8.1 Conventional code
 
-Conventional code remains the right tool wherever the result must be repeatable
-or an error would cross a hard boundary:
+Conventional code remains the right tool for:
 
+- deterministic, repeatable processes;
 - hard security boundaries;
 - exact data transformations;
 - APIs and protocol adapters;
@@ -824,14 +785,23 @@ how a server publishes a tool's name, description, and input schema, and how a
 client discovers and calls it. A calendar API, database query, or payment action
 can then appear to the model through a common interface.
 
+The 2026-07-28 MCP specification is stateless at the protocol layer. Each
+request carries the protocol version, client metadata, and client capabilities
+needed to process it. There is no initialization handshake or MCP session ID. If
+a tool needs state to survive across calls, it returns an explicit handle that
+the client passes in later requests. That handle belongs to the tool or
+application, not to an MCP session.
+
 When an application reaches external systems through MCP, identity,
-authentication, and authorization become part of the tool boundary. Under the [MCP authorization
-specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization),
+authentication, and authorization become part of the tool boundary. Under the
+[MCP authorization
+specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization),
 a protected HTTP MCP server acts as an OAuth 2.1 resource server, while the MCP
 client calls it on behalf of a resource owner. The server publishes how to find
-its authorization server and which scopes are needed. The client obtains a token
-issued for that MCP server, sends it with each request, and responds when the
-server requires additional scope.
+its authorization server and which scopes are needed. The client obtains an
+access token issued for that MCP server and includes it in the `Authorization`
+header of every HTTP request. If the server requires another scope, the client
+can ask the user to authorize it and retry the request.
 
 The application still has to bind three identities correctly: the authenticated
 user, the agent instance, and the external account. For user-initiated work, the
@@ -1110,7 +1080,7 @@ design.
 
 | Standard | Boundary it covers | What it does not define |
 |---|---|---|
-| [MCP](https://modelcontextprotocol.io/specification/2025-11-25/basic) | An agent host connecting to tools, resources, and prompts | The agent loop, project layout, workspace, or application release |
+| [MCP](https://modelcontextprotocol.io/specification/2026-07-28/basic) | An agent host connecting to tools, resources, and prompts | The agent loop, project layout, workspace, or application release |
 | [Agent Skills](https://agentskills.io/specification) | A reusable instruction package loaded by compatible agents | How an application selects models, stores state, or deploys |
 | [Agent Plugins 1.0](https://agent-plugins.org/specification) | A portable extension bundle containing Agent Skills and MCP server configuration | A complete Agent Application, dependency graph, or release format |
 | [AG-UI](https://docs.ag-ui.com/) | Events between an agent backend and a user-facing application | The backend framework or frontend component library |
@@ -2743,7 +2713,7 @@ Several current formats cover part of this architecture:
 
 | Existing work | Relevant part |
 |---|---|
-| [MCP](https://modelcontextprotocol.io/specification/2025-11-25/basic) | Discovery and invocation of tools, resources, and prompts across agent hosts and external servers |
+| [MCP](https://modelcontextprotocol.io/specification/2026-07-28/basic) | Discovery and invocation of tools, resources, and prompts across agent hosts and external servers |
 | [Agent Skills](https://agentskills.io/specification) | Portable instructions, scripts, references, and assets |
 | [Agent Plugins 1.0](https://agent-plugins.org/specification) | Portable packaging and discovery of Agent Skills and MCP server configurations, plus namespaced client extensions |
 | [OpenAI plugin format](https://developers.openai.com/plugins/build/plugins) | OpenAI-specific packaging for skills, MCP connections, hooks, assets, metadata, and distribution |
