@@ -838,26 +838,27 @@ another form. This framework-native representation is the **agent project**. It
 contains the code, instructions, knowledge, configuration, and tests used to
 build and run the application.
 
-The project stays in the framework's native form. Next.js and Rails both build
+The project stays in the framework's native form. This is similar to how Next.js and Rails both build
 web applications, but they use different route files, project conventions, and
 release bundles. They interoperate through the web platform and its protocols.
 Agent frameworks can likewise support common protocols while keeping their own
 project layouts and programming models.
 
-The choice of framework affects the finished application. Its model support,
+The choice of framework affects the finished application. Its conventions,
+defaults and design philosophy about model support,
 context strategy, tool system, execution environment, state model, event stream,
 and debugging facilities all shape behavior and cost.
 
 ### 9.1 A capability model for Agent Applications
 
-The table collects capabilities found across current Agent Applications. Each
-project uses the ones its job requires. A small application may need only an
+Here we collect capabilities found across current Agent Applications. Each
+project uses appropriate subset that its job requires. A small application may need only an
 agent program, a few tools, an interface, and tests. A long-running business
 application may need every row.
 
 | Capability | What the application needs | Usually supplied by |
 |---|---|---|
-| Agent program | A primary agent, model configuration, instructions, context assembly, tool loop, stop conditions, and structured outputs | Framework |
+| Agent program | A primary agent, model configuration, instructions, context assembly, tool loop, stop conditions, and structured outputs | harness / Framework |
 | Instructions and knowledge | System instructions, reusable procedures, domain knowledge, examples, and other material loaded into context when needed | Project, framework, or reusable package |
 | Tools and integrations | Typed functions, APIs, data sources, files, shell or code execution, browsers, and remote tool servers | Project, framework, MCP server, or plugin |
 | Agents and workflows | Specialist agents, delegation, deterministic steps, branching, parallel work, and communication with independently deployed agents | Framework, with A2A at a remote boundary |
@@ -869,9 +870,7 @@ application may need every row.
 | Evaluation and observability | Test cases, trajectory and output checks, security tests, traces, cost measurements, and production feedback | Framework, evaluation service, and platform |
 | Application lifecycle | Local development, dependency review, configuration, deployment, releases, instance creation, migration, rollback, metering, export, and deletion | Framework and platform toolchain |
 
-Framework authors can use the table to describe what their frameworks handle
-and what remains in application or platform code. The capability names do not
-specify folders, configuration keys, or APIs.
+Framework authors can use the table to describe what their frameworks handle.
 
 ### 9.2 What a project may contain
 
@@ -913,13 +912,13 @@ design.
 | [A2A](https://a2a-protocol.org/latest/specification/) | Discovery, messages, tasks, and artifacts between independently addressable agents | Internal subagents or a framework's workflow model |
 | [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview) | Interactive UI supplied by a tool and rendered by a host | The application's full user interface or artifact model |
 
-These standards play roles closer to HTTP, HTML, and package formats than to a
-shared Next.js or Rails release. A framework can support them while keeping its
-own source layout, build process, and deployment model.
+These standards play roles similar to HTTP, HTML, and package formats in web applications. A framework
+brings these together to simplify building applications that leverage these standards,
+while keeping its own source layout, build process, and deployment model.
 
 ### 9.4 How current frameworks expose the capabilities
 
-The table records how five frameworks documented these capabilities on August
+The table records how five frameworks documented these capabilities as of August
 8, 2026. It describes their first-class paths and does not rank product quality
 or test conformance. "Application-owned" means that application code or a
 separate platform supplies the capability.
@@ -939,79 +938,57 @@ and some form of state. They differ in how they package instructions, manage
 workspaces, run evaluations, connect to user interfaces, and deploy. Those
 differences matter when a developer chooses a framework.
 
-### 9.5 Plugins are components, not applications
+### 9.5 Plugins contribute components
 
-An Agent Plugin adds components to a project or host. The application still
-owns its primary program, product identity, state model, authority rules, tests,
-and operating lifecycle. A reviewer supplied by a plugin is part of the
-application unless someone deploys it as a separate application with its own
-identity and authority boundary.
+An Agent Plugin packages reusable components for an Agent Project. An
+application can incorporate plugin-supplied instructions, tools, hooks, and
+client extensions into its program. Its state model, authority rules, tests,
+and operating lifecycle govern how those components are used.
 
 [Agent Plugins 1.0](https://agent-plugins.org/specification) defines a portable
 directory with a root `plugin.json`, Agent Skills under `skills/`, MCP server
-configuration in `mcp.json`, and reverse-domain client extensions. It does not
-define a registry, dependency resolution, a project dependency file, transitive
-plugin dependencies, installation permissions, or supply-chain verification.
-Frameworks and package managers can add those features without changing the
-plugin format.
-
-Using a plugin involves four separate decisions:
-
-1. Resolution selects a package and source.
-2. Installation materializes and verifies its content.
-3. Activation exposes selected components to the agent.
-4. Authorization grants access to capabilities, accounts, or credentials.
-
-These decisions are independent. A skill can change behavior without adding a
-tool. An MCP server can add a capability before it receives a credential. A
-hook may execute without the model choosing it.
-
-Logs, permissions, tests, and lineage need an unambiguous name for every
-imported component. A framework can qualify a short name such as `review` with
-the plugin identity and component type. Each framework can choose its own syntax
-until separate implementations need to exchange these names.
-
-The [Hello World Agent Application](https://agentapplication.io/examples/hello-world)
-shows a minimal project with instructions, one file-writing tool, a persistent
-workspace, and a durable artifact.
+configuration in `mcp.json`, and reverse-domain client extensions. The
+specification stops at the package format. Frameworks and package managers can
+supply registries and dependency resolution, including project dependency files
+and transitive plugin dependencies. They can also define installation
+permissions and supply-chain verification without changing the plugin format.
 
 ---
 
 ## 10. Application, release, instance, and session
 
-A publisher turns the source project into a fixed version for deployment: a
-release. Deployment creates instances from that release, and each period of
-activity becomes a session. These four lifetimes govern the running
-application.
+A running Agent Application has four related lifetimes. The product continues
+across releases. Each release can create many instances, and each instance can
+run many sessions.
 
-**The application** is the product identity: what a company offers and customers
-use. It continues across releases.
+The application is the product identity that a company offers and customers
+use. It continues while the publisher ships new releases.
 
-**The release** is a fixed version of the native project that a publisher
-deploys. Each framework and platform has its own release format. A production
-release should preserve enough information for an operator to inspect and
-reproduce the deployment. This includes the source revision, resolved
-dependencies, framework, harness and model versions, active components,
-requested authority, runtime requirements, evaluations, and migration rules.
-Prior releases stay available for inspection and rollback.
+A release is a fixed, deployable version of the native project. Each framework
+and platform has its own release format. A production release records the source
+revision and resolved dependencies, along with the framework, harness, and model
+versions. It also records active components, requested authority, runtime
+requirements, evaluations, and migration rules so an operator can inspect and
+reproduce the deployment. Operators keep prior releases for inspection and
+rollback.
 
 A release records content digests as well as version labels. Semantic versioning
 cannot establish behavioral compatibility for a package that changes
-natural-language instructions. A production update requires evaluation even
-when the plugin publisher labels it a minor or patch release.
+natural-language instructions. A plugin update therefore requires evaluation
+even when its publisher labels it a minor or patch release.
 
-**The instance** is the long-lived unit created from a release for one privacy
-domain. Depending on the application, that domain may be a user, team, customer
-account, project, or job. Its workspace, authority grants, history, and billing
-accumulate independently of other instances. It may act for months on behalf of
-someone who remains responsible for it. An instance can be upgraded to a new
-release by updating its project files. If the instance has modified those files,
-the upgrade may require a semantic merge.
+An instance is the long-lived unit created from a release for one privacy
+domain, such as a user, team, customer account, project, or job. Its workspace,
+authority grants, history, and billing accumulate independently of other
+instances. The user or organization it represents remains responsible even when
+the instance acts for months. An operator upgrades an instance by updating its
+project files to a new release. Local modifications may require a semantic
+merge.
 
-**The session** is one period of execution or interaction, lasting one turn or
-many, started by a user, an event, or a schedule. A session may or may not have
-a formal "finished" state. It uses the application release and active local
-changes attached to the instance when the session starts.
+A session is one period of execution or interaction within an instance. A user,
+event, or schedule starts it. The session may last one turn or many and need not
+have a formal finished state. It uses the release and active local changes
+attached to the instance when the session starts.
 
 ```text
 Agent Application
@@ -1027,103 +1004,99 @@ Agent Application instances
 
 ---
 
-## 11. The workspace: a continuing place to work
+## 11. The durable workspace
 
-Each instance has a persistent, isolated logical workspace. All durable working
-state available to the runtime agent belongs to that workspace, even when a
-platform stores it across several systems.
+Each instance has one persistent, isolated logical workspace. It includes every
+piece of durable state that the runtime agent can retrieve, even when the
+platform stores that state across several systems.
 
-An implementation may keep structured state in a database and artifacts in
-object storage. It may give each session an ephemeral filesystem, retain its
-selected changes, and associate those changes with the session that produced
-them. These designs satisfy the contract when later sessions can discover, use,
-and update the retained state.
+A logical workspace need not be a single filesystem. A platform may keep
+structured state in a database and artifacts in object storage. It may also give
+each session an ephemeral filesystem, retain selected changes, and record which
+session produced them. Later sessions must be able to find, use, and update the
+retained state.
 
-The canonical and most general implementation gives each instance an isolated
-persistent virtual filesystem. Agents and their tools can use ordinary file
-operations to work with unstructured documents, code, local databases,
-installed packages, artifacts, and intermediate results. New forms of state do
-not require the application developer to design a database schema or storage API
-first.
+The reference design gives each instance an isolated persistent virtual
+filesystem. Agents and their tools use ordinary file operations to work with
+documents, code, local databases, installed packages, artifacts, and
+intermediate results. They can add new forms of state without requiring the
+application developer to design a database schema or storage API first.
 
-This filesystem does not need a dedicated machine while the instance is idle. A
-platform can snapshot it, restore compute when work arrives, and suspend it
-again afterward. At scale, the platform stores one shared base image and only
-the files each instance has changed. Appendix D describes the storage contract.
+The filesystem does not require a dedicated machine while the instance is idle.
+A platform can snapshot it, restore compute when work arrives, and suspend it
+afterward. At scale, the platform can store a shared base image and only the
+files each instance has changed. Appendix D describes the storage contract.
 
 ### 11.1 What a workspace holds
 
-**Current working state** is updated in place. Its size tends to reflect the
-application's current work rather than its full history. Depending on the
-application, it includes:
+Current working state changes in place, so its size usually reflects the
+application's current work rather than its full history. It may include:
 
 - source material and working files;
 - generated code and installed dependencies;
 - local databases, indexes, and caches;
 - created artifacts;
 - downloaded and locally cached files;
-- user uploaded files;
+- user-uploaded files;
 - tool configuration and pending schedules.
 
-**Historical state** accumulates as the instance works:
+Historical state grows as the instance works and includes:
 
 - checkpoints and snapshots;
 - run records;
 - evaluation results;
 - source and change history.
 
-Historical state determines much of a long-lived instance's carrying cost. A
-workspace holding fifty megabytes of customer work may also carry several
-gigabytes of checkpoints taken before consequential actions over two years.
-Without retention and compaction policies, history eventually dominates the cost
-of the workspace.
+For a long-lived instance, history may cost more to store than the current
+working state. A workspace holding fifty megabytes of customer work may also
+carry several gigabytes of checkpoints taken before consequential actions over
+two years. Retention and compaction policies can keep that history from
+dominating the workspace's storage cost.
 
 Raw credentials stay in a managed secret store, while the workspace holds
 governed references. An export carries those references and leaves the
 credentials behind.
 
-The Agent Plugins specification defines two storage roots. For a plugin packaged
-with an application, `PLUGIN_ROOT` is immutable release content. `PLUGIN_DATA` is
-writable state in the instance workspace. A platform scopes that data by
-application, instance, and plugin identity, then applies the workspace's
-isolation, retention, export, checkpoint, and deletion rules. Plugin data is
-shared only inside one instance: a team that shares an instance shares its
-plugin data, and separate instances never share it. Secrets stay in the
-managed secret store rather than either root. Plugin upgrades that change
-persistent data include migrations in the release plan.
+The Agent Plugins specification defines two storage roots. `PLUGIN_ROOT` holds
+immutable release content for a plugin packaged with an application.
+`PLUGIN_DATA` holds writable state in the instance workspace. A platform scopes
+that data by application, instance, and plugin identity, then applies the
+workspace's isolation, retention, export, checkpoint, and deletion rules. A
+team sharing one instance also shares its plugin data; separate instances never
+share it. Secrets stay in the managed secret store rather than either root.
+Plugin upgrades that change persistent data include migrations in the release
+plan.
 
 ### 11.2 The workspace is the privacy boundary
 
-The agent can read the whole workspace. Files, memory, indexes, summaries, and
-artifacts may all enter its context or affect later work. Applications cannot
-place two entities in one workspace and assume that folder names or file
-permissions will keep their information apart.
+The runtime agent can read the whole workspace. Files, memory, indexes,
+summaries, and artifacts may enter its context or affect later work. Folder
+names and file permissions within a shared workspace do not create separate
+privacy domains.
 
-This boundary applies to the logical workspace, not only to one filesystem
-volume. Database rows, objects, session-bound files, and external records are
-inside the boundary whenever the instance can retrieve them.
+The boundary covers the logical workspace rather than one filesystem volume. It
+includes database rows, objects, session-bound files, and external records
+whenever the instance can retrieve them.
 
 The platform enforces privacy between workspaces. It isolates their storage and
 compute, controls where their contents can be sent, and restores or deletes one
 without touching another. Section 6.1 gives examples of where applications draw
 that boundary; section 19 covers the controls that enforce it.
 
-### 11.3 The agent instance and workspace are different things
+### 11.3 Instance identity and workspace state
 
 The instance identifies the continuing agent: whom it represents, what it may
-do, and what it has done. The workspace contains the durable working state and
-computational environment that the agent uses. Keeping them separate lets an
-operator access, move, or restore the workspace without changing the agent's
-identity or permissions. It also lets an operator keep per-instance
-configuration outside the workspace and out of the runtime agent's reach.
+do, and what it has done. The workspace holds the durable working state and
+computational environment that the agent uses. Separating them lets an operator
+access, move, or restore the workspace without changing the agent's identity or
+permissions. It also keeps per-instance configuration outside the workspace and
+out of the runtime agent's reach.
 
 ### 11.4 Memory and workspace
 
 A memory system selects facts or past interactions for the model's context.
-Whether it stores that information in files, a database, or another service,
-persisted memory belongs to the logical workspace when the instance can retrieve
-it. Applications can choose memory structures and retrieval methods suited to
-their work.
+Persisted memory belongs to the logical workspace whenever the instance can
+retrieve it. The memory may live in files, a database, or another service.
 
 ---
 
