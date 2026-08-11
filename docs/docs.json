@@ -51,5 +51,16 @@
   },
   "seo": {
     "indexing": "all"
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "download-pdf",
+      "chatgpt",
+      "claude",
+      "grok"
+    ],
+    "display": "header"
   }
 }
