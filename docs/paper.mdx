@@ -916,27 +916,52 @@ These standards play roles similar to HTTP, HTML, and package formats in web app
 brings these together to simplify building applications that leverage these standards,
 while keeping its own source layout, build process, and deployment model.
 
-### 9.4 How current frameworks expose the capabilities
+### 9.4 How current harnesses expose the capabilities
 
-The table records how five frameworks documented these capabilities as of August
-8, 2026. It describes their first-class paths and does not rank product quality
-or test conformance. "Application-owned" means that application code or a
-separate platform supplies the capability.
+This comparison focuses on Goose, Claude Code, Deep Agents, OpenCode, and
+Vercel AI SDK. Each already covers much of the capability model and has a
+project or runtime boundary that could develop into an Agent Application
+framework.
 
-| Capability | Documented path in each framework |
-|---|---|
-| Agent program | **[Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview):** agent loop plus system prompt or project instructions<br />**[Google ADK](https://adk-labs.github.io/adk-docs/get-started/about/):** `LlmAgent` or a workflow agent<br />**[LangGraph](https://docs.langchain.com/oss/python/langgraph/overview):** graph or LangChain agent<br />**[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/):** `Agent` plus `Runner`<br />**[Vercel AI SDK](https://ai-sdk.dev/docs/agents):** `ToolLoopAgent` |
-| Reusable instructions | **Claude:** Agent Skills and plugins<br />**Google:** Agent Skills, plugins, and native instructions<br />**LangGraph:** prompts and application code<br />**OpenAI:** agent instructions and prompt templates<br />**Vercel:** agent instructions and application modules |
-| Tools and integrations | **Claude:** built-in tools, custom tools, and MCP<br />**Google:** native tools and MCP toolsets<br />**LangGraph:** LangChain tools and an MCP adapter<br />**OpenAI:** function tools and MCP servers<br />**Vercel:** typed tools and an MCP client |
-| Agent composition | **Claude:** subagents<br />**Google:** multi-agent and graph workflows<br />**LangGraph:** subgraphs, subagents, handoffs, and routers<br />**OpenAI:** agents as tools and handoffs<br />**Vercel:** subagents invoked as tools |
-| State and workspace | **Claude:** resumable sessions, a working directory, and file checkpoints<br />**Google:** session, state, memory, and artifact services<br />**LangGraph:** checkpoints, threads, and stores<br />**OpenAI:** sessions and sandbox-agent workspaces<br />**Vercel:** application-owned message and durable state |
-| User-facing events | **Claude:** streamed SDK messages; application-owned UI<br />**Google:** events and a development UI<br />**LangGraph:** typed event streams; application-owned UI<br />**OpenAI:** streaming and realtime agents; application-owned UI<br />**Vercel:** AI SDK UI streams and hooks |
-| Evaluation and operations | **Claude:** hooks, OpenTelemetry, usage tracking, and self-hosting guidance<br />**Google:** built-in evaluation, traces, and several deployment targets<br />**LangGraph:** persistence in LangGraph; evaluation, tracing, and deployment through LangSmith<br />**OpenAI:** built-in tracing and evaluation integration; SDK deployment is application-owned<br />**Vercel:** telemetry and development tools; tests and deployment are application-owned |
+The table uses first-party documentation available on August 11, 2026. Each
+entry names the path the project documents. "Project code" means that the
+application assembles the capability from general APIs. "Platform service"
+means that a deployment or hosting layer supplies it. These terms describe
+ownership and packaging, not a pass/fail score.
 
-All five frameworks provide an agent program, tools, agent composition, events,
-and some form of state. They differ in how they package instructions, manage
-workspaces, run evaluations, connect to user interfaces, and deploy. Those
-differences matter when a developer chooses a framework.
+| Capability | Goose | Claude Code | Deep Agents | OpenCode | Vercel AI SDK |
+|---|---|---|---|---|---|
+| Agent program | [Desktop, CLI, or API](https://block.github.io/goose/) agent with shareable [recipes](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/recipes/recipe-reference.md) | Built-in [agent loop](https://code.claude.com/docs/en/how-claude-code-works), interactive or [programmatic](https://code.claude.com/docs/en/headless) | [`create_deep_agent`](https://docs.langchain.com/oss/python/deepagents/overview) configures the model, prompt, tools, backends, middleware, and subagents | Built-in or custom [primary agent](https://opencode.ai/docs/agents/), interactive or exposed through the [server](https://opencode.ai/docs/server/) | In-memory [`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) or durable [`WorkflowAgent`](https://vercel.com/kb/guide/what-is-workflowagent) |
+| Instructions and knowledge | [Persistent instructions](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/context-engineering/using-persistent-instructions.md), [Agent Skills](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/context-engineering/using-skills.md), and recipe instructions | `CLAUDE.md`, path-scoped rules, Skills, and plugins in the [extension model](https://code.claude.com/docs/en/features-overview) | System prompt, `AGENTS.md` [memory](https://docs.langchain.com/oss/python/deepagents/memory), and [Skills](https://docs.langchain.com/oss/python/deepagents/skills) | `AGENTS.md` and other [rules](https://opencode.ai/docs/rules/), plus on-demand [Agent Skills](https://opencode.ai/docs/skills/) | Agent `instructions`, provider-backed Skills and files, and project modules in [AI SDK 7](https://vercel.com/changelog/ai-sdk-7) |
+| Tools and integrations | Built-in tools and local or remote [MCP extensions](https://github.com/aaif-goose/goose/blob/main/documentation/docs/getting-started/using-extensions.md) | Built-in file, shell, web, and code-intelligence tools, plus [MCP and plugins](https://code.claude.com/docs/en/features-overview) | LangChain and custom tools, MCP, pluggable filesystems, and sandbox [`execute`](https://docs.langchain.com/oss/python/deepagents/overview) | [Built-in tools](https://opencode.ai/docs/tools/), project [custom tools](https://opencode.ai/docs/custom-tools/), and [MCP servers](https://opencode.ai/docs/mcp-servers/) | Typed and provider tools, MCP clients, harness adapters, and optional sandbox execution in [AI SDK 7](https://vercel.com/changelog/ai-sdk-7) |
+| Agents and workflows | Context-isolated [subagents](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/context-engineering/subagents.mdx), recipes, and [subrecipes](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/recipes/subrecipes.md) | [Subagents and agent teams](https://code.claude.com/docs/en/features-overview), with hooks for deterministic lifecycle steps | Planning plus synchronous, asynchronous, and custom [subagents](https://docs.langchain.com/oss/python/deepagents/subagents) | Configurable primary agents and subagents delegated through the [`task` tool](https://opencode.ai/docs/agents/) | [Subagents as tools](https://ai-sdk.dev/docs/agents/subagents), project-owned loop control, and durable [`WorkflowAgent`](https://vercel.com/kb/guide/what-is-workflowagent) steps |
+| State and workspace | Persistent [session records](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/sessions/session-management.md) and files in the selected host working directory | Named, resumable, branchable [sessions](https://code.claude.com/docs/en/sessions), project files, worktrees, and checkpoints | Checkpointed threads, long-term memory, and [filesystem backends](https://docs.langchain.com/oss/python/deepagents/going-to-production) for ephemeral, durable, local, or sandboxed files | Session history and state through the [server](https://opencode.ai/docs/server/), with tools operating on the project worktree | [`WorkflowAgent`](https://vercel.com/kb/guide/what-is-workflowagent) persists runs; [project code](https://ai-sdk.dev/docs/agents/memory) stores messages and memory; sandboxes supply isolated files |
+| Interfaces and events | Desktop, CLI, API, ACP, structured run output, and interactive [MCP Apps](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/interactive-chat/mcp-ui.md) | Terminal, desktop, IDE, web, mobile, and integration [surfaces](https://code.claude.com/docs/en/platforms), plus programmatic streams | Typed streaming and [`useStream`](https://docs.langchain.com/oss/python/deepagents/frontend/overview) for messages, plans, subagents, approvals, and sandbox state | TUI, desktop, IDE, and [web](https://opencode.ai/docs/web/) clients over a server with sessions, messages, files, and events | UI hooks and transports, streams, MCP Apps, and a terminal UI in [AI SDK 7](https://vercel.com/changelog/ai-sdk-7) |
+| Artifacts | Workspace files and [MCP Apps](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/interactive-chat/mcp-ui.md); project or platform code adds identity, versions, permissions, and export | Project files plus private or shareable interactive [Artifacts](https://code.claude.com/docs/en/artifacts) | Virtual-filesystem outputs and [sandbox file views](https://docs.langchain.com/oss/python/deepagents/frontend/overview); project or platform code adds artifact metadata | Project files and shared [session snapshots](https://opencode.ai/docs/share/); project or platform code adds artifact lifecycle | File parts, UI data, generated media, and MCP Apps; [application code](https://vercel.com/changelog/ai-sdk-7) stores and renders artifacts |
+| Triggers and background work | [`goose run`](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/running-tasks.md), headless recipes, and [CI/CD](https://github.com/aaif-goose/goose/blob/main/documentation/docs/tutorials/cicd.md); an external scheduler or queue starts runs | Cloud [Routines](https://code.claude.com/docs/en/routines) triggered by schedules, API calls, or GitHub events, plus local schedules and CI | Durable asynchronous runs, webhooks, and cron through [LangSmith Deployments](https://docs.langchain.com/oss/python/deepagents/going-to-production) | Non-interactive runs and [GitHub](https://opencode.ai/docs/github/) or [GitLab](https://opencode.ai/docs/gitlab/) events; CI or another platform supplies schedules and queues | Durable background execution through [`WorkflowAgent`](https://vercel.com/kb/guide/what-is-workflowagent), with schedules through [Vercel Cron Jobs](https://vercel.com/docs/cron-jobs) |
+| Policy and authority | Autonomy modes, granular [tool permissions](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/managing-tools/goose-permissions.md), and deterministic [hooks](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/context-engineering/hooks.md) | Versionable permission rules, approvals, hooks, sandboxing, and managed [policies](https://code.claude.com/docs/en/permissions) | [Filesystem permissions](https://docs.langchain.com/oss/python/deepagents/permissions), human interrupts, middleware guardrails, and deployment-layer auth | Global and per-agent [allow, ask, and deny rules](https://opencode.ai/docs/permissions/) with permission and tool-call hooks | Tool approval policies, signed replay, timeouts, active tools, and callbacks in [AI SDK 7](https://vercel.com/changelog/ai-sdk-7); project and host enforce identity and resources |
+| Evaluation and observability | Local [session and system logs](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/logs.md) and opt-in [usage data](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/usage-data.md); project code supplies tests and graders | Hooks and [OpenTelemetry metrics and events](https://code.claude.com/docs/en/monitoring-usage); project code supplies behavioral evaluations | Native LangSmith [tracing](https://docs.langchain.com/langsmith/trace-deep-agents) and [evaluation](https://docs.langchain.com/langsmith/evaluation) | Server logs and [plugin events](https://opencode.ai/docs/plugins/) for messages, sessions, permissions, files, and tools; project code supplies evaluations | Stable telemetry, `@ai-sdk/otel`, callbacks, and step statistics in [AI SDK 7](https://vercel.com/changelog/ai-sdk-7), plus [test models](https://ai-sdk.dev/docs/ai-sdk-core/testing) |
+| Application lifecycle | Versioned recipes and config, [custom distributions](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/custom-distributions.md), CI, and a [remote server](https://github.com/aaif-goose/goose/blob/main/documentation/docs/guides/remote-goose-server.md); platform-owned releases and instances | Versioned [`.claude` content and plugins](https://code.claude.com/docs/en/features-overview) through CLI, SDK, web, Routines, and CI; platform-owned releases and instances | [`deepagents deploy`](https://docs.langchain.com/oss/python/deepagents/going-to-production) provisions a LangSmith Deployment with assistants, threads, runs, stores, auth, triggers, and observability | Versioned project rules, agents, Skills, tools, and plugins through clients, [server](https://opencode.ai/docs/server/), or CI; platform-owned releases and instances | Versioned TypeScript application on its chosen host; Vercel [deployments](https://vercel.com/docs/deployments) and Workflow supply release and run lifecycle |
+
+The table exposes fragmented support for the capability model. A capability may
+be a built-in feature in one harness, project code in another, and a platform
+service in a third. Similar features use different names, scopes, state models,
+and deployment paths. Developers must therefore reconstruct the application
+model for each harness.
+
+The boundary also differs. Goose, Claude Code, and OpenCode package a runnable
+host with user surfaces. Deep Agents combines a Python harness with a documented
+LangSmith deployment path. Vercel AI SDK offers TypeScript primitives and a
+durable Workflow runtime, leaving the project to supply more of the application
+structure.
+
+One goal of this project is to make these differences visible and give the
+community a shared capability model. A harness moves toward becoming a
+first-class Agent Application framework when it presents these capabilities as
+a coherent system for structuring, developing, testing, deploying, and
+operating an application. Consistency means shared concepts, explicit
+ownership, and interoperable boundaries while each framework keeps its native
+preferences, defaults, and use-case optimizations.
 
 ### 9.5 Plugins contribute components
 
@@ -2364,16 +2389,12 @@ page](https://karta.sh/platform) document the CLI, hosted surfaces, fleet
 operation, metering, and monetization used as platform examples. Section 24
 keeps these examples separate from the vendor-neutral workflow.
 
-**Framework capability snapshot.** Section 9.4 records each framework's
-documented, first-class support. It does not try to include every integration a
-developer could add. The sources are the
-[Claude Agent SDK feature guide](https://code.claude.com/docs/en/agent-sdk/claude-code-features),
-[Google ADK technical overview](https://adk-labs.github.io/adk-docs/get-started/about/),
-[LangGraph overview](https://docs.langchain.com/oss/python/langgraph/overview),
-[OpenAI Agents SDK overview](https://openai.github.io/openai-agents-python/),
-and [Vercel AI SDK agent guide](https://ai-sdk.dev/docs/agents). Their detailed
-documentation supports the entries for state, tools, agent composition, events,
-evaluation, and deployment.
+**Harness capability snapshot.** Section 9.4 compares Goose, Claude Code, Deep
+Agents, OpenCode, and Vercel AI SDK. Every entry links to the relevant
+first-party documentation. Karta's [executable capability
+check](https://karta.sh/blog/harness-selection-part-2-capability-parity)
+independently verifies MCP, Skills, hooks, subagents, code execution, shell
+access, and web access across four of the five projects in the table.
 
 **Prior art on the name.** Ge et al., "LLM as OS, Agents as Apps: Envisioning
 AIOS, Agents and the AIOS-Agent Ecosystem," arXiv:2312.03815, December 2023,
