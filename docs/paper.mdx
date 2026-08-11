@@ -557,8 +557,10 @@ directly.
 
 ## 8. A hybrid programming model
 
-An Agent Application combines four kinds of project material: **conventional
-code, natural-language programs, declarations, and knowledge or assets**.
+An Agent Application combines four kinds of material: **conventional code,
+natural-language programs, declarations, and knowledge or assets**. Developers
+package this material in the Agent Project. After deployment, an instance may
+also acquire code, instructions, knowledge, or assets as local state.
 
 ### 8.1 Conventional code
 
@@ -575,6 +577,8 @@ Conventional code remains the right tool for:
 - resource accounting;
 - rendering and user interfaces;
 - performance-sensitive work.
+
+**Tools and MCP**
 
 Tools connect this code to the model's reasoning loop. In an LLM "tool call,"
 the model selects a tool and produces structured arguments. The harness validates
@@ -623,6 +627,17 @@ one such pattern. Parallel calls introduce ordering and concurrency problems.
 Conventional code enforces these guarantees and records each request, approval,
 retry, result, and error for audit.
 
+**Runtime code execution**
+
+An Agent Application may make scripts and executables available to the runtime
+agent. Some are packaged with the release; the agent may generate others while
+working. The agent can invoke this code through a shell, interpreter, or
+code-execution tool, and conventional compute runs it in the application's
+execution environment.
+
+If the instance retains generated code for later execution, it becomes part of
+the workspace and local program state rather than the immutable release.
+
 ### 8.2 Natural-language programs
 
 Natural language becomes program material when changing the text changes runtime
@@ -637,13 +652,13 @@ behavior. Agent developers already write this material in several common forms:
 - Subagent definitions describe specialist roles, the tools they may use, and
   the instructions they follow when the main agent delegates work to them.
 
-The harness can load instructions at runtime from a designated URL, a file on
-disk, an organization policy store, or a skill registry. The LLM interprets this
-text alongside the instructions packaged in the release. Dynamic loading
-allows an organization to add a procedure without rebuilding the application
-and lets the agent load specialized instructions for the task at hand. If the
-instance keeps them, they become local program state; the instance has diverged
-from its release, and its lineage records the change.
+The harness / Agent Application Framework can load instructions at runtime from
+a designated URL, a file on disk, an organization policy store, or a skill
+registry. The LLM interprets this text alongside the instructions packaged in
+the release. Dynamic loading allows an organization to add a procedure without
+rebuilding the application and lets the agent load specialized instructions for
+the task at hand. If the instance keeps them, they become local program state;
+the instance has diverged from its release, and its lineage records the change.
 
 Loaded instructions carry the authority to steer the agent. An attacker who can
 alter the source can change the agent's behavior, and a prompt injection can have
@@ -653,47 +668,58 @@ contents are verified and versioned, and what authority they receive. A document
 loaded as knowledge remains untrusted reference material unless the release
 designates it as an instruction source. Section 19.4 develops these controls.
 
-These instructions can define a multi-step process. A developer might tell the
-agent to inspect source material, draft a change, send it to a review subagent,
-run tests, and report the result. A research application can generate a larger
-graph in which subagents plan parts of a query, gather evidence, review each
-other's findings, and assemble a report. The harness loads the relevant
-instructions, while the model interprets them against current state and adjusts
-the process as work proceeds.
+These instructions can define a dynamic multi-step process. A procedure packaged
+with the release or adopted as local program state by an instance might direct
+the agent to inspect source material, draft a change, send it to a review
+subagent, run tests, and report the result. A research application can generate
+a larger graph in which subagents plan parts of a query, gather evidence, review
+each other's findings, and assemble a report. The harness / Agent Application
+Framework loads the relevant instructions, while the model interprets them
+against current state and adjusts the process as work proceeds. Designing these
+dynamic workflow graphs, including their participants and transitions, is
+sometimes called graph engineering.
 
 Frontier models have become better at following detailed instructions and
 chaining tool calls, making longer natural-language procedures practical.
-Direct interpretation uses the least machinery. Work that needs named steps,
-compiler checks, and inspectable execution can add structure.
-[Playbooks](https://www.runplaybooks.ai/#video-intro), an early
-natural-language programming harness, compiled structured Markdown into an
-intermediate language and provided a debugger with breakpoints, variables, and
-a call stack. The [Agent Skills
+The [Agent Skills
 specification](https://agentskills.io/specification) does not define execution
 guarantees. Its guidance uses
 [evaluations](https://agentskills.io/skill-creation/evaluating-skills) to test
 behavior.
-Appendix B records the prior art and dated sources.
+
+A harness can improve reliability by adding structure, execution validation,
+and debugging. For example,
+[Playbooks](https://www.runplaybooks.ai/#video-intro) compiles structured
+Markdown into an intermediate language and provides a debugger with breakpoints,
+variables, and a call stack. These mechanisms make natural-language programs
+more inspectable and their execution easier to validate. Appendix B records the
+prior art and dated sources.
 
 Natural-language programs are versioned, reviewed, and evaluated with the rest
 of the application. Their behavior depends on the model, harness, tools, and
 runtime context, so behavioral tests establish whether the procedure works.
 Section 12.5 explains why text diffs alone cannot settle upgrades.
 
-### 8.3 Declarations
+### 8.3 Project declarations
 
-Declarations wire the other material into the running application. They name
-entrypoints and components, select models and harness features, configure tools
-and triggers, request permissions, and declare package dependencies. A client
-reads an Agent Plugin's `plugin.json` and `mcp.json` as declarations. The files
-change runtime behavior, but a conventional processor does not execute them as
-ordinary code and a model does not interpret them as instructions.
+Project declarations are structured configuration that a framework or its
+tooling reads to assemble and run an Agent Project. They name entrypoints and
+components, select models and harness features, configure tools and triggers,
+declare package dependencies, and state requested permissions or runtime
+requirements. An Agent Plugin's `plugin.json` and `mcp.json` files are
+declarations contributed by a project dependency.
 
-Treat declarations as program material. Version and review them with the source
-they connect. Validate them against a schema where one exists, and test the
-assembled behavior after resolution. A syntactically valid MCP declaration can
-still expose the wrong server, while a valid dependency range can resolve to
-plugin content the application has never evaluated.
+Some declarations describe deployment requirements and become part of the
+release. The platform resolves those requirements when it deploys the release.
+Secrets, granted authority, user data, and per-instance settings remain outside
+the project and release.
+
+Declarations change application behavior, but a processor does not execute them
+as ordinary code and a model does not interpret them as instructions. Version
+and review declarations with the source they configure. Validate them against a
+schema where one exists, then test the assembled application. A syntactically
+valid MCP declaration can expose the wrong server, and a valid dependency range
+can resolve to plugin content the application has never evaluated.
 
 ### 8.4 Knowledge resources
 
@@ -709,8 +735,8 @@ Knowledge supplies the material the application reasons over:
 - organizational context.
 
 Knowledge may be packaged in the agent folder or kept in an external location
-the agent can access, such as a website, database, Google Drive, or another
-document store. A release may therefore contain the material itself or the
+the agent can access, such as a website, database, a document store, or behind
+an API. A release may therefore contain the material itself or the
 configuration and credentials needed to reach it.
 
 The source can remain raw. The agent browses, searches, opens, and reads the
@@ -771,8 +797,8 @@ programmer composes those primitives into a product. This includes:
 - separating a use case into model judgments and deterministic operations;
 - placing each behavior in the primary agent, reusable instructions, skills,
   tools, hooks, specialist agents, or runtime policy;
-- designing dynamic workflows, sometimes called graph engineering, and deciding
-  which transitions code fixes and which the model chooses at runtime;
+- applying graph engineering to dynamic workflows and deciding which transitions
+  conventional code determines and which the model chooses at runtime;
 - selecting external capabilities from plugins, MCP servers, libraries, APIs,
   and other dependencies;
 - assigning state to sessions, instances, workspaces, memory, and artifacts;
