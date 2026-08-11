@@ -1102,14 +1102,15 @@ retrieve it. The memory may live in files, a database, or another service.
 
 ## 12. How instances change after deployment
 
-Traditional software changes when its developer ships a release. An Agent
-Application also changes as each instance works. It learns facts, accumulates
-files, adopts preferences, and may receive new instructions. Some systems also
-let an agent write a skill or generate code for its own future use.
+A shared application changes when its publisher ships a release. An instance
+can also change between releases. It may learn facts, accumulate files, adopt
+user preferences, or receive new instructions. Some applications let the
+runtime agent write a skill or generate code for later use.
 
-Over time, the fleet consists of related but different instances. The shared
-release must remain separate from each instance's local changes. Every local
-change needs a known author, a test, an approval rule, and a way to undo it.
+These local changes cause instances in the same fleet to diverge. The platform
+tracks the shared release separately from the changes made inside each
+instance. For every local change, it records the author, tests, approval rule,
+and rollback method.
 
 ### 12.1 Who can author a change
 
@@ -1120,58 +1121,56 @@ change needs a known author, a test, an approval rule, and a way to undo it.
 | The agent itself | A proposed skill, revised instruction, or generated tool |
 | Another agent or optimization system | A proposed improvement based on results across many runs |
 
-The right to propose a change is different from the right to activate it. An
-agent might draft a new skill while a person approves it. A low-risk change may
-activate automatically after tests pass. The application sets that policy in
-advance.
+Authorship does not confer the right to activate a change. An agent may draft a
+skill that requires a person's approval. The application may activate a
+low-risk change automatically after its tests pass, according to a policy set
+in advance.
 
-### 12.2 Some changes carry more risk than others
+### 12.2 Risk depends on the change
 
 Adding a customer document changes what the agent knows. Editing a skill changes
-how it behaves. Installing a plugin can change behavior, capability, or
-structure, depending on the components it contributes. Granting a credential
-changes what those components may reach. Each step needs review matched to the
-change.
+how it behaves. Installing a plugin can alter behavior, available capabilities,
+or program structure. Granting a credential expands what the installed
+components can access. The review process should reflect these differences.
 
 Installation, activation, and authorization remain separate decisions. A plugin
 cannot authorize itself, and installing it does not approve future updates. A
-behavioral diff covers instructions, descriptions, tool schemas, hooks, and
-other declarations in addition to executable files.
+behavioral diff must include instructions, descriptions, tool schemas, hooks,
+and other declarations as well as executable files.
 
-Risk also depends on where the change came from. A support ticket or web page can
+The source of a change also affects its risk. A support ticket or web page may
 contain instructions written by an attacker. If an agent turns that material
-into a new skill or tool, the new program carries the same risk as its source.
+into a skill or tool, reviewers must treat the resulting program as influenced
+by an untrusted source.
 
-One rule is absolute: an agent cannot grant itself more authority. A new
-credential, spending limit, or network destination requires the person or
-organization that controls that resource. Appendix D gives a detailed change
-classification.
+An agent cannot grant itself more authority. Only the person or organization
+that controls a resource can approve a new credential, spending limit, or
+network destination. Appendix D classifies these changes in more detail.
 
-### 12.3 Containing the propagation path
+### 12.3 Keep instance changes local
 
-Local changes stay with the instance that created them. They do not flow directly
-into the shared application used by every customer.
+Changes created inside an instance stay with that instance. They cannot update
+the shared Agent Project or publisher release.
 
-An instance can report that a new procedure worked well. The developer can use
-that evidence to author and test a new release. Code or instructions written
-inside one customer's instance do not promote themselves into the shared agent
-project or a publisher release.
+An instance may report that a new procedure worked well. A developer can use
+that evidence to author and test a release through the publisher's release
+process.
 
-Changes influenced by untrusted material stay quarantined until a trusted
-reviewer clears them. The platform also writes change history somewhere the
-agent cannot edit. These rules allow improvement without letting one compromised
-instance change the whole fleet.
+The platform quarantines changes influenced by untrusted material until a
+trusted reviewer clears them. It also stores change history where the agent
+cannot edit it. This prevents a compromised instance from changing the rest of
+the fleet.
 
 If policy lets a runtime agent install a plugin, the platform treats the result
 as an instance-local change to the program. It records the package and
-activation in lineage, evaluates it in isolation, and keeps it out of the shared
-release. A plugin derived from untrusted content cannot promote itself into a
-publisher release.
+activation in lineage and evaluates the change in isolation. Promotion to a
+publisher release still requires the release process and trusted review,
+especially when the plugin came from untrusted content.
 
 ### 12.4 Recording instance lineage
 
-Version control records changes to the shared application. Lineage records what
-happened to one instance after it was created:
+Version control records changes to the shared application. Instance lineage
+records local history after creation:
 
 - originating release and installed upgrades;
 - active local filesystem overlays;
@@ -1183,43 +1182,43 @@ happened to one instance after it was created:
 - tool and permission changes;
 - forks, merges, and rollback points.
 
-### 12.5 Why upgrades cannot be merged by diff
+### 12.5 Upgrades require semantic merges
 
-Text merging only detects edits to the same lines. It cannot tell whether two
-instructions in different files disagree.
+A text merge finds edits to the same lines. It cannot detect contradictions
+between instructions in different files.
 
 Suppose a publisher raises the threshold for escalating a support case. One
 customer's instance has also learned to "handle routine cases without
-escalating." A normal three-way merge may accept both sentences even if their
-combined behavior is wrong. The reverse can happen when two differently worded
-instructions mean the same thing.
+escalating." A three-way merge may accept both sentences even when their
+combined behavior is wrong. It may also report a conflict between two
+differently worded instructions that mean the same thing.
 
-When instances may diverge from the release, upgrading a fleet becomes a
-semantic update. The platform applies the publisher's intended behavior to each
-instance while preserving unrelated local changes. It then tests the result
-against that instance's workspace. Any issue found during the upgrade blocks
-that instance's upgrade and creates a review task for the fleet manager.
+When instances can diverge from a release, the platform must upgrade each one
+semantically. It applies the publisher's intended behavior, preserves unrelated
+local changes, and tests the result against the instance's workspace. If the
+test finds a problem, the platform blocks that instance's upgrade and creates a
+review task for the fleet manager.
 
-### 12.6 Why release evaluation is not enough
+### 12.6 Evaluate releases against instance state
 
 A shared release can pass every test and still fail for one instance whose
 workspace contains unusual history. The platform first tests the release on
 standard examples, then tests the upgrade against affected instances or
 representative checkpoints.
 
-Releases still remain fixed and inspectable. When behavior changes, an operator
-can compare the release, runtime, policy, and workspace instead of debugging a
-moving target. Appendix D states this model more formally.
+Releases remain fixed and inspectable. When behavior changes, an operator can
+compare the release, runtime, policy, and workspace against a stable reference.
+Appendix D states this model more formally.
 
 ---
 
 ## 13. Artifacts and other durable results
 
-An Agent Application produces work that persists beyond a conversation: a
-report, a working codebase, an updated customer record, or a process it continues
-to maintain.
+An Agent Application may produce a report, a working codebase, an updated
+customer record, or a process that it continues to maintain. These results
+persist independently of the conversation that produced them.
 
-Durable results take four shapes:
+Durable results fall into four groups:
 
 | Result | Example |
 |---|---|
@@ -1228,9 +1227,9 @@ Durable results take four shapes:
 | External record | CRM update, ticket, pull request, database change, sent message |
 | Ongoing process | Monitored account, scheduled operation, maintained queue |
 
-An **Agent Artifact** is a portable, versioned, access-controlled work product. The
-platform keeps a record of who created it, which version is current,
-where its sources came from, and who may see it.
+An **Agent Artifact** is a portable, versioned, access-controlled work product.
+The platform records its creator, current version, source lineage, and access
+rules.
 
 An artifact may be:
 
@@ -1242,35 +1241,37 @@ An artifact may be:
 ### 13.1 Message versus artifact
 
 A message belongs to the conversation timeline and is usually append-only. An
-artifact has its own identity and lifecycle. A user can open it, revise it, and
-compare versions without replaying the conversation that produced it.
+artifact has a separate identity and lifecycle. A user can open it, revise it,
+and compare versions without replaying the conversation that produced it.
 
 ### 13.2 Surfaces
 
 Interactive Agent Applications usually expose the agent widget described in
-section 5. It combines conversation, session history, artifacts, approvals, and
-generated UI around one instance. Applications can also provide a dedicated
-artifact editor, workspace browser, approval queue, or operations view for runs,
-cost, errors, and schedules. APIs carry product integration, while email,
-messaging, and ticketing systems reach people where the work already is.
+section 5. It presents conversation, session history, artifacts, approvals, and
+generated UI in one interface for an instance. An application may also have a
+dedicated artifact editor, workspace browser, approval queue, or operations view
+for runs, cost, errors, and schedules. APIs connect the application to other
+products. Email, messaging, and ticketing systems deliver work through channels
+that people already use.
 
-All of these surfaces operate on the same instance and durable state.
+Each surface operates on the same instance and durable state.
 
 ---
 
 # Part III: Operating Agent Applications
 
-## 14. Wake, work, and suspend
+## 14. Instance execution
 
 ### 14.1 Persistence without resident compute
 
 An instance can suspend compute while preserving its identity, workspace,
-schedules, and pending work. At rest it holds bytes rather than a running process.
-Section 16.2 shows why this distinction determines the economics of the model.
+schedules, and pending work. Suspension stores the instance's state without
+keeping a process running. Section 16.2 explains how this affects operating
+costs.
 
 ### 14.2 Event-driven operation
 
-Much of this work happens unattended. An instance can wake in response to:
+An instance often works without a user present. It can wake in response to:
 
 - a user request;
 - an uploaded file;
@@ -1284,17 +1285,17 @@ Much of this work happens unattended. An instance can wake in response to:
 GitHub Copilot automations run on repository events or a schedule, while Intercom
 Fin wakes when a customer sends a support message.
 
-Events and schedules create fleets with many short wakeups: ten thousand
-accounts might each run for ninety seconds every night. Slow or expensive resume
-pushes a platform toward keeping instances resident, erasing the economic benefit
-of suspension. Resume cost grows with the instance's writable delta, retained
-checkpoints, and file count. This is why retention policies and workspace size
-caps matter.
+Events and schedules create fleets with many short wakeups. Ten thousand
+accounts, for example, might each run for ninety seconds every night. If resume
+is slow or expensive, a platform may keep instances resident and lose the cost
+savings of suspension. Resume cost grows with the instance's writable delta,
+retained checkpoints, and file count. Retention policies and workspace size caps
+limit these costs.
 
 ### 14.3 Checkpointed long-running work
 
-Work that runs for hours or months must survive interruptions and mistakes. It
-needs:
+Work that runs for hours or months must recover from interruptions, mistakes,
+and partial failure. It requires:
 
 - checkpoints;
 - pause and resume;
@@ -1306,70 +1307,72 @@ needs:
 - clear terminal states.
 
 The application stores its plan, commitments, inputs, outputs, and checkpoints
-outside the model's short-term context. A later run can then see what already
-happened and decide what remains.
+outside the model's short-term context. On a later run, the agent reads that
+record to determine what has happened and what remains.
 
 ### 14.4 Multi-agent structure
 
-An instance may contain one principal agent and several subagents, or a set of
-peers. Multiple agents inside one instance share its identity, workspace, and
-authority, which keeps accountability intact. A plugin can contribute a
-subagent definition, but that subagent still runs under the application's
+An instance may contain one principal agent with several subagents, or a set of
+peers. Agents inside the same instance share its identity, workspace, and
+authority, so the instance remains the unit of accountability. A plugin can
+contribute a subagent definition, but the subagent runs under the application's
 instance and delegated limits. An A2A peer is independently addressable and may
-have its own workspace, identity, and authority boundary. Coordination across
-separate instances is a different and open problem, noted in section 23.
+have its own workspace, identity, and authority boundary. Section 23 identifies
+coordination across separate instances as an open problem.
 
 ### 14.5 Human authority and approval
 
-Approval rules should depend on how hard an action is to undo. Editing a draft is
-easy to reverse. Refunding a charge may require a second transaction. Sending a
-private document to the wrong person may be impossible to undo.
+Approval rules should reflect how hard an action is to undo. Editing a draft is
+easy to reverse, while refunding a charge may require a second transaction.
+Sending a private document to the wrong person may be irreversible.
 
-For each action, decide whether the agent may act silently, act and report, ask
-first, or never act.
+For each action, the policy specifies whether the agent may act silently, act
+and report, ask first, or never act.
 
-Approvals provide oversight and a chance to stop irreversible work. They fail
-under volume: a reviewer approving fifty items an hour eventually rubber-stamps
-them. Code and policy systems must enforce hard limits, as section 19.3 requires.
+An approval lets a reviewer stop irreversible work before it occurs. Manual
+review becomes less reliable at high volume because a reviewer handling fifty
+items an hour may start to rubber-stamp them. Code and policy systems must
+enforce hard limits, as section 19.3 requires.
 
 ---
 
-## 15. The SaaS transition
+## 15. Adoption paths for SaaS companies
 
-An established software company has three compatible routes into this model.
-They can be combined: a copilot can be the main surface of a first-party Agent
-Application, and that same application can export tools to other assistants.
+An established software company can embed a copilot, export capabilities to
+external assistants, or operate its own Agent Application. These approaches can
+coexist. A copilot may be the main interface for a first-party application that
+also exports tools to other assistants.
 
 ### 15.1 Embed a copilot
 
-The company adds AI to its existing product. The copilot is the delivery form;
-the system behind it can still be an Agent Application. The existing product
-remains the primary work surface and may remain the system of record. Microsoft
-365 Copilot inside Word and Excel, and Canva AI inside its design editor, are
-current examples of the embedded form.
+The company adds AI inside its existing product. A copilot provides the
+interface, and the underlying system may be an Agent Application. The existing
+product remains the primary work surface and may remain the system of record.
+Microsoft 365 Copilot inside Word and Excel, and Canva AI inside its design
+editor, are current examples of this approach.
 
 ### 15.2 Export capabilities to external assistants
 
-The company publishes APIs, tools, connectors, or protocol servers that another
-assistant calls, which is the pattern behind assistant-hosted apps built on an
-Apps SDK. The company reaches users through their chosen assistant, and the
-assistant vendor controls more of the runtime, the presentation, and the
-continuing relationship. Apps inside ChatGPT and connected apps inside Claude
-use this route.
+The company publishes APIs, tools, connectors, or protocol servers for another
+assistant to call. Assistant-hosted apps built on an Apps SDK follow this
+pattern. The company reaches users through their chosen assistant, while the
+assistant vendor controls more of the runtime, presentation, and continuing
+relationship. Apps inside ChatGPT and connected apps inside Claude use this
+approach.
 
 ### 15.3 Operate a first-party Agent Application
 
 The company packages what it knows as a persistent application and operates it
-directly. In exchange for taking on the operating burden, it controls the
-application's behavior, instance lifecycle, workspaces, compliance, cost, and
-product surfaces.
+directly. It controls the application's behavior, instance lifecycle,
+workspaces, compliance, cost, and product surfaces. Direct operation also makes
+the company responsible for running the application.
 
 A first-party Agent Application can also export tools to external assistants,
 which then act as its clients.
 
-### 15.4 What first-party operation costs
+### 15.4 Cost of first-party operation
 
-Running it yourself means running all of this:
+First-party operation requires:
 
 - per-instance storage, indexes, schedules, snapshots, and deletion;
 - isolated execution with credentials, approvals, and audit records;
@@ -1378,16 +1381,16 @@ Running it yourself means running all of this:
 - monitoring, incident response, and support reproduction;
 - model, tool, compute, and human-review budgets.
 
-An Agent Application Platform can provide these operating services across many
-applications: deployment, instance and fleet management, security controls,
-cost tracking, and monetization.
+An Agent Application Platform can provide shared operating services for many
+applications, including deployment, instance and fleet management, security
+controls, cost tracking, and monetization.
 
 ---
 
 ## 16. Distribution and economics
 
-The lifetimes defined in section 10 also determine how the product is priced and
-operated.
+The application, release, instance, and session lifetimes from section 10 incur
+different costs.
 
 ### 16.1 Cost structure
 
@@ -1404,20 +1407,21 @@ instances may have to inspect, migrate, or test the change a hundred thousand
 times. If the agent must interpret old workspace material during that migration,
 the upgrade also incurs model cost.
 
-Platforms therefore share expensive infrastructure across many instances while
-keeping each instance's data and permissions separate. Appendix D gives the cost
-model.
+Platforms can share expensive infrastructure across many instances while
+keeping each instance's data and permissions separate. Appendix D gives the
+cost model.
 
 ### 16.2 An idle instance is mostly storage
 
-An idle instance mainly needs storage. A running instance also needs memory, CPU,
-model calls, and tools. Under the estimates in Appendix B, keeping compute alive
+An idle instance mainly needs storage. A running instance also needs memory,
+CPU, model calls, and tools. Appendix B estimates that keeping compute alive
 costs hundreds of times more than storing a suspended workspace.
 
 The platform can share a base image and store only each instance's changed files
 and retained history. Large workspaces still take longer to restore, and
-background processes still consume running compute. Workspace limits and
-background-execution permissions are therefore product and pricing decisions.
+background processes still require running compute. Publishers must account for
+both when they set workspace limits, background-execution permissions, and
+prices.
 
 ### 16.3 Pricing and distribution
 
@@ -1425,10 +1429,9 @@ Publishers can charge per instance, per organization, by usage, or by completed
 work. They may also sell the application as a managed service or through a
 marketplace.
 
-Per-instance subscriptions require particular care. An abandoned instance still
-costs money, so a flat subscription promises to carry it indefinitely. Dormancy,
-archival, and deletion policies keep the long tail of untouched instances from
-becoming an unpriced liability.
+An abandoned instance continues to incur storage and scheduling costs. A flat
+per-instance subscription carries those costs indefinitely unless the publisher
+defines dormancy, archival, and deletion policies.
 
 Distribution also needs a trusted publisher identity, signed releases,
 permission review, upgrade channels, billing, and an enterprise approval path.
@@ -1437,22 +1440,23 @@ permission review, upgrade channels, billing, and an enterprise approval path.
 
 ## 17. The Agent Application Platform
 
-An **Agent Application Platform** turns a native project for a harness / Agent
-Application framework into an operating product. It packages an immutable
-release, provisions instances at the application's privacy boundary, attaches a
-durable workspace and scoped authority to each instance, and runs the sessions
-that perform the work. It also supplies the interfaces, fleet controls, cost
-controls, and commercial services needed to distribute the application.
+An **Agent Application Platform** turns a project written for a harness or Agent
+Application framework into a product that a publisher can operate. It packages
+an immutable release and provisions instances at the application's privacy
+boundary. Each instance receives a durable workspace and scoped authority. The
+platform runs its sessions and provides the interfaces, fleet controls, cost
+controls, and commercial services needed for distribution.
 
 Ordinary cloud infrastructure supplies compute, storage, networking, and
 databases. An **Agent Cloud** adds infrastructure designed for persistent
 agents: durable workspaces, resumable execution, sandboxed tools, model access,
 event streams, checkpoints, and per-instance metering. An Agent Application
 Platform may build on that specialized infrastructure, provide it directly, or
-assemble the same capabilities from general cloud services. The platform is the
-larger developer- and publisher-facing layer.
+assemble the same capabilities from general cloud services. Above this
+infrastructure, the platform manages the application lifecycle and the services
+used by developers and publishers.
 
-An Agent Application Platform has to provide these shared lifecycle services.
+An Agent Application Platform provides these shared lifecycle services:
 
 | Service | What it does |
 |---|---|
@@ -1476,9 +1480,9 @@ Amazon Bedrock AgentCore, Karta, Vercel Eve, and Pickaxe each cover part of this
 | [Vercel Eve](https://vercel.com/blog/introducing-eve) | A filesystem-first framework with durable workflows, sandboxes, approvals, subagents, evaluations, channels, and ordinary Vercel deployment |
 | [Pickaxe](https://pickaxe.co/features) | A visual builder, links and embeds, APIs and messaging channels, user access, persistent memory, portals, usage limits, and built-in monetization |
 
-Fleet management adds one more responsibility: keeping local changes separate
-from the shared release. The platform records each instance's lineage, tests
-local changes, applies upgrades in stages, and supports rollback.
+For a fleet, the platform keeps local changes separate from the shared release.
+It records each instance's lineage, tests local changes, applies upgrades in
+stages, and supports rollback.
 
 An instance moves through four lifecycle states:
 
@@ -1490,42 +1494,38 @@ An instance moves through four lifecycle states:
 | Deleted | Tombstone and retained audit record | Audit retention only | Not resumable |
 
 Most instances spend much of their time suspended. They keep their work and
-schedules without paying for a running computer. Appendix D expands the service
-boundaries for platform builders.
+schedules while using storage instead of active compute. Appendix D expands the
+service boundaries for platform builders.
 
 ---
 
 ## 18. Standards, contracts, and portability
 
-Existing standards already cover specific boundaries in the stack: tools,
-reusable instructions, component packages, agent events, communication between
-independent agents, and commerce. Section 9.3 and Appendix D.4 map these
-protocols in more detail.
+Standards cover specific boundaries in the stack: tools, reusable instructions,
+component packages, agent events, communication between independent agents, and
+commerce. Section 9.3 and Appendix D.4 map these protocols in more detail.
 
-The rest of the stack does not automatically need a standard. Frameworks can
-simplify local development, evaluation, and deployment. Cloud platforms can
-provide durable workspaces, identity, scheduling, fleet operations, and cost
-controls. A standard becomes useful when independent implementations need to
-exchange information or commands.
+A standard is useful when independent implementations need to exchange
+information or commands. Frameworks can keep their own approaches to local
+development, evaluation, and deployment. Cloud platforms can likewise choose
+how they provide workspaces, identity, scheduling, fleet operations, and cost
+controls.
 
-This paper does not propose a common Agent Project or release format. Current
-frameworks do not share enough structure to justify one. A project written for
-Claude Agent SDK, Google ADK, LangGraph, OpenAI Agents SDK, or Vercel AI SDK
-should keep the source layout, build process, and release mechanism of that
-framework.
+Agent Projects and releases remain framework-native because current frameworks
+use different structures. A project written for Claude Agent SDK, Google ADK,
+LangGraph, OpenAI Agents SDK, or Vercel AI SDK keeps that framework's source
+layout, build process, and release mechanism.
 
-The practical place to standardize is a boundary where independent systems
-exchange information. A frontend can talk to several agent backends through
-AG-UI. A tool can serve several hosts through MCP. An Agent Skill or Agent
+At these boundaries, a frontend can talk to several agent backends through
+AG-UI, and a tool can serve several hosts through MCP. An Agent Skill or Agent
 Plugin can move between compatible clients. Independently deployed agents can
-collaborate through A2A. Each contract covers a real connection between separate
-implementations.
+collaborate through A2A.
 
-More contracts may follow for artifacts, workspace exports, lineage, delegated
-authority, or billing records. Users and operators may need to move this
-information between platforms. Work on any of these contracts should start with
-two independent implementations and a specific exchange problem. It should not
-try to normalize a framework's internal design.
+Future contracts may cover artifacts, workspace exports, lineage, delegated
+authority, and billing records because users and operators may need to move them
+between platforms. Work on a contract should begin with two independent
+implementations and a specific exchange problem. The contract stays at the
+exchange boundary while internal design remains framework-specific.
 
 ---
 
@@ -1534,8 +1534,8 @@ try to normalize a framework's internal design.
 An Agent Application reads untrusted content, executes code, holds credentials,
 accumulates private material, and acts over long periods under delegated
 authority. A malicious instruction can arrive through a web page, email,
-document, support ticket, tool result, or old workspace file. Six rules limit
-the damage.
+document, support ticket, tool result, or old workspace file. The controls below
+limit what compromised or mistaken behavior can affect.
 
 ### 19.1 The agent cannot choose its own authority
 
@@ -1544,41 +1544,40 @@ organization, or resource owner decides what to grant. The agent can use that
 authority but cannot expand it. Permissions can expire or be revoked while the
 instance is suspended or running.
 
-The platform itself must also use a narrow execution identity. Otherwise, an
-agent with limited permissions could borrow the platform's broader access.
+The platform must also use a narrow execution identity so an agent cannot
+inherit broader platform access.
 
-Commerce makes this authority boundary concrete. Permission to search and
-negotiate does not imply permission to place an order, and permission to place
-an order does not imply permission to move money. A commercial grant can limit
-the merchant, what may be bought, maximum price, time window, payment
-instrument, and confirmation rules. Commerce and payment protocols can carry
-intent, checkout state, authorization, payment requirements, and receipts.
-Policy code still enforces those limits and handles revocation. Appendix D.4
-lists the current protocols.
+Commerce policies grant search, negotiation, ordering, and payment authority
+separately. A commercial grant can limit the merchant, what may be bought,
+maximum price, time window, payment instrument, and confirmation rules.
+Commerce and payment protocols can carry intent, checkout state, authorization,
+payment requirements, and receipts. Policy code enforces the limits and handles
+revocation. Appendix D.4 lists the current protocols.
 
 ### 19.2 Review the complete plugin
 
-A plugin is both a software dependency and a source of model behavior. Review
-and approve the complete content digest: executable code, natural-language
-instructions, component descriptions, tool schemas, declarations, hooks, and
-client extensions. A skill can raise risk by steering an existing tool in a new
-way even when the plugin adds no capability. Hooks need extra scrutiny because
-they can execute at lifecycle points without model selection.
+A plugin affects executable software and model behavior. Review and approve its
+complete content digest: executable code, natural-language instructions,
+component descriptions, tool schemas, declarations, hooks, and client
+extensions. A skill can steer an existing tool in a new way even when the
+plugin adds no capability. Hooks require extra scrutiny because they can run at
+lifecycle points without model selection.
 
 A production release keeps a component inventory analogous to a software bill
 of materials. For each plugin it records the source, version, digest, exported
 components, executable files, requested capabilities, network destinations, and
-active host extensions. Credentials are instance-scoped governed references.
+active host extensions. Credentials remain governed references scoped to an
+instance.
 Neither a plugin nor one of its components can grant itself access.
 
-Updates show behavioral and capability changes in addition to file changes. The
-platform reruns affected evaluations before activation and keeps the prior
+An update shows behavioral and capability changes along with file changes. The
+platform reruns affected evaluations before activation and keeps the previous
 resolved graph available for rollback.
 
 ### 19.3 Put hard limits in code
 
-The model may choose an action. Ordinary code decides whether that action is
-allowed. Keep these controls outside the model's reach:
+Policy code authorizes each action proposed by the model. Keep these controls
+outside the model's reach:
 
 - authentication and agent-instance identity;
 - permission checks on the exact record or resource being read or changed;
@@ -1592,8 +1591,8 @@ allowed. Keep these controls outside the model's reach:
 
 A permission such as `crm.write` is too broad by itself. The system that controls
 the resource must also check which customer account the agent is changing. A
-persuaded agent then cannot reach another account or send private files to an
-unapproved server.
+record-level check prevents a compromised or misled agent from reaching another
+account or sending private files to an unapproved server.
 
 Reads need the same control. A database, document connector, search index, or RAG
 service must enforce access before returning data to the agent. When that
@@ -1606,19 +1605,18 @@ asking the model to hide unauthorized records defeats this boundary.
 Credentials should be short-lived and limited to the current action whenever
 possible.
 
-### 19.4 Remember where information came from
+### 19.4 Preserve source labels
 
 The runtime distinguishes developer instructions, organization policy, user
 directions, reference material, and outside content. It keeps those source labels
 when text is summarized, passed to a subagent, or saved and read later.
 
-Reading an untrusted document may narrow what the current run is allowed to do or
-trigger an approval requirement. Source labels do not stop every prompt
-injection. They let policy limit what a misled agent can reach. Source labels
-cannot make one shared workspace safe for users with different data rights.
-Instance and workspace isolation provide the outer boundary: a misled agent can
-reach only the data in its workspace and through its scoped tools. Appendix D
-describes this mechanism in more detail.
+Reading an untrusted document may narrow what the current run is allowed to do
+or trigger an approval requirement. Prompt injection remains possible, so policy
+uses source labels to limit what a misled agent can reach. Instance and workspace
+isolation provide the outer boundary. Users with different data rights need
+separate workspaces, and scoped tools limit what the agent can reach outside its
+workspace. Appendix D describes this mechanism in more detail.
 
 ### 19.5 Agent-generated code
 
@@ -1627,27 +1625,25 @@ use the result to continue working. It may save that script at a known path in
 its workspace so later sessions can run or revise it.
 
 The runtime applies the instance's network, resource, and permission limits to
-this code. Saving the script changes that instance's workspace; it does not
-change the shared application release. If the publisher wants every instance to
-receive the script, a developer reviews and tests it before adding it to a new
-release.
+this code. Saving the script makes it part of the instance's local program state.
+It does not change the shared application release. If the publisher wants every
+instance to receive the script, a developer reviews and tests it before adding
+it to a new release.
 
-### 19.6 Keep enough evidence to explain and recover
+### 19.6 Evidence and recovery
 
-Someone who was absent should still be able to answer: Which agent acted? What
-was it allowed to do? Which sources did it use? Which tools did it call? What
-changed?
+An audit record identifies the agent, its authority, the sources it used, the
+tools it called, and what changed. It must be understandable to someone who was
+not present during the run. Keep this compact record for as long as the result
+matters. Store detailed model inputs and outputs for a shorter period unless the
+use case or law requires more; they are large and often contain sensitive data.
+Before a consequential action, keep a workspace checkpoint and record any
+outside systems the agent will change.
 
-Keep a compact audit record for as long as the result matters. Store detailed
-model inputs and outputs for a shorter period unless the use case or law requires
-more; they are large and often contain sensitive data. Before a consequential
-action, keep a workspace checkpoint and record any outside systems the agent will
-change.
-
-A checkpoint can restore files. It cannot unsend an email or make someone forget
-a disclosed secret. The application must record how each outside action can be
-reversed, offset, or reported. Appendix D covers replay and recovery techniques;
-Appendix B records one current legal retention example.
+A checkpoint can restore files but cannot recall an email or a disclosed secret.
+For each outside action, the application must record how it can be reversed,
+offset, or reported. Appendix D covers replay and recovery techniques; Appendix
+B records one current legal retention example.
 
 ---
 
