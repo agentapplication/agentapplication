@@ -61,5 +61,10 @@
       "grok"
     ],
     "display": "header"
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-XFC3VQ5WVT"
+    }
   }
 }
