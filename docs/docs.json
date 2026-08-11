@@ -56,7 +56,6 @@
     "options": [
       "copy",
       "view",
-      "download-pdf",
       "chatgpt",
       "claude",
       "grok"
