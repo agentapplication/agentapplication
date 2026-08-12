@@ -1,11 +1,12 @@
 ---
 title: "Agent Application Platform"
-description: "The service that deploys Agent Projects and operates releases, instances, workspaces, fleets, and commercial distribution."
+description: "The service that turns tested Agent Projects into releases and operates long-lived agent instances."
 ---
 
-> **Agent Application Platform** is the developer- and publisher-facing service
-> that deploys Agent Projects, operates instances and workspaces, manages fleets
-> and costs, and supports distribution and monetization.
+> **Agent Application Platform** turns tested Agent Projects into immutable
+> releases and operates long-lived instances with durable workspaces, identity
+> management, security controls, governance, observability, evaluation, and
+> fleet management.
 
 The platform turns a framework-native project into an operating product. It
 resolves and verifies dependencies, packages the complete graph as an immutable
@@ -13,9 +14,11 @@ release, creates instances at the application's privacy boundary, attaches a
 durable workspace and scoped authority, and runs the sessions that perform the
 work.
 
-It also supplies the shared services that do not belong in each application:
-identity, scheduling, interfaces, artifact delivery, evaluation, fleet
-upgrades, cost controls, distribution, and billing.
+It also supplies shared services for identity and authority, scheduling, event
+delivery, artifacts, evaluation and observability, governance, fleet upgrades,
+cost allocation, and usage enforcement. An [Agent Application
+Store](/paper#21-agent-application-stores) may provide discovery, acquisition,
+entitlements, billing, and publisher payments separately.
 
 ## Agent Cloud and platform
 
@@ -28,4 +31,5 @@ An Agent Application Platform is the larger product layer. It may use an Agent
 Cloud, provide those services itself, or assemble them from ordinary cloud
 services.
 
-See [the paper](/paper), section 17.
+See the paper's [Agent Application Platform](/paper#18-the-agent-application-platform)
+and [Agent Application Store](/paper#21-agent-application-stores) sections.

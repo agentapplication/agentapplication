@@ -1,12 +1,12 @@
 ---
 title: "Agent Project"
-description: "The native source directory for a harness / Agent Application framework, used to create Agent Application releases."
+description: "The framework-native project representation used to create Agent Application releases."
 ---
 
-> An **Agent Project** is the source directory for an Agent Application, in the
-> layout expected by its harness / Agent Application framework. It contains the
-> code, instructions, configuration, dependencies, and tests used to create a
-> release.
+> An **Agent Project** is the native project representation for a harness /
+> Agent Application framework, usually a source directory. It contains the
+> code, natural-language programs, declarations, knowledge, dependencies, and
+> tests used to create releases.
 
 An agent project keeps the layout prescribed by its harness / Agent Application
 framework. A Claude Code project, for example, may use `CLAUDE.md`, `.claude/`,
@@ -17,9 +17,9 @@ production.
 Agent Projects do not share a standard directory structure. They may contain a
 primary agent program, instructions, tools, workflows, state, interfaces,
 artifacts, triggers, policy, evaluations, and operational configuration.
-Section 9 groups these parts into a capability model so developers can compare
-frameworks. The model does not define a portable project schema, and most
-projects will use only part of it.
+Section 12 groups these parts into a capability model so developers can compare
+frameworks. Each framework retains its own project schema, and most projects
+will use only part of the model.
 
 An [Agent Application framework](/concepts/framework) ties the project to the
 rest of the development process. It defines how developers run and test the
@@ -28,15 +28,20 @@ tell an [Agent Application Platform](/concepts/platform) which models, tools,
 workspace features, permissions, schedules, artifact support, and upgrade
 behavior the project needs.
 
-Plugins are project dependencies. They can add skills, MCP servers, hooks, or
-other components. Each framework decides how to install and record them. When a
-publisher creates a release, the framework and platform record the project
-source, its dependencies, the runtime, and the tests in their native release
-format.
+Plugins may be declared as project dependencies. They can add skills, MCP
+servers, hooks, or other components. Some applications also allow a runtime
+agent to install a plugin as an instance-local program change. Each framework
+decides how to install and record plugins. When a publisher creates a release,
+the framework and platform record the project source, resolved dependencies,
+runtime, active components, requested authority, evaluations, and migration
+rules in their native release format.
 
 Developers will usually say they are "building an agent." The term *agent
 project* becomes useful when the source directory must be distinguished from an
 [instance](/concepts/instance), a session, or the runtime agent doing the work.
 
-See [the paper](/paper), sections 7, 9, and 10. Appendix A shows one
-non-normative project layout.
+See the paper's [vocabulary](/paper#8-vocabulary), [capability
+model](/paper#12-the-agent-project-and-capability-model), and [application
+lifetimes](/paper#13-application-release-instance-and-session). [Appendix
+A](/paper#appendix-a-an-illustrative-project-layout) shows one illustrative
+project layout.

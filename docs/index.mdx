@@ -1,33 +1,57 @@
 ---
 title: "Agent Applications"
 sidebarTitle: "Overview"
-description: "The Agent Applications working paper, examples, companion documents, and community review."
+description: "A vendor-neutral reference architecture for building and operating AI agent systems."
 mode: "default"
 keywords: ["AI agent", "Agent Application", "Agent harness", "Agent Application Framework", "Agent Application Platform", "MCP", "Skills", "Agent Application Programming", "Natural Language Programming"]
 ---
 
 <Note>
-  **A working paper** · Draft 0.8 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
+  **A working paper** · Draft 0.9 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
 </Note>
 
-[Model Context Protocol (MCP)](https://modelcontextprotocol.io/) standardizes how agents connect to tools and data. The [Agent Skills specification](https://agentskills.io/specification) defines an open format for packaging instructions, scripts, and supporting material. Developers combine them with plugins, hooks, agent loops, and built-in tools such as shell access and code execution.
+[Agent Applications](/paper#1-what-is-an-agent-application) are AI systems built
+around persistent, tool-using agents. A request, event, or schedule can start
+work. The agent chooses intermediate actions within application guardrails,
+while its instance retains a workspace, authority, artifacts, and unfinished
+work after the run ends.
 
-The Agent Applications project asks what the complete software product looks like when developers put these parts together. The [working paper](/paper) calls the result an Agent Application and proposes shared vocabulary and an architecture for building, deploying, and operating one.
+The [working paper](/paper) presents a vendor-neutral reference architecture for
+building and operating these systems. It identifies the main elements, assigns
+responsibilities to them, and follows an Agent Project through release,
+deployment, operation, and change. It also locates standards such as the [Model
+Context Protocol (MCP)](https://modelcontextprotocol.io/) and [Agent
+Skills](https://agentskills.io/specification) at the boundaries they cover.
 
 The paper is a working draft. We invite readers to test its claims against real products, implementation experience, prior art, and counterexamples.
 
-## Project goals
+## What the paper gives you
 
-- Describe the typical shape of an agent application as its components mature.
-- Identify the framework capabilities, developer tools, standards, and cloud services that could make these applications easier to build, deploy, and manage.
-- Give practitioners a shared place to discuss the evolving nature of agent applications as agents gain widespread adoption.
+- A common vocabulary for projects, releases, instances, workspaces, artifacts,
+  frameworks, platforms, and stores
+- A [build-and-operate method](/paper#9-a-build-and-operate-method) for turning a
+  use case into a tested application design
+- A [capability model](/paper#12-1-a-capability-model-for-agent-applications) for
+  comparing frameworks and assigning responsibility
+- Lifecycle, security, and governance views for operating long-lived instances
+  without losing their accumulated work
+- An account of existing standards and the exchange boundaries where future
+  contracts may help
+
+The paper includes [guided reading
+paths](/paper#guided-reading-paths) for application developers, framework
+authors, platform operators, buyers, and standards contributors.
 
 ## Core terms
 
-- **[Agent Application](/paper#1-what-is-an-agent-application):** Software that uses one or more persistent, tool-using AI agents to produce work over time.
-- **[Harness / Agent Application framework](/concepts/framework):** A system that runs the agent loop and supports project structure, testing, packaging, deployment, and the production runtime.
-- **[Agent Application Programming](/paper#8-7-agent-application-programming):** The discipline of deciding which behavior belongs in code, instructions, skills, tools, hooks, agents, workflows, state, or policy, then composing those parts for a use case.
-- **[Agent Application Platform](/concepts/platform):** A service that deploys and operates Agent Applications, manages fleets, updates, and costs, and supports distribution and monetization.
+| Term | Meaning |
+|---|---|
+| [Agent Application](/paper#1-what-is-an-agent-application) | The complete product built around one or more persistent, tool-using agents that produce durable work. |
+| [Agent Project](/concepts/agent-project) | The framework-native project representation used to create releases. |
+| [Agent Application Framework](/concepts/framework) | A harness that includes coherent project structure, development tools, evaluations, packaging, deployment, and production runtime support. |
+| [Agent Application Programming](/paper#11-7-agent-application-programming) | The discipline of decomposing a use case across code, natural-language programs, tools, agents, workflows, state, and policy. |
+| [Agent Application Platform](/concepts/platform) | A service that turns tested Agent Projects into immutable releases and operates long-lived instances with durable workspaces, identity management, security controls, governance, observability, evaluation, and fleet management. |
+| [Agent Application Store](/paper#21-agent-application-stores) | A catalog and commerce service through which people find, acquire, and pay for Agent Applications. |
 
 ## Read the work
 
@@ -50,12 +74,11 @@ We welcome community engagement as the paper evolves.
 
 ```bibtex
 @misc{kelkar2026agentapplications,
-  title  = {Agent Applications: Software Architecture for the AI Era},
+  title  = {Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems},
   author = {Amol Kelkar},
   year   = {2026},
-  note   = {Working Draft 0.8},
   url    = {https://agentapplication.io/paper}
 }
 ```
 
-Correspondence: [amol@agentapplication.io](mailto:amol@agentapplication.io)
+Correspondence: [hello@amolkelkar.me](mailto:hello@amolkelkar.me)

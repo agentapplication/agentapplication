@@ -7,7 +7,7 @@ description: "A minimal Agent Application: one persistent notebook agent, one du
 # Hello World: a durable notebook
 
 The smallest useful Agent Application can return to work it saved during an
-earlier run. A one-shot task runner cannot.
+earlier run and decide what to do next from the state it finds.
 
 This example is a notebook agent for one user. It saves notes in its workspace
 and maintains a short briefing that the user can open without reading through
@@ -104,14 +104,15 @@ ask the agent to revise it.
 | Defining property | Where it appears |
 |---|---|
 | Persistent agent instance | Ada's stable instance key selects the same notebook on every run and keeps it separate from other users |
-| Durable computational workspace | `notes.md`, `briefing.md`, and the agent's instructions survive suspension |
+| Agent-directed control flow | The agent decides whether to call `save_note`, read earlier notes, or revise the briefing within the instructions and tools provided by the application |
+| Durable computational workspace | `notes.md`, `briefing.md`, and unfinished work remain available after suspension |
 | Durable work | The notes and briefing outlive the conversations that created them |
 
 ## The same notebook with a plugin
 
-The notebook does not need a plugin. The example above keeps `save-note.ts` in
-the project so all of its code is visible. Another version could get the note
-tool and briefing procedure from a portable plugin:
+The example above keeps `save-note.ts` in the project so all of its code is
+visible. Another version could get the note tool and briefing procedure from a
+portable plugin:
 
 ```text
 research-notebook-tools/

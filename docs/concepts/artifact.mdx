@@ -1,27 +1,28 @@
 ---
 title: "Agent Artifact"
-description: "A durable work product created or maintained by an instance: content plus a record."
+description: "A durable, portable work product with its own identity, versions, provenance, permissions, and history."
 ---
 
 > **Agent Artifact** is a durable, portable work product with its own identity,
-> versions, sources, permissions, execution, access control and history.
+> versions, provenance, permissions, and history.
 
-The useful result of an Agent Application is often the work it produces, not the
-conversation around it. A message belongs to a conversation timeline. An
-artifact has its own address and lifecycle. A user can revise it, compare
-versions, share it outside the original conversation, or use it as input to
-later work. Discussing a spreadsheet is different from having the spreadsheet.
+Agent Applications often produce work that outlives the conversation. A message
+belongs to a conversation timeline. An artifact has its own address and
+lifecycle. A user can revise it, compare versions, share it outside the original
+conversation, or use it as input to later work. Discussing a spreadsheet is
+different from having the spreadsheet.
 
-## Content and record
+## Portable and live artifacts
 
-The **content layer** holds the bytes that render or run in a compatible
-environment, including structured data, view state, and executable actions. The
-**record layer** holds provenance, permissions, comments, versions, and links to
-the agent or process that maintains the artifact.
+A file artifact, such as a document or spreadsheet, can be opened on a user's
+computer. A hosted work product, such as an interactive report, website, or
+Agent Application, needs a suitable runtime. In both cases, the platform records
+the artifact's creator, current version, source lineage, and access rules.
 
-When an artifact moves between environments, its record can travel as a
-verifiable sidecar. Remove that record and the content should still be a usable
-document or application.
+A live artifact may depend on current data that cannot travel with it. Its
+record carries governed references and an artifact-scoped grant for the exact
+resources it may read. A receiving platform resolves those references and
+requests fresh authorization for grants that cannot transfer.
 
-The proposed standards sequence begins with artifacts. See
-[Companion documents](/companion-documents) and [the paper](/paper), section 13.
+See [Companion documents](/companion-documents) and the paper's section on
+[artifacts and other durable results](/paper#16-artifacts-and-other-durable-results).

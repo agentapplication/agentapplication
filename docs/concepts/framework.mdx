@@ -1,19 +1,18 @@
 ---
 title: "Agent Application Framework"
-description: "An agent harness that supports the complete development and operating lifecycle of an Agent Application."
+description: "An agent harness with coherent project structure, development tools, evaluations, packaging, deployment, and production runtime support."
 ---
 
-> **Agent Application Framework** is an agent harness that has evolved to
-> support the complete development and operating lifecycle. It defines the
-> native project structure, extension conventions, evaluations, packaging,
-> deployment, and production runtime.
+> **Agent Application Framework** is an agent harness that includes coherent
+> project structure, development tools, evaluations, packaging, deployment, and
+> production runtime support.
 
 An agent harness runs the loop around a model. It assembles context, calls tools,
-and loads skills or subagents. A framework carries that same runtime into the
-rest of the application lifecycle. It tells developers how to structure a
-project, test it locally, package it, and run it in production.
+and loads skills or subagents. An Agent Application Framework extends that
+runtime into development and production. It tells developers how to structure
+a project, test it locally, package it, and run it in production.
 
-Section 9 of the paper uses a capability model to compare frameworks that expose
+Section 12 of the paper uses a capability model to compare frameworks that expose
 different APIs and arrange projects differently. It covers agent programs,
 instructions, tools, workflows, state, interfaces, artifacts, triggers, policy,
 evaluations, and lifecycle operations. A framework can provide these
@@ -25,14 +24,17 @@ model support, context management, tool systems, permissions, delegation,
 checkpointing, and debugging. Those choices affect behavior, portability, and
 cost.
 
-Frameworks can interoperate where one system meets another. MCP connects hosts
-to tools and data. Agent Skills packages reusable instructions, and Agent
-Plugins packages skills with MCP configuration. AG-UI connects a backend to a
-frontend. A2A connects independently deployed agents. These standards leave
-each framework free to use its own project and release formats.
+Several standards connect systems at specific boundaries. MCP connects hosts to
+tools and data. Agent Skills packages reusable instructions, and Agent Plugins
+packages skills with MCP configuration. AG-UI connects a backend to a frontend.
+A2A connects independently deployed agents. Each framework retains its own
+project and release formats.
 
 An [Agent Project](/concepts/agent-project) keeps the native layout of its
 framework. An [Agent Application Platform](/concepts/platform) can support
 several frameworks without translating every project into one generic schema.
 
-See [the paper](/paper), especially sections 3, 7, 9, and 24.2.
+See the paper's [stack](/paper#3-the-agent-application-stack),
+[vocabulary](/paper#8-vocabulary), [build-and-operate
+method](/paper#9-a-build-and-operate-method), and [capability
+model](/paper#12-the-agent-project-and-capability-model).

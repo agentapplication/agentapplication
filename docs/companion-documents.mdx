@@ -1,6 +1,6 @@
 ---
 title: "Companion documents"
-description: "The document family the working paper anchors: manifesto, technical papers, platform architecture, and the standards that follow."
+description: "Planned practical and technical documents that build on the Agent Applications paper."
 ---
 
 The paper introduces a set of related documents, each with a different job:
@@ -10,8 +10,9 @@ The paper introduces a set of related documents, each with a different job:
 | The Agent Applications Manifesto | A short public argument for software that does the work | Planned |
 | Programming Agent Applications | How to decompose a use case across code, natural-language programs, tools, agents, workflows, dependencies, state, policy, and evaluation | Planned |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery | Planned |
-| The Agent Application Platform: A Platform Architecture | Production infrastructure and commercial services for long-lived agent instances | Planned |
-| Agent Artifact Standard | A portable contract for artifact content, identity, provenance, permissions, versions, rendering, and actions | Planned |
+| The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances | Planned |
+| Agent Applications for SaaS Companies | Adoption paths for embedded copilots, exported capabilities, and first-party Agent Applications | Planned |
+| Agent Application Stores and Economics | Catalogs, review, installation, entitlements, pricing, billing, publisher terms, and market structure | Planned |
 
 ## From contracts to standards
 
@@ -19,22 +20,20 @@ The paper points to several areas where an open contract may eventually help.
 Standards work should start when two or more independent implementations need
 to exchange the same information across a stable boundary.
 
-The capability model serves a different purpose. It lists the parts of an
-Agent Application so developers can compare frameworks and framework authors
-can see what developers may need. It does not prescribe project files, APIs,
-builds, or release artifacts.
+The capability model lists the parts of an Agent Application so developers can
+compare frameworks and framework authors can see what developers may need.
+Each framework retains its own project files, APIs, build process, and release
+artifacts.
 
 Likely candidates for future standards include:
 
-1. **Agent Artifact contract.** This would cover identity, content and state,
-   provenance, permissions, versions, rendering, and actions. See
-   [Agent Artifact](/concepts/artifact) for the two-layer model.
-2. **Workspace and lineage export.** This would carry portable state and its
-   release and overlay history, using secret references instead of credentials.
-3. **Agent identity and delegated authority.** This work comes later, after
-   principal and cross-system authority models are mature enough to support a
-   shared abstraction.
+- An Agent Artifact contract covering identity, content and state, provenance,
+  permissions, versions, rendering, and actions
+- A workspace and lineage export contract carrying portable state and its
+  release and overlay history, using secret references instead of credentials
+- An agent identity and delegated authority contract, once principal and
+  cross-system authority models can support a shared abstraction
 
 A proposal should identify the independent implementations that need to
 exchange information and the exact problem they face. Its scope should stop at
-that boundary rather than trying to normalize each framework's project model.
+that boundary. Each framework keeps its own project model.

@@ -19,7 +19,7 @@ This separation limits the damage from prompt injection. A user can try to make
 the agent reveal anything it can read. The instance should therefore contain
 only information that every authorized user may allow the agent to use. The
 same rule applies to tools and retrieval systems: a call made for one user
-should not return information that user cannot access.
+should return only information that user may access.
 
 Authentication controls who may use an instance. Several teammates can use one
 shared instance, while an administrator may manage many private instances. The
@@ -37,9 +37,12 @@ Instances created from the same release diverge as their workspaces accumulate
 different information and instructions. [Lineage](/concepts/lineage) records
 those changes.
 
-The instance and workspace are different. The instance has identity, ownership,
-authority, a lifecycle, and lineage. It owns one or more computational
-environments. The [Agent Workspace](/concepts/workspace) contains the durable
-working state used inside them.
+The instance carries identity, ownership, authority, lifecycle, and lineage.
+The [Agent Workspace](/concepts/workspace) holds the durable working state and
+computational environment used by the agent. Keeping them separate lets an
+operator restore or move the workspace without changing the instance's identity
+or permissions.
 
-See [the paper](/paper), sections 6.1, 10, and 11.3.
+See the paper's sections on [privacy domains](/paper#7-1-how-to-decide-who-gets-an-agent-instance),
+[application lifetimes](/paper#13-application-release-instance-and-session),
+and [instance identity](/paper#14-3-instance-identity-and-workspace-state).

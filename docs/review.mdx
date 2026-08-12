@@ -1,10 +1,10 @@
 ---
 title: "Review the draft"
 sidebarTitle: "Review"
-description: "How to send holes, counterexamples, boundary cases, and prior art for Working Draft 0.8."
+description: "How to send holes, counterexamples, boundary cases, and prior art for Working Draft 0.9."
 ---
 
-This is **Working Draft 0.8**, and the work is now being developed in public at
+This is **Working Draft 0.9**, and the work is now being developed in public at
 [agentapplication/agentapplication](https://github.com/agentapplication/agentapplication).
 We welcome help with the paper, examples, definitions, and the open contracts
 that may follow it.
@@ -21,11 +21,12 @@ that may follow it.
   [contribution guide](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md)
   explains how to prepare one.
 
-## Review the definition
+## Review the category boundary
 
-The paper draws a boundary around persistent agent instances, durable
-workspaces, and durable work. If a real product crosses that boundary in a way
-the definition misses, that is exactly the review we want.
+The paper identifies four defining properties: a persistent agent instance,
+agent-directed control flow, a durable computational workspace, and durable
+work. If a real product crosses that boundary in a way the definition misses,
+we want to understand the case.
 
 A useful review might:
 
@@ -36,6 +37,13 @@ A useful review might:
   agent research.
 - Give a real system that the definition wrongly includes or excludes.
 - Flag a term that already has a different meaning in another field.
+
+## Review the architecture
+
+The paper also assigns responsibilities to frameworks, projects, releases,
+instances, platforms, and stores. Useful architecture feedback can identify a
+missing responsibility, show that one has been assigned to the wrong element,
+or describe a real system whose boundaries do not fit the model.
 
 If you would rather send feedback privately, email
 [amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review)

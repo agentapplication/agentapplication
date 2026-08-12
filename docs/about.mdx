@@ -1,64 +1,63 @@
 ---
 title: "About this paper"
-description: "Who the Agent Applications paper is for, what it is trying to establish, and the long-term goal behind it."
+description: "Who should read the Agent Applications paper, how to use it, and what lies outside its scope."
 ---
 
-This paper gives a name and an architecture to a kind of software that already
-exists. ChatGPT, Claude, Lovable, Replit Agent, OpenClaw, Lightfield, and similar
-products look different, but they share a basic shape: an agent can return to
-ongoing work, use tools, and leave behind results that matter after a session
-ends. We call the whole product an **Agent Application**.
+Teams have built persistent, tool-using agents as product-specific systems.
+These products use different names and divide responsibilities differently,
+even when they share the same broad shape. The paper identifies that shape and
+presents a reference architecture for building and operating the complete
+product, which it calls an **Agent Application**.
 
 ## Who it is for
 
-The paper is written for people building the next layer of agent software:
+| Reader | How to use the paper |
+|---|---|
+| Application architects and developers | Define the application's job and privacy boundary, decompose its program, and design its release and instance lifecycles. |
+| Framework authors | Compare a harness with the capability model and identify the development and production support needed for complete Agent Applications. |
+| Platform builders and operators | Assign responsibility for releases, instances, workspaces, authority, interfaces, and fleet operations. |
+| Security and governance teams | Locate trust boundaries, approval gates, audit records, retention rules, and recovery points. |
+| Technology buyers | Compare frameworks, platforms, and stores by their responsibilities, operating model, and lifecycle support. |
+| Standards contributors | Identify boundaries where independent systems need shared contracts while leaving framework-specific design to each framework. |
 
-- Application developers deciding how to package, test, deploy, and update an
-  agent that works over time
-- Harness and framework builders deciding which parts of the application
-  lifecycle their tools need to support
-- Platform builders operating releases, instances, workspaces, permissions,
-  costs, fleets, distribution, and monetization
-- Product teams deciding what deserves its own persistent agent instance and
-  where to draw the privacy boundary around its workspace
-- Protocol and standards authors looking for the boundaries where independent
-  systems need to work together
+Boundary cases, counterexamples, and prior art are useful input to the next
+draft, including cases that challenge the proposed terms or contracts.
 
-You do not need to agree with every proposed term or contract. Boundary cases,
-counterexamples, and prior art are useful input to the next draft.
+The paper provides [guided reading paths](/paper#guided-reading-paths) for these
+different uses.
 
 ## What the paper is trying to do now
 
-The immediate goal is to make Agent Applications easier to discuss and build.
-The paper defines the main layers of the stack, separates an application from
-its releases and running instances, and explains why durable workspaces,
-artifacts, lineage, privacy, and fleet management belong in the application
-model.
+The paper defines the elements of an Agent Application, assigns responsibilities
+to them, and maps the lifecycle from project to release, instance, workspace,
+and durable work. Its capability model helps developers design applications and
+helps framework authors describe what their systems provide.
 
-For harness and platform builders, the paper provides a concrete target. A
-harness grows into an Agent Application framework as it supports more of the
-development and operating lifecycle. An Agent Application Platform can run
-projects from different frameworks while sharing common services at the
-boundaries between them.
+The paper calls a harness an **Agent Application Framework** when it includes a
+coherent project structure, development tools, evaluations, packaging,
+deployment, and production runtime support. An **Agent Application Platform**
+turns tested projects into immutable releases and operates long-lived instances.
 
-## The north star
+The architecture defines no conformance test. Products may combine several
+elements in one service, use different names, and keep their own project and
+release formats.
 
-Today, most successful agent products are vertically integrated. The project
-format, runtime, user interface, state, artifacts, and commercial model usually
-belong to one company and move together.
+## Longer-term direction
 
-The long-term goal is a broader software industry. Developers should be able to
-build Agent Applications with the framework that suits the work, publish them
-through competing platforms, and earn revenue from a portfolio of applications.
-Platforms should be able to run projects from several frameworks. Users should
-be able to keep the context, artifacts, and completed work that their agent
-instances accumulate over time.
+Many agent products combine the project format, runtime, user interface, state,
+artifacts, and commercial services under one provider.
 
-Different frameworks and project formats can coexist. What the industry needs
-is a set of clear contracts at the places where systems meet: tools,
-instructions, identity and authority, releases, workspaces, artifacts, instance
-updates, communication, and commerce. The paper maps the standards that already
-cover some of those boundaries and points to the ones still missing.
+The long-term goal is a software market in which developers can build with the
+framework that suits the work, run applications on compatible platforms, and
+distribute them through competing Agent Application Stores. Users should be
+able to keep the context, artifacts, and completed work that their instances
+accumulate over time.
+
+Agent Projects and releases can remain framework-native. Shared contracts are
+most useful where independent systems meet, including tools, instructions,
+interfaces, identity and authority, artifact sharing, workspace migration, and
+commerce. The paper maps standards that already cover some boundaries and
+identifies others that may need further work.
 
 Read the [full paper](/paper), see the [companion
 documents](/companion-documents), or [review the draft](/review).
