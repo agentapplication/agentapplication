@@ -1,0 +1,153 @@
+<mxfile host="Electron" agent="Codex" compressed="false">
+  <diagram id="seven-layer-stack" name="Seven-layer stack">
+    <mxGraphModel dx="1550" dy="1090" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="880" background="#fbfbf7" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="boundaries" parent="0" style="fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Boundaries" />
+        <mxCell id="canvas" parent="boundaries" style="rounded=1;arcSize=2;whiteSpace=wrap;html=1;fillColor=#fbfbf7;strokeColor=#111827;strokeWidth=1.5;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="829" width="1398" x="1" y="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l7" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#eef9f1;strokeColor=#57926b;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l6" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l5" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="308" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l4" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f2f5ff;strokeColor=#7e8cb4;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="406" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l3" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f2f5ff;strokeColor=#7e8cb4;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="504" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l2" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#c58a47;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="602" as="geometry" />
+        </mxCell>
+        <mxCell id="bg-l1" parent="boundaries" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#c58a47;strokeWidth=1.4;shadow=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="82" width="1260" x="70" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="4-qhCZ3Fy5Ztq9ZGm2Z7-1" parent="boundaries" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Responsibilities from model inference to the application delivered to a user or organization" vertex="1">
+          <mxGeometry height="30" width="800" x="70" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="components" parent="0" style="fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Labels and components" />
+        <mxCell id="title" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=22;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="SEVEN-LAYER AGENT APPLICATION STACK" vertex="1">
+          <mxGeometry height="34" width="600" x="70" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="components" style="text;html=1;convertToSvg=1;align=right;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=default;fontSize=10;labelBackgroundColor=none;textShadow=0;spacingRight=4;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;div&gt;&lt;b&gt;Agent Applications&lt;/b&gt;&lt;span&gt;: A Reference Architecture for Building and Operating AI Agent Systems | &lt;/span&gt;&lt;a href=&quot;https://agentapplication.io&quot;&gt;https://agentapplication.io&lt;/a&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="800" x="600" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l7" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L7" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="127" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l7" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent use cases&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="121" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l7" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Agent Applications delivered to users and organizations" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="123" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l7" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Financial advisor • support agent • coding agent • tutor • backend operator" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="153" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l6" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L6" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l6" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent Application Store&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="219" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l6" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="(Optional) Turns agents into commercial products" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="221" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l6" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="acquisition • entitlements • billing • publisher payments •&amp;nbsp;monetization" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="251" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l5" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L5" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="323" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l5" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent Application Platform&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="317" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l5" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Runs long-lived agent instances" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="319" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l5" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Isolated durable workspaces • resumable execution • identity and authority • checkpoints • observability • per-instance metering&lt;div&gt;User and machine interfaces • tenant access • schedules • artifact delivery • fleet operations&lt;/div&gt;" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="349" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l4" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L4" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="421" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l4" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent Application Project&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l4" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Contains the framework-native application program" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="417" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l4" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Code • natural-language programs • declarations • knowledge • dependencies • tools • workflows • policy • evaluations" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="447" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l3" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L3" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="519" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l3" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent Application Framework&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="513" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l3" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Runs the agent loop and defines L4 project conventions" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l3" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Context assembly • model and tool invocation • skills • subagents&lt;br&gt;Development tools • evaluations • packaging • deployment • production runtime support" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l2" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L2" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="617" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l2" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent compute&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="611" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l2" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Provides isolated conventional compute" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="613" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l2" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Code and tool execution • shell commands • browsers • filesystem operations" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="643" as="geometry" />
+        </mxCell>
+        <mxCell id="number-l1" parent="components" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontColor=#172033;fontSize=24;fontStyle=1;fillColor=#ffffff;fillOpacity=72;strokeColor=none;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="L1" vertex="1">
+          <mxGeometry height="52" width="62" x="86" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="title-l1" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=18;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Model&lt;/b&gt;" vertex="1">
+          <mxGeometry height="64" width="280" x="221" y="709" as="geometry" />
+        </mxCell>
+        <mxCell id="statement-l1" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=bottom;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Interprets programs and current state" vertex="1">
+          <mxGeometry height="28" width="800" x="500" y="711" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-l1" parent="components" style="text;html=1;convertToSvg=1;whiteSpace=wrap;overflow=hidden;align=left;verticalAlign=top;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Natural-language programs • reasoning over current state • content generation • action selection within application guardrails" vertex="1">
+          <mxGeometry height="36" width="800" x="500" y="741" as="geometry" />
+        </mxCell>
+        <mxCell id="footer-note" parent="components" style="text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="The layers assign responsibilities. A product may combine several layers or assemble them from different systems." vertex="1">
+          <mxGeometry height="30" width="1260" x="70" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="icons" parent="0" style="fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Lucide icons" />
+        <mxCell id="icon-l7" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M16%2021v-2a4%204%200%200%200-4-4H6a4%204%200%200%200-4%204v2%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M16%203.128a4%204%200%200%201%200%207.744%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M22%2021v-2a4%204%200%200%200-3-3.87%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%224%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="139" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-l6" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%2220%22%20height%3D%2216%22%20rx%3D%222%22%3E%3C%2Frect%3E%3Cpath%20d%3D%22M10%204v4%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M2%208h20%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M6%204v4%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="237" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-l5" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17.5%2019H9a7%207%200%201%201%206.71-9h1.79a4.5%204.5%200%201%201%200%209Z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-l4" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M11%2021.73a2%202%200%200%200%202%200l7-4A2%202%200%200%200%2021%2016V8a2%202%200%200%200-1-1.73l-7-4a2%202%200%200%200-2%200l-7%204A2%202%200%200%200%203%208v8a2%202%200%200%200%201%201.73z%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M12%2022V12%22%3E%3C%2Fpath%3E%3Cpolyline%20points%3D%223.29%207%2012%2012%2020.71%207%22%3E%3C%2Fpolyline%3E%3Cpath%20d%3D%22m7.5%204.27%209%205.15%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-l3" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M10%2022V7a1%201%200%200%200-1-1H4a2%202%200%200%200-2%202v12a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2v-5a1%201%200%200%200-1-1H2%22%3E%3C%2Fpath%3E%3Crect%20x%3D%2214%22%20y%3D%222%22%20width%3D%228%22%20height%3D%228%22%20rx%3D%221%22%3E%3C%2Frect%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="531" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-l2" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2019h8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22m4%2017%206-6-6-6%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="629" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-l1" parent="icons" style="shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M11.017%202.814a1%201%200%200%201%201.966%200l1.051%205.558a2%202%200%200%200%201.594%201.594l5.558%201.051a1%201%200%200%201%200%201.966l-5.558%201.051a2%202%200%200%200-1.594%201.594l-1.051%205.558a1%201%200%200%201-1.966%200l-1.051-5.558a2%202%200%200%200-1.594-1.594l-5.558-1.051a1%201%200%200%201%200-1.966l5.558-1.051a2%202%200%200%200%201.594-1.594z%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M20%202v4%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M22%204h-4%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%224%22%20cy%3D%2220%22%20r%3D%222%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="174" y="727" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

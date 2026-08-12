@@ -14,6 +14,9 @@
       "dark": "#161613"
     }
   },
+  "fonts": {
+    "family": "DM Sans"
+  },
   "favicon": "/favicon.svg",
   "navbar": {
     "primary": {

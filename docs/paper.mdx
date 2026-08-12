@@ -225,57 +225,34 @@ delivered to a person or organization.
 
 *Figure 2. Seven-layer Agent Application stack.*
 
-```mermaid
-%%{init: {"flowchart": {"rankSpacing": 12, "nodeSpacing": 10}, "themeVariables": {"fontSize": "14px"}}}%%
-flowchart LR
-    subgraph Stack["Seven-layer stack"]
-        direction LR
-        L1["L1 Model"] --> L2["L2 Agent compute"] --> L3["L3 Agent harness"]
-        L3 --> L4["L4 Agent Application Project"] --> L5["L5 Agent Cloud"]
-        L5 --> L6["L6 Agent productization"] --> L7["L7 Agent use cases"]
-    end
-```
-
-| Layer | Responsibility |
-|---|---|
-| L7 Agent use cases | The Agent Applications delivered to users and organizations, such as a financial advisor, support agent, coding agent, tutor, or backend operator. |
-| L6 Agent productization | Turns running agents into products through user and machine interfaces, tenant access, schedules, artifact delivery, fleet operations, metering, and usage controls. An Agent Application Store may supply acquisition, entitlements, billing, and publisher payments at this boundary. |
-| L5 Agent Cloud | Runs long-lived instances with isolated durable workspaces, resumable execution, identity and authority controls, checkpoints, observability, and per-instance metering. |
-| L4 Agent Application Project | Holds the framework-native program used to build releases, including code, natural-language programs, declarations, knowledge, dependencies, tools, workflows, policy, and evaluations. |
-| L3 Agent harness | Assembles context, invokes models and tools, loads skills and subagents, and runs the agent loop. |
-| L2 Agent compute | Provides the isolated conventional compute used for code, tools, shell commands, browsers, and filesystem operations. |
-| L1 Model | Interprets natural-language programs, reasons over current state, generates content, and chooses actions within application guardrails. |
+![Seven-layer Agent Application stack, from models and agent compute through
+the Agent Application Framework, Agent Application Project, Agent Application
+Platform, optional Agent Application Store, and delivered use
+cases.](/images/architecture/stack.drawio.svg)
 
 The layers describe responsibilities, not seven products that a team must buy.
 One provider may combine several layers, and an application may assemble them
-from different systems. An Agent Application Framework joins an L3 harness to
-a coherent L4 Agent Application Project and development lifecycle, then
-supports deployment and production runtime. An Agent Application Platform
-normally spans L5 and L6 and may also supply development tools for L4 projects.
+from different systems. L3 is the Agent Application Framework: the harness,
+project conventions, development tools, evaluations, packaging, deployment
+model, and production runtime support. L4 is the framework-native Agent
+Application Project itself. L5 is the Agent Application Platform, which runs
+instances and exposes them through user and machine interfaces. L6 is the
+optional Agent Application Store, which handles acquisition, entitlements,
+billing, publisher payments, and monetization.
 
 [Karta](https://karta.sh/platform) is one implementation that provides
-development tools at L4 and platform services across L5 and L6.
+development tools at L4 and platform services at L5.
 
 An artifact can be shared outside its instance under its own access policy.
 That access does not open the workspace that produced it.
 
 *Figure 3. Logical view of an Agent Application.*
 
-```mermaid
-flowchart TB
-    Developer(["Developer"]) --> Framework["Harness / Agent Application framework"]
-    Framework --> Project["Agent Project"]
-    Project --> Release["Immutable release"]
-    Release --> Platform
-    Platform["Agent Application Platform"] --> Instance["Agent instance"]
-    Surface["Widget, channel, API, or event"] --> Instance
-    Instance --> Runtime["Framework runtime"]
-    Instance --> Workspace["Durable workspace"]
-    Runtime <--> Workspace
-    Runtime --> Model["Model and compute"]
-    Runtime --> Services["Tools and external services"]
-    Workspace --> Artifacts["Artifacts and durable results"]
-```
+![Logical view showing how a developer uses an Agent Application Framework to
+build a project and immutable release, which an Agent Application Platform runs
+as an instance with a framework runtime, durable workspace, interfaces,
+artifacts, models, compute, tools, and external
+services.](/images/architecture/logical-view.drawio.svg)
 
 The diagram assigns logical responsibilities. One product may combine the
 framework and platform, while another runs a third-party framework on an
@@ -638,26 +615,10 @@ shared program but does not replace the instance's accumulated work.
 
 *Figure 4. Release and instance lifecycle.*
 
-```mermaid
-flowchart TB
-    Project["Agent Project"] --> Evaluate["Build and evaluate"]
-    Evaluate --> Release1["Release 1.0"]
-    Release1 --> InstanceA["Maya's instance"]
-    Release1 --> InstanceB["Another instance"]
-    InstanceA --> Session1["Session"]
-    Session1 --> WorkspaceA["Durable workspace"]
-    InstanceA --> Session2["Later session or schedule"]
-    Session2 --> WorkspaceA
-    WorkspaceA --> LocalSkill["Maya's modified version 1 skill"]
-
-    Project2["Revised Agent Project"] --> Evaluate2["Build and evaluate"]
-    Evaluate2 --> Release2["Release 1.1"]
-    Release2 --> Upgrade["Staged semantic upgrade"]
-    LocalSkill --> Upgrade
-    Upgrade --> Continued["Version 1.1 with Maya's change preserved"]
-
-    Continued -..-> WorkspaceA
-```
+![Release and instance lifecycle showing fixed releases, separate instances,
+sessions that share a durable workspace, a local adaptation, and a staged
+semantic upgrade that preserves the instance's accumulated state and local
+change.](/images/architecture/release-instance-lifecycle.drawio.svg)
 
 Consider the Financial Advisor Agent from section 1. Its project contains
 instructions for reviewing records, skills for account and retirement analysis,
