@@ -112,24 +112,9 @@ where authority is enforced, and which component owns each capability.
 
 *Figure 1. System context.*
 
-```mermaid
-flowchart TB
-    Developer(["Developer"]) --> Project["Agent Application Project"]
-    Publisher(["Publisher"]) --> Project
-    Project --> Platform["Agent Application\n Platform"]
-    Publisher --> Store["Agent Application Store"]
-    Publisher -. fleet, cost, and \naccess management .-> Platform
-    User(["User or organization"]) --> Store
-    Store -. user acquisition\n and entitlement .-> Platform
-    Platform --> Instance["Agent instance"]
-    User --> Surface["Widget, channel, \nAPI, or event"]
-    Surface --> Instance
-    Instance --> Model["Model and compute"]
-    Instance --> Services["Tools and external services"]
-    Instance --> Workspace["Durable workspace"]
-    Workspace --> Artifact["Artifact or durable result"]
-    Artifact --> Recipient(["Authorized recipient"])
-```
+![Agent Application system context showing build and publishing, optional
+distribution, platform operation, runtime dependencies, user interaction, and
+artifact sharing.](/images/architecture/system-context.drawio.svg)
 
 ---
 
@@ -235,22 +220,46 @@ release with each instance's local state.
 
 ## 3. The Agent Application stack
 
-An Agent Application spans six layers, from model execution to the surfaces
-where people and software use the product. Each layer has a distinct role.
+An Agent Application spans seven layers, from model inference to the use case
+delivered to a person or organization.
+
+*Figure 2. Seven-layer Agent Application stack.*
+
+```mermaid
+%%{init: {"flowchart": {"rankSpacing": 12, "nodeSpacing": 10}, "themeVariables": {"fontSize": "14px"}}}%%
+flowchart LR
+    subgraph Stack["Seven-layer stack"]
+        direction LR
+        L1["L1 Model"] --> L2["L2 Agent compute"] --> L3["L3 Agent harness"]
+        L3 --> L4["L4 Agent Application Project"] --> L5["L5 Agent Cloud"]
+        L5 --> L6["L6 Agent productization"] --> L7["L7 Agent use cases"]
+    end
+```
 
 | Layer | Responsibility |
 |---|---|
-| Model and conventional compute | The model interprets natural-language programs and chooses actions. Conventional processors execute code, tools, and filesystem operations. |
-| Harness / Agent Application framework | A harness assembles context, invokes models and tools, and runs the agent loop. An Agent Application Framework is a harness that also includes coherent project structure, development tools, evaluations, packaging, deployment, and production runtime support. |
-| Agent project and release | A framework-native project contains the developer-authored program, configuration, knowledge setup, dependencies, and evaluations. The chosen framework and platform turn it into a fixed, inspectable version for deployment. |
-| Agent Application Platform | Packages immutable releases and operates long-lived instances with durable workspaces, identity management, security controls, governance, observability, evaluation, and fleet management. |
-| Agent instance | A long-lived copy created for one privacy domain such as a user, a team or a ticket. It accumulates its own workspace, history, authority, artifacts, and local program changes. |
-| Product surfaces | Agent widgets, APIs, communication channels, and artifact sharing expose the running instances to users and other software. |
+| L7 Agent use cases | The Agent Applications delivered to users and organizations, such as a financial advisor, support agent, coding agent, tutor, or backend operator. |
+| L6 Agent productization | Turns running agents into products through user and machine interfaces, tenant access, schedules, artifact delivery, fleet operations, metering, and usage controls. An Agent Application Store may supply acquisition, entitlements, billing, and publisher payments at this boundary. |
+| L5 Agent Cloud | Runs long-lived instances with isolated durable workspaces, resumable execution, identity and authority controls, checkpoints, observability, and per-instance metering. |
+| L4 Agent Application Project | Holds the framework-native program used to build releases, including code, natural-language programs, declarations, knowledge, dependencies, tools, workflows, policy, and evaluations. |
+| L3 Agent harness | Assembles context, invokes models and tools, loads skills and subagents, and runs the agent loop. |
+| L2 Agent compute | Provides the isolated conventional compute used for code, tools, shell commands, browsers, and filesystem operations. |
+| L1 Model | Interprets natural-language programs, reasons over current state, generates content, and chooses actions within application guardrails. |
+
+The layers describe responsibilities, not seven products that a team must buy.
+One provider may combine several layers, and an application may assemble them
+from different systems. An Agent Application Framework joins an L3 harness to
+a coherent L4 Agent Application Project and development lifecycle, then
+supports deployment and production runtime. An Agent Application Platform
+normally spans L5 and L6 and may also supply development tools for L4 projects.
+
+[Karta](https://karta.sh/platform) is one implementation that provides
+development tools at L4 and platform services across L5 and L6.
 
 An artifact can be shared outside its instance under its own access policy.
 That access does not open the workspace that produced it.
 
-*Figure 2. Logical view of an Agent Application.*
+*Figure 3. Logical view of an Agent Application.*
 
 ```mermaid
 flowchart TB
@@ -627,7 +636,7 @@ operation. A release can create many instances. Each instance can run many
 sessions and retain one workspace across them. A later release changes the
 shared program but does not replace the instance's accumulated work.
 
-*Figure 3. Release and instance lifecycle.*
+*Figure 4. Release and instance lifecycle.*
 
 ```mermaid
 flowchart TB
@@ -1605,7 +1614,7 @@ authority. A malicious instruction can arrive through a web page, email,
 document, support ticket, tool result, or old workspace file. The controls below
 limit what compromised or mistaken behavior can affect.
 
-*Figure 4. Trust and authority boundaries.*
+*Figure 5. Trust and authority boundaries.*
 
 ```mermaid
 flowchart TB
