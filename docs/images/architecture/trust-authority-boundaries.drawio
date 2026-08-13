@@ -1,82 +1,76 @@
 <mxfile host="Electron" agent="Codex" compressed="false">
   <diagram id="trust-authority-boundaries" name="Trust and authority boundaries">
-    <mxGraphModel dx="1550" dy="1090" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="880" background="#fbfbf7" math="0" shadow="0">
+    <mxGraphModel dx="2214" dy="1557" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="880" background="#fbfbf7" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
         <mxCell id="canvas" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=2;whiteSpace=wrap;html=1;fillColor=#fbfbf7;strokeColor=#111827;strokeWidth=1.5;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="" vertex="1">
-          <mxGeometry x="1" y="1" width="1398" height="829" as="geometry" />
+          <mxGeometry height="829" width="1398" x="1" y="1" as="geometry" />
         </mxCell>
         <mxCell id="title" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=22;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="TRUST AND AUTHORITY BOUNDARIES" vertex="1">
-          <mxGeometry x="70" y="24" width="700" height="34" as="geometry" />
+          <mxGeometry height="34" width="700" x="70" y="24" as="geometry" />
         </mxCell>
         <mxCell id="description" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#596273;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="The agent proposes work inside controls that it cannot grant, expand, or erase" vertex="1">
-          <mxGeometry x="70" y="60" width="850" height="30" as="geometry" />
+          <mxGeometry height="30" width="850" x="70" y="60" as="geometry" />
         </mxCell>
         <mxCell id="footer" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;text;html=1;convertToSvg=1;align=right;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#172033;fontSize=10;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems | https://agentapplication.io" vertex="1">
-          <mxGeometry x="590" y="840" width="790" height="24" as="geometry" />
+          <mxGeometry height="24" width="790" x="590" y="840" as="geometry" />
         </mxCell>
-
         <mxCell id="untrusted-boundary" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=16;spacingLeft=22;fontColor=#172033;fillColor=#fff7ed;fillOpacity=45;strokeColor=#c58a47;strokeWidth=1.5;dashed=1;dashPattern=7 6;fontSize=13;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="UNTRUSTED INPUTS" vertex="1">
-          <mxGeometry x="45" y="130" width="330" height="600" as="geometry" />
+          <mxGeometry height="600" width="330" x="45" y="130" as="geometry" />
         </mxCell>
         <mxCell id="instance-boundary" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=14;spacingLeft=22;fontColor=#172033;fillColor=#ffffff;strokeColor=#111827;strokeWidth=1.8;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="AGENT INSTANCE" vertex="1">
-          <mxGeometry x="420" y="130" width="480" height="600" as="geometry" />
+          <mxGeometry height="600" width="480" x="420" y="130" as="geometry" />
         </mxCell>
         <mxCell id="instance-note" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;text;html=1;convertToSvg=1;align=right;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#6b7280;fontSize=11;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Isolated runtime, workspace, and code execution" vertex="1">
-          <mxGeometry x="445" y="168" width="420" height="22" as="geometry" />
+          <mxGeometry height="22" width="420" x="445" y="168" as="geometry" />
         </mxCell>
         <mxCell id="authority-boundary" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=14;spacingLeft=22;fontColor=#172033;fillColor=#fdfef8;strokeColor=#7f9131;strokeWidth=1.8;fontSize=15;fontStyle=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="AUTHORITY AND POLICY PLANE" vertex="1">
-          <mxGeometry x="945" y="130" width="410" height="600" as="geometry" />
+          <mxGeometry height="600" width="410" x="945" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="authority-note" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;text;html=1;convertToSvg=1;align=right;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#6b7280;fontSize=11;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Platform-enforced controls outside agent-editable state" vertex="1">
-          <mxGeometry x="970" y="168" width="350" height="22" as="geometry" />
+        <mxCell id="authority-note" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;text;html=1;convertToSvg=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontColor=#6b7280;fontSize=11;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="Platform-enforced controls outside agent-editable state" vertex="1">
+          <mxGeometry height="22" width="350" x="967" y="168" as="geometry" />
         </mxCell>
-
         <mxCell id="principal" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=left;spacingLeft=48;fontColor=#172033;fillColor=#ffffff;strokeColor=#64748b;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Principal or event source&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;user, organization, schedule&lt;/font&gt;" vertex="1">
-          <mxGeometry x="80" y="200" width="260" height="82" as="geometry" />
+          <mxGeometry height="82" width="260" x="80" y="211" as="geometry" />
         </mxCell>
         <mxCell id="untrusted" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingTop=14;spacingLeft=48;spacingRight=14;fontColor=#172033;fillColor=#ffffff;strokeColor=#c58a47;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Untrusted content&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;Documents and messages&lt;br&gt;Web pages and support tickets&lt;br&gt;Tool results&lt;br&gt;Old workspace files&lt;/font&gt;" vertex="1">
-          <mxGeometry x="80" y="365" width="260" height="120" as="geometry" />
+          <mxGeometry height="120" width="260" x="80" y="365" as="geometry" />
         </mxCell>
-        <mxCell id="resource" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;spacingLeft=48;fontColor=#172033;fillColor=#ffffff;strokeColor=#c58a47;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;External resource&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;data or system with its own policy&lt;/font&gt;" vertex="1">
-          <mxGeometry x="80" y="580" width="260" height="88" as="geometry" />
+        <mxCell id="resource" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;spacingLeft=48;fontColor=#172033;fillColor=#ffffff;strokeColor=#c58a47;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;External resource&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;data or system with its &lt;br&gt;own policy&lt;/font&gt;" vertex="1">
+          <mxGeometry height="88" width="260" x="80" y="580" as="geometry" />
         </mxCell>
-
-        <mxCell id="identity" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fontColor=#172033;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Identity and&lt;br&gt;instance routing&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;selects the authority domain&lt;/font&gt;" vertex="1">
-          <mxGeometry x="455" y="205" width="190" height="95" as="geometry" />
+        <mxCell id="identity" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fontColor=#172033;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Identity and&lt;br&gt;instance routing&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;selects the authority&lt;br&gt;domain&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="190" x="455" y="205" as="geometry" />
         </mxCell>
-        <mxCell id="labels" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fontColor=#172033;fillColor=#fff8d8;strokeColor=#b29a3c;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Source and&lt;br&gt;trust labels&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;survive context and summaries&lt;/font&gt;" vertex="1">
-          <mxGeometry x="675" y="205" width="190" height="95" as="geometry" />
+        <mxCell id="labels" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fontColor=#172033;fillColor=#fff8d8;strokeColor=#b29a3c;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Source and&lt;br&gt;trust labels&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;survive context &lt;br&gt;and summaries&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="190" x="675" y="205" as="geometry" />
         </mxCell>
-        <mxCell id="runtime" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingTop=14;spacingLeft=52;spacingRight=14;fontColor=#172033;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.5;shadow=1;fontSize=15;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent runtime&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;Model proposes actions within granted authority.&lt;br&gt;Runtime evaluates inputs, tools, and current state.&lt;/font&gt;" vertex="1">
-          <mxGeometry x="475" y="370" width="365" height="130" as="geometry" />
+        <mxCell id="runtime" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingTop=14;spacingLeft=52;spacingRight=14;fontColor=#172033;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.5;shadow=1;fontSize=15;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Agent runtime&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;Model proposes actions within &lt;br&gt;granted authority. Runtime evaluates&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font color=&quot;#596273&quot;&gt;inputs, tools, and current state.&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="365" x="475" y="370" as="geometry" />
         </mxCell>
         <mxCell id="sandbox" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;spacingLeft=48;fontColor=#172033;fillColor=#fff7ed;strokeColor=#c58a47;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Sandboxed code&lt;br&gt;execution&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;filesystem, process,&lt;br&gt;and network limits&lt;/font&gt;" vertex="1">
-          <mxGeometry x="455" y="620" width="200" height="82" as="geometry" />
+          <mxGeometry height="82" width="200" x="455" y="620" as="geometry" />
         </mxCell>
         <mxCell id="workspace" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;spacingLeft=48;fontColor=#172033;fillColor=#fff8d8;strokeColor=#b29a3c;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Isolated durable&lt;br&gt;workspace&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;private state and work&lt;/font&gt;" vertex="1">
-          <mxGeometry x="675" y="620" width="200" height="82" as="geometry" />
+          <mxGeometry height="82" width="200" x="675" y="620" as="geometry" />
         </mxCell>
-
         <mxCell id="policy" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingTop=14;spacingLeft=52;spacingRight=14;fontColor=#172033;fillColor=#eef5cc;strokeColor=#7f9131;strokeWidth=1.5;shadow=1;fontSize=15;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Policy and approval boundary&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;Permissions and approvals&lt;br&gt;network and resource limits&lt;br&gt;spending limits&lt;/font&gt;" vertex="1">
-          <mxGeometry x="985" y="195" width="330" height="120" as="geometry" />
+          <mxGeometry height="120" width="330" x="985" y="195" as="geometry" />
         </mxCell>
         <mxCell id="tool" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;spacingLeft=50;fontColor=#172033;fillColor=#ffffff;strokeColor=#7f9131;strokeWidth=1.4;shadow=1;fontSize=14;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Tool or MCP server&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;executes an approved capability&lt;/font&gt;" vertex="1">
-          <mxGeometry x="985" y="375" width="330" height="86" as="geometry" />
+          <mxGeometry height="86" width="330" x="985" y="375" as="geometry" />
         </mxCell>
         <mxCell id="evidence" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=14;spacingLeft=52;spacingRight=14;fontColor=#172033;fillColor=#eef9f1;strokeColor=#57926b;strokeWidth=1.5;shadow=1;fontSize=15;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="&lt;b&gt;Evidence and recovery record&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#596273&quot;&gt;Approvals, tool calls, and audit events&lt;br&gt;checkpoints and rollback points&lt;/font&gt;" vertex="1">
-          <mxGeometry x="985" y="525" width="330" height="120" as="geometry" />
+          <mxGeometry height="120" width="330" x="985" y="525" as="geometry" />
         </mxCell>
         <mxCell id="control-note" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fontColor=#172033;fillColor=#ffffff;strokeColor=#94a3b8;strokeWidth=1.2;dashed=1;dashPattern=6 5;fontSize=12;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;" value="The agent may request authority.&lt;br&gt;It cannot grant authority to itself&lt;br&gt;or erase the evidence of its actions." vertex="1">
-          <mxGeometry x="985" y="660" width="330" height="52" as="geometry" />
+          <mxGeometry height="52" width="330" x="985" y="660" as="geometry" />
         </mxCell>
-
-        <mxCell id="e-principal-identity" edge="1" parent="1" source="principal" target="identity" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#475569;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="authenticates / routes">
+        <mxCell id="e-principal-identity" edge="1" parent="1" source="principal" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#475569;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="identity" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 239), rgb(22, 22, 18));&quot;&gt;authenticates /&lt;br&gt;routes&lt;/span&gt;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-untrusted-labels" edge="1" parent="1" source="untrusted" target="labels" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#c58a47;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" value="">
+        <mxCell id="e-untrusted-labels" edge="1" parent="1" source="untrusted" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#c58a47;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" target="labels" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="400" y="425" />
@@ -85,19 +79,19 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e-identity-runtime" edge="1" parent="1" source="identity" target="runtime" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#51651b;strokeWidth=1.8;endArrow=block;endFill=1;endSize=7;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" value="">
+        <mxCell id="e-identity-runtime" edge="1" parent="1" source="identity" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#51651b;strokeWidth=1.8;endArrow=block;endFill=1;endSize=7;exitX=0.5;exitY=1;entryX=0.206;entryY=-0.013;entryDx=0;entryDy=0;entryPerimeter=0;" target="runtime" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-labels-runtime" edge="1" parent="1" source="labels" target="runtime" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b29a3c;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" value="">
+        <mxCell id="e-labels-runtime" edge="1" parent="1" source="labels" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b29a3c;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;exitX=0.5;exitY=1;entryX=0.806;entryY=-0.022;entryDx=0;entryDy=0;entryPerimeter=0;" target="runtime" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-runtime-policy" edge="1" parent="1" source="runtime" target="policy" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#51651b;strokeWidth=1.8;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.25;entryX=0;entryY=0.65;" value="requests action">
+        <mxCell id="e-runtime-policy" edge="1" parent="1" source="runtime" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#51651b;strokeWidth=1.8;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.25;entryX=0;entryY=0.65;" target="policy" value="requests action">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-policy-tool" edge="1" parent="1" source="policy" target="tool" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#51651b;strokeWidth=1.8;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fdfef8;fontColor=#596273;fontSize=10;fontStyle=1;" value="authorizes">
+        <mxCell id="e-policy-tool" edge="1" parent="1" source="policy" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#51651b;strokeWidth=1.8;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fdfef8;fontColor=#596273;fontSize=10;fontStyle=1;" target="tool" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(19, 20, 15));&quot;&gt;authorizes&lt;/span&gt;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-tool-resource" edge="1" parent="1" source="tool" target="resource" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#475569;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" value="accesses resource">
+        <mxCell id="e-tool-resource" edge="1" parent="1" source="tool" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;html=1;strokeColor=#475569;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fbfbf7;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" target="resource" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(22, 22, 18));&quot;&gt;accesses resource&lt;/span&gt;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1335" y="418" />
@@ -107,50 +101,49 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e-runtime-sandbox" edge="1" parent="1" source="runtime" target="sandbox" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#c58a47;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#ffffff;fontColor=#596273;fontSize=10;fontStyle=1;exitX=0.35;exitY=1;entryX=0.5;entryY=0;" value="executes code">
+        <mxCell id="e-runtime-sandbox" edge="1" parent="1" source="runtime" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#c58a47;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#ffffff;fontColor=#596273;fontSize=10;fontStyle=1;exitX=0.221;exitY=1.006;entryX=0.5;entryY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="sandbox" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(18, 18, 18));&quot;&gt;executes code&lt;/span&gt;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-runtime-workspace-read" edge="1" parent="1" source="runtime" target="workspace" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b29a3c;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#ffffff;fontColor=#596273;fontSize=10;fontStyle=1;exitX=0.65;exitY=1;entryX=0.35;entryY=0;" value="reads + writes">
+        <mxCell id="e-runtime-workspace-read" edge="1" parent="1" source="runtime" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b29a3c;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#ffffff;fontColor=#596273;fontSize=10;fontStyle=1;exitX=0.738;exitY=0.991;entryX=0.35;entryY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="workspace" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(18, 18, 18));&quot;&gt;reads + writes&lt;/span&gt;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-policy-evidence" edge="1" parent="1" source="policy" target="evidence" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#57926b;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fdfef8;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" value="">
+        <mxCell id="e-policy-evidence" edge="1" parent="1" source="policy" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#57926b;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fdfef8;fontColor=#596273;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" target="evidence" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1335" y="255" />
-              <mxPoint x="1335" y="585" />
+              <mxPoint x="1350" y="255" />
+              <mxPoint x="1350" y="585" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e-tool-evidence" edge="1" parent="1" source="tool" target="evidence" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#57926b;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fdfef8;fontColor=#596273;fontSize=10;fontStyle=1;" value="records effects">
+        <mxCell id="e-tool-evidence" edge="1" parent="1" source="tool" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#57926b;strokeWidth=1.7;endArrow=block;endFill=1;endSize=7;labelBackgroundColor=#fdfef8;fontColor=#596273;fontSize=10;fontStyle=1;" target="evidence" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 239), rgb(19, 20, 15));&quot;&gt;records effects&lt;/span&gt;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
         <mxCell id="icon-principal" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M16%2021v-2a4%204%200%200%200-4-4H6a4%204%200%200%200-4%204v2%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M16%203.128a4%204%200%200%201%200%207.744%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M22%2021v-2a4%204%200%200%200-3-3.87%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%224%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="95" y="228" width="24" height="24" as="geometry" />
+          <mxGeometry height="24" width="24" x="95" y="228" as="geometry" />
         </mxCell>
         <mxCell id="icon-untrusted" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%202H6a2%202%200%200%200-2%202v16a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V7.5L14.5%202z%22%3E%3C%2Fpath%3E%3Cpolyline%20points%3D%2214%202%2014%208%2020%208%22%3E%3C%2Fpolyline%3E%3Cline%20x1%3D%229%22%20x2%3D%2215%22%20y1%3D%2213%22%20y2%3D%2213%22%3E%3C%2Fline%3E%3Cline%20x1%3D%229%22%20x2%3D%2215%22%20y1%3D%2217%22%20y2%3D%2217%22%3E%3C%2Fline%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="95" y="393" width="24" height="24" as="geometry" />
+          <mxGeometry height="24" width="24" x="95" y="393" as="geometry" />
         </mxCell>
         <mxCell id="icon-resource" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%229%22%20ry%3D%223%22%3E%3C%2Fellipse%3E%3Cpath%20d%3D%22M3%205V19A9%203%200%200%200%2021%2019V5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M3%2012A9%203%200%200%200%2021%2012%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="95" y="612" width="24" height="24" as="geometry" />
+          <mxGeometry height="24" width="24" x="95" y="612" as="geometry" />
         </mxCell>
         <mxCell id="icon-runtime" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2019h8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22m4%2017%206-6-6-6%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="493" y="473" width="25" height="25" as="geometry" />
+          <mxGeometry height="25" width="25" x="493" y="393" as="geometry" />
         </mxCell>
         <mxCell id="icon-sandbox" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2019h8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22m4%2017%206-6-6-6%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="470" y="648" width="24" height="24" as="geometry" />
+          <mxGeometry height="24" width="24" x="470" y="648" as="geometry" />
         </mxCell>
         <mxCell id="icon-workspace" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%229%22%20ry%3D%223%22%3E%3C%2Fellipse%3E%3Cpath%20d%3D%22M3%205V19A9%203%200%200%200%2021%2019V5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M3%2012A9%203%200%200%200%2021%2012%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="690" y="648" width="24" height="24" as="geometry" />
+          <mxGeometry height="24" width="24" x="690" y="648" as="geometry" />
         </mxCell>
         <mxCell id="icon-policy" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20%2013c0%205-3.5%207.5-7.66%208.95a1%201%200%200%201-.67-.01C7.5%2020.5%204%2018%204%2013V6a1%201%200%200%201%201-1c2%200%204.5-1.2%206.24-2.72a1.17%201.17%200%200%201%201.52%200C14.51%203.81%2017%205%2019%205a1%201%200%200%201%201%201z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="1001" y="224" width="25" height="25" as="geometry" />
+          <mxGeometry height="25" width="25" x="1001" y="224" as="geometry" />
         </mxCell>
         <mxCell id="icon-tool" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%203H7a2%202%200%200%200-2%202v5a2%202%200%200%201-2%202%202%202%200%200%201%202%202v5c0%201.1.9%202%202%202h1%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M16%2021h1a2%202%200%200%200%202-2v-5c0-1.1.9-2%202-2a2%202%200%200%201-2-2V5a2%202%200%200%200-2-2h-1%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="1000" y="406" width="25" height="25" as="geometry" />
+          <mxGeometry height="25" width="25" x="1000" y="406" as="geometry" />
         </mxCell>
         <mxCell id="icon-evidence" parent="1" style="convertToSvg=1;fontFamily=DM Sans;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DDM%2BSans;shape=image;html=1;imageAspect=0;aspect=fixed;image=data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%202H6a2%202%200%200%200-2%202v16a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V7.5L14.5%202z%22%3E%3C%2Fpath%3E%3Cpolyline%20points%3D%2214%202%2014%208%2020%208%22%3E%3C%2Fpolyline%3E%3Cpath%20d%3D%22m9%2015%202%202%204-4%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E;" value="" vertex="1">
-          <mxGeometry x="1001" y="555" width="25" height="25" as="geometry" />
+          <mxGeometry height="25" width="25" x="1001" y="555" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

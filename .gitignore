@@ -8,3 +8,4 @@
 # Dependencies and local tooling
 node_modules/
 .mintlify/
+*.bkp

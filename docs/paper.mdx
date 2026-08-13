@@ -1577,20 +1577,11 @@ limit what compromised or mistaken behavior can affect.
 
 *Figure 5. Trust and authority boundaries.*
 
-```mermaid
-flowchart TB
-    Principal["User, organization, or event source"] --> Identity["Identity and instance routing"]
-    Identity --> Runtime["Agent runtime"]
-    Untrusted["Documents, messages, web pages, and tool results"] --> Labels["Source and trust labels"]
-    Labels --> Runtime
-    Runtime --> Policy["Policy and approval boundary"]
-    Policy --> Tool["Tool or MCP server"]
-    Tool --> Resource["External resource"]
-    Runtime --> Sandbox["Sandboxed code execution"]
-    Runtime <--> Workspace["Isolated durable workspace"]
-    Policy --> Evidence["Audit, checkpoints, and recovery record"]
-    Tool --> Evidence
-```
+![Trust and authority boundaries showing untrusted inputs entering an isolated
+Agent Instance through identity routing and source labels. The runtime operates
+through sandboxed code execution and a durable workspace, while a separate
+policy plane controls tool access and preserves evidence and recovery
+records.](/images/architecture/trust-authority-boundaries.drawio.svg)
 
 The model can propose actions inside these boundaries. Identity, resource-level
 authorization, approval decisions, network policy, spending limits, and audit
