@@ -201,14 +201,13 @@ The web application architecture is a useful point of comparison. Both models
 separate application development from managed operation, and both give the
 developer a framework within which to build.
 
-| Stage | Web application | Agent Application |
-|---|---|---|
-| Select a framework | The developer chooses a web application framework that defines project conventions, supported languages and runtimes, and base capabilities. | The developer chooses a harness / Agent Application Framework that defines the agent loop, native project conventions, model and tool integration, and base capabilities. |
-| Program the application | The developer writes routes, user interfaces, business logic, and data access within the framework's conventions. | The developer composes conventional code, natural-language programs, declarations, knowledge, tools, agents, workflows, and policy in an Agent Project. |
-| Test and release | Tests exercise the application before the build system creates a deployment artifact. | Evaluations exercise behavior across the selected model, framework, tools, and workspace fixtures before the platform creates an immutable release. |
-| Deploy and connect services | A web application platform deploys the artifact and connects it to databases, caches, queues, secrets, and outside services. | An Agent Application Platform deploys the release and connects its instances to models, tools, durable workspaces, identity, authority, schedules, and artifact services. |
-| Operate at scale | The platform provides tenant isolation, request routing, scaling, fault tolerance, logging, security controls, and staged deployments. | The platform provides instance isolation, session routing, suspension and resume, scaling, security, governance, observability, and semantic upgrades across the fleet. |
-| Use the application | Browser and API requests reach application code and account or tenant data. | Widgets, channels, APIs, and events return to the same persistent instance and the durable work it has accumulated. |
+*Figure 2. Web and Agent Application lifecycles.*
+
+![Two parallel lifecycles compare web and Agent Applications across framework
+selection, programming, test and release, deployment, operation, and use. The
+Agent Application lifecycle adds persistent instance identity, durable work,
+model-directed control flow, and semantic
+upgrades.](/images/architecture/web-agent-application-correspondence.drawio.svg)
 
 The agent runtime adds model-directed control flow to this familiar lifecycle.
 Its workspace may accumulate instructions, generated code, artifacts, and
@@ -223,7 +222,7 @@ release with each instance's local state.
 An Agent Application spans seven layers, from model inference to the use case
 delivered to a person or organization.
 
-*Figure 2. Seven-layer Agent Application stack.*
+*Figure 3. Seven-layer Agent Application stack.*
 
 ![Seven-layer Agent Application stack, from models and agent compute through
 the Agent Application Framework, Agent Application Project, Agent Application
@@ -246,7 +245,7 @@ platform services at L5 and agent monetization capabilities at L6.
 An artifact can be shared outside its instance under its own access policy.
 That access does not open the workspace that produced it.
 
-*Figure 3. Logical view of an Agent Application.*
+*Figure 4. Logical view of an Agent Application.*
 
 ![Logical view showing how a developer uses an Agent Application Framework to
 build a project and immutable release, which an Agent Application Platform runs
@@ -613,7 +612,7 @@ operation. A release can create many instances. Each instance can run many
 sessions and retain one workspace across them. A later release changes the
 shared program but does not replace the instance's accumulated work.
 
-*Figure 4. Release and instance lifecycle.*
+*Figure 5. Release and instance lifecycle.*
 
 ![Release and instance lifecycle showing fixed releases, separate instances,
 sessions that share a durable workspace, a local adaptation, and a staged
@@ -1524,12 +1523,12 @@ stages, and supports rollback.
 
 An instance moves through four lifecycle states:
 
-| State | What is resident | Relative cost | Resume |
-|---|---|---|---|
-| Active | Compute, working copy, credentials | Highest, dominated by execution | Immediate |
-| Suspended | Writable delta, checkpoints, schedules, secret references | Storage and schedule entries only | Seconds to minutes, full state preserved |
-| Archived | Compacted bytes in cold storage | Lowest non-zero | Minutes to hours, may need rehydration |
-| Deleted | Tombstone and retained audit record | Audit retention only | Not resumable |
+*Figure 6. Instance execution and lifecycle states.*
+
+![User requests, business events, schedules, and approvals start sessions for
+the same persistent instance. The instance moves among active, suspended,
+archived, and deleted states. Checkpoints support suspension, resume, and
+recovery.](/images/architecture/instance-execution-state-transitions.drawio.svg)
 
 Most instances spend much of their time suspended. They keep their work and
 schedules while using storage instead of active compute. Appendix D expands the
@@ -1575,7 +1574,7 @@ authority. A malicious instruction can arrive through a web page, email,
 document, support ticket, tool result, or old workspace file. The controls below
 limit what compromised or mistaken behavior can affect.
 
-*Figure 5. Trust and authority boundaries.*
+*Figure 7. Trust and authority boundaries.*
 
 ![Trust and authority boundaries showing untrusted inputs entering an isolated
 Agent Instance through identity routing and source labels. The runtime operates
