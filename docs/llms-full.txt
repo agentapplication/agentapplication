@@ -10,7 +10,7 @@ Source: https://agentapplication.io/
 A vendor-neutral reference architecture for building and operating AI agent systems.
 
 <Note>
-  **A working paper** · Draft 0.9 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
+  **A working paper** · Draft 0.9.1 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
 </Note>
 
 [Agent Applications](/paper#1-what-is-an-agent-application) are AI systems built
@@ -52,7 +52,7 @@ authors, platform operators, buyers, and standards contributors.
 | [Agent Application](/paper#1-what-is-an-agent-application) | The complete product built around one or more persistent, tool-using agents that produce durable work. |
 | [Agent Project](/concepts/agent-project) | The framework-native project representation used to create releases. |
 | [Agent Application Framework](/concepts/framework) | A harness that includes coherent project structure, development tools, evaluations, packaging, deployment, and production runtime support. |
-| [Agent Application Programming](/paper#11-7-agent-application-programming) | The discipline of decomposing a use case across code, natural-language programs, tools, agents, workflows, state, and policy. |
+| [Agent Application Programming](/paper#11-7-agent-application-programming) | The discipline of programming Agent Applications: designing, authoring, and evaluating a hybrid program of code, natural-language programs, tools, agents, workflows, state, and policy. |
 | [Agent Application Platform](/concepts/platform) | A service that turns tested Agent Projects into immutable releases and operates long-lived instances with durable workspaces, identity management, security controls, governance, observability, evaluation, and fleet management. |
 | [Agent Application Store](/paper#21-agent-application-stores) | A catalog and commerce service through which people find, acquire, and pay for Agent Applications. |
 
@@ -226,15 +226,15 @@ it must pass the same persistence test.
 # Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems
 Source: https://agentapplication.io/paper
 
-Working Draft 0.9, August 2026. A vendor-neutral reference architecture for building and operating AI agent systems.
+Working Draft 0.9.1, August 2026. A vendor-neutral reference architecture for building and operating AI agent systems.
 
-**Working Draft 0.9 · August 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
+**Working Draft 0.9.1 · August 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
 
 ---
 
 ## Abstract
 
-This paper proposes a vendor-neutral reference architecture for building and
+This paper proposes a **vendor-neutral reference architecture** for building and
 operating AI agent systems. It identifies the system's main elements, assigns
 responsibilities to them, and describes how an Agent Project becomes a release,
 how releases create long-lived instances, and how those instances retain work
@@ -242,36 +242,48 @@ across sessions. The architecture gives developers, framework authors, and
 platform operators a common model without requiring one implementation or
 project format.
 
-The architecture applies to products built around persistent,
-tool-using agents. A request, event, or schedule can start work. The agent
-chooses intermediate actions within application guardrails, while its instance
-retains a workspace, authority, artifacts, and unfinished work after the run
-ends. This paper calls the complete product an **Agent Application**.
+The architecture applies to products built around persistent, tool-using
+agents. A request, event, or schedule can start work. The agent chooses
+intermediate actions within application guardrails. After a run ends, the
+instance retains its workspace, credentials, artifacts, and unfinished work.
+This paper calls the complete product an **Agent Application**.
 
 Developers build these systems as hybrid programs of conventional code,
 natural-language instructions, declarations, and knowledge. A harness runs the
-agent loop. This paper defines an **Agent Application Framework** as a harness
-that includes a coherent project structure, development tools, evaluations,
-packaging, deployment, and production runtime support. An **Agent Application
-Platform** turns a tested project into an immutable release, provisions and
-operates long-lived instances with durable workspaces, and supplies identity
-management, security controls, governance, observability, evaluation, and fleet
-management.
+agent loop. An **Agent Application Framework** is a harness that also supplies a
+coherent project structure, development tools, evaluations, packaging,
+deployment, and production runtime support. An **Agent Application Platform**
+turns a tested project into an immutable release, provisions and operates
+long-lived instances with durable workspaces, and provides identity
+management, security controls, governance, observability, evaluation, and
+fleet management. It attaches scoped credentials to each instance and
+enforces permissions, spending limits, network destinations, and approvals.
 
-Long-lived instances create problems that do not appear in a single model call.
-Their workspaces accumulate different facts, artifacts, instructions, generated
-code, and unfinished work. Instances can diverge in program as well as state.
-Operators must preserve that work, enforce authority outside the model, test
-new releases against existing instance state, and keep enough evidence to
-explain or recover consequential actions.
+Long-lived instances accumulate different facts, artifacts, generated code,
+and unfinished work. If they can also add or edit natural-language
+instructions, they diverge in program as well as state. Operators then
+manage and govern a fleet whose members no longer share one program: rollout,
+audit, and policy have to follow each instance's local program and state, not
+only the shared release. They must preserve per-instance work, test a new release
+against existing instance state, and keep enough evidence to explain or
+recover consequential actions. Edited published instructions have to be
+merged semantically on upgrade: copy and line-based merge miss how one
+instruction changes another.
 
 The paper provides a layered system model, a capability model, lifecycle and
-security views, a method for applying the architecture, and a worked example.
-It introduces **Agent Application Programming**, the discipline of decomposing
-a use case across code, natural-language programs, tools, agents, workflows,
-state, and policy. It also defines the **Agent Application Store** role and locates
-current standards such as the Model Context Protocol (MCP), Agent Skills, Agent
-Plugins, and Agent2Agent (A2A) at the boundaries they cover.
+security views, and a method for applying the architecture. It defines **Agent
+Application Programming** as the discipline of programming Agent Applications:
+designing, authoring, and evaluating a hybrid program of code,
+natural-language instructions, tools, agents, workflows, state, and policy.
+It also defines an **Agent Application Store** as a catalog and commerce service
+through which people find, acquire, and pay for Agent Applications.
+
+The architecture locates current standards such as the Model Context Protocol
+(MCP), Agent Skills, Agent Plugins, and Agent2Agent (A2A) at the boundaries
+they cover, and identifies where new standards are still needed. Teams can use
+the paper to reason about the complete system, decide who owns each
+responsibility, compare implementations, and see which boundaries need to
+interoperate.
 
 ---
 
@@ -425,14 +437,13 @@ The web application architecture is a useful point of comparison. Both models
 separate application development from managed operation, and both give the
 developer a framework within which to build.
 
-| Stage | Web application | Agent Application |
-|---|---|---|
-| Select a framework | The developer chooses a web application framework that defines project conventions, supported languages and runtimes, and base capabilities. | The developer chooses a harness / Agent Application Framework that defines the agent loop, native project conventions, model and tool integration, and base capabilities. |
-| Program the application | The developer writes routes, user interfaces, business logic, and data access within the framework's conventions. | The developer composes conventional code, natural-language programs, declarations, knowledge, tools, agents, workflows, and policy in an Agent Project. |
-| Test and release | Tests exercise the application before the build system creates a deployment artifact. | Evaluations exercise behavior across the selected model, framework, tools, and workspace fixtures before the platform creates an immutable release. |
-| Deploy and connect services | A web application platform deploys the artifact and connects it to databases, caches, queues, secrets, and outside services. | An Agent Application Platform deploys the release and connects its instances to models, tools, durable workspaces, identity, authority, schedules, and artifact services. |
-| Operate at scale | The platform provides tenant isolation, request routing, scaling, fault tolerance, logging, security controls, and staged deployments. | The platform provides instance isolation, session routing, suspension and resume, scaling, security, governance, observability, and semantic upgrades across the fleet. |
-| Use the application | Browser and API requests reach application code and account or tenant data. | Widgets, channels, APIs, and events return to the same persistent instance and the durable work it has accumulated. |
+*Figure 2. Web and Agent Application lifecycles.*
+
+![Two parallel lifecycles compare web and Agent Applications across framework
+selection, programming, test and release, deployment, operation, and use. The
+Agent Application lifecycle adds persistent instance identity, durable work,
+model-directed control flow, and semantic
+upgrades.](/images/architecture/web-agent-application-correspondence.drawio.svg)
 
 The agent runtime adds model-directed control flow to this familiar lifecycle.
 Its workspace may accumulate instructions, generated code, artifacts, and
@@ -447,7 +458,7 @@ release with each instance's local state.
 An Agent Application spans seven layers, from model inference to the use case
 delivered to a person or organization.
 
-*Figure 2. Seven-layer Agent Application stack.*
+*Figure 3. Seven-layer Agent Application stack.*
 
 ![Seven-layer Agent Application stack, from models and agent compute through
 the Agent Application Framework, Agent Application Project, Agent Application
@@ -465,12 +476,12 @@ optional Agent Application Store, which handles acquisition, entitlements,
 billing, publisher payments, and monetization.
 
 [Karta](https://karta.sh/platform) is one implementation that provides
-development tools at L4 and platform services at L5.
+platform services at L5 and agent monetization capabilities at L6.
 
 An artifact can be shared outside its instance under its own access policy.
 That access does not open the workspace that produced it.
 
-*Figure 3. Logical view of an Agent Application.*
+*Figure 4. Logical view of an Agent Application.*
 
 ![Logical view showing how a developer uses an Agent Application Framework to
 build a project and immutable release, which an Agent Application Platform runs
@@ -780,7 +791,7 @@ these names: **Agent App Programming**, for example, is the shortened form of
 | **Agent Lineage** | The history of an instance as it diverges from the release that created it. |
 | **Agent Widget** | A rich interactive client for an agent, including sessions, multimodal input, runtime events, tool calls, artifacts, approvals, and generated UI. |
 | **Natural-Language Program** | Instructions that change how the application behaves, including skills, procedures, policies, agent roles, and constraints. |
-| **Agent Application Programming / Agent App Programming** | The discipline of decomposing a use case across code, natural-language programs, tools, agents, workflows, state, and policy. |
+| **Agent Application Programming / Agent App Programming** | The discipline of programming Agent Applications: designing, authoring, and evaluating a hybrid program of code, natural-language programs, tools, agents, workflows, state, and policy. |
 | **Agent Harness** | The runtime around the model that assembles context, calls tools, loads skills and subagents, and runs the agent loop. |
 | **Agent Application Framework** | An agent harness that supports the application lifecycle from development through production runtime. It defines the native project model, extension conventions, evaluations, packaging, and deployment model. |
 | **Agent Application Platform** | A service that turns tested Agent Projects into immutable releases and operates long-lived instances with durable workspaces, identity management, security controls, governance, observability, evaluation, and fleet management. |
@@ -837,7 +848,7 @@ operation. A release can create many instances. Each instance can run many
 sessions and retain one workspace across them. A later release changes the
 shared program but does not replace the instance's accumulated work.
 
-*Figure 4. Release and instance lifecycle.*
+*Figure 5. Release and instance lifecycle.*
 
 ![Release and instance lifecycle showing fixed releases, separate instances,
 sessions that share a durable workspace, a local adaptation, and a staged
@@ -1119,7 +1130,8 @@ application, not just its code.
 Building an Agent Application requires more than writing prompts or connecting
 tools. Someone has to decide which work the model may judge, which behavior
 code must guarantee, how agents divide and hand off work, what state persists,
-and which outside components the application can trust. This work is **Agent
+and which outside components the application can trust, then author that
+program and evaluate the complete application. This work is **Agent
 Application Programming**.
 
 The discipline operates at two scales. At the local scale, a programmer decides
@@ -1748,12 +1760,12 @@ stages, and supports rollback.
 
 An instance moves through four lifecycle states:
 
-| State | What is resident | Relative cost | Resume |
-|---|---|---|---|
-| Active | Compute, working copy, credentials | Highest, dominated by execution | Immediate |
-| Suspended | Writable delta, checkpoints, schedules, secret references | Storage and schedule entries only | Seconds to minutes, full state preserved |
-| Archived | Compacted bytes in cold storage | Lowest non-zero | Minutes to hours, may need rehydration |
-| Deleted | Tombstone and retained audit record | Audit retention only | Not resumable |
+*Figure 6. Instance execution and lifecycle states.*
+
+![User requests, business events, schedules, and approvals start sessions for
+the same persistent instance. The instance moves among active, suspended,
+archived, and deleted states. Checkpoints support suspension, resume, and
+recovery.](/images/architecture/instance-execution-state-transitions.drawio.svg)
 
 Most instances spend much of their time suspended. They keep their work and
 schedules while using storage instead of active compute. Appendix D expands the
@@ -1799,7 +1811,7 @@ authority. A malicious instruction can arrive through a web page, email,
 document, support ticket, tool result, or old workspace file. The controls below
 limit what compromised or mistaken behavior can affect.
 
-*Figure 5. Trust and authority boundaries.*
+*Figure 7. Trust and authority boundaries.*
 
 ![Trust and authority boundaries showing untrusted inputs entering an isolated
 Agent Instance through identity routing and source labels. The runtime operates
@@ -2905,9 +2917,9 @@ documents](/companion-documents), or [review the draft](/review).
 # Review the draft
 Source: https://agentapplication.io/review
 
-How to send holes, counterexamples, boundary cases, and prior art for Working Draft 0.9.
+How to send holes, counterexamples, boundary cases, and prior art for Working Draft 0.9.1.
 
-This is **Working Draft 0.9**, and the work is now being developed in public at
+This is **Working Draft 0.9.1**, and the work is now being developed in public at
 [agentapplication/agentapplication](https://github.com/agentapplication/agentapplication).
 We welcome help with the paper, examples, definitions, and the open contracts
 that may follow it.

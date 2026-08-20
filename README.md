@@ -5,7 +5,7 @@
 [agentapplication.io](https://agentapplication.io) publishes the Agent
 Applications working paper and the examples, concept pages, and companion work
 around it. The current paper is [Working Draft
-0.9](https://agentapplication.io/paper), dated August 2026.
+0.9.1](https://agentapplication.io/paper), dated August 2026.
 
 An **Agent Application** uses one or more persistent, tool-using AI agents to
 produce or maintain durable results. A request, schedule, or outside event can
