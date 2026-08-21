@@ -99,7 +99,8 @@ each instance's local program and state, not only the shared release.
 
 The [Hello World](https://agentapplication.io/examples/hello-world) example is
 the smallest complete case: a notebook agent saves a note, suspends, and uses
-that note to update a briefing on a later run.
+that note to update a briefing on a later run. The files are in
+[`examples/durable-notebook/`](examples/durable-notebook).
 
 ## Read the work
 

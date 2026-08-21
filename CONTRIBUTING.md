@@ -16,6 +16,14 @@ around it.
 
 ## Useful contributions
 
+### Add or challenge a product
+
+The [overview](https://agentapplication.io/) lists products the definition
+currently includes. A useful first contribution is a pull request that adds a
+row with a source, or a
+[discussion](https://github.com/agentapplication/agentapplication/discussions/1)
+that argues a row should come out.
+
 ### Review the category definition
 
 The paper is most useful if its boundaries survive contact with real products.

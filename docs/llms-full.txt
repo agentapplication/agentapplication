@@ -188,11 +188,13 @@ earlier run and decide what to do next from the state it finds.
 
 This example is a notebook agent for one user. It saves notes in its workspace
 and maintains a short briefing that the user can open without reading through
-the conversation. This example uses generic filenames. A runnable version would
-use its framework's own project layout and APIs.
+the conversation. The files live in
+[`examples/durable-notebook/`](https://github.com/agentapplication/agentapplication/tree/main/examples/durable-notebook).
+They use generic names. A harness still has to supply its own project layout
+and APIs.
 
 ```text
-durable-notebook/
+examples/durable-notebook/
 |-- instructions.md
 |-- tools/
 |   `-- save-note.ts

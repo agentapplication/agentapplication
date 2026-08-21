@@ -1,0 +1,19 @@
+name: notes survive suspension
+steps:
+  - run:
+      instance: ada
+      input: Remember that the launch moved to September 18.
+  - suspend: ada
+  - run:
+      instance: ada
+      input: Prepare a launch briefing.
+  - run:
+      instance: bea
+      input: Prepare a launch briefing.
+assert:
+  - workspace: ada
+    fileContains:
+      notes.md: September 18
+      briefing.md: September 18
+  - workspace: bea
+    fileAbsent: notes.md
