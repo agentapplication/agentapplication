@@ -316,7 +316,7 @@ which boundaries need to interoperate.
 
 | Reader | How to use the paper |
 |---|---|
-| Application architects and developers | Define the application's job and privacy boundary, decompose its program, assign capabilities, and design its release and instance lifecycles. |
+| Application architects and developers | Define the application's job and privacy boundary, design, author, and evaluate its program, assign capabilities, and design its release and instance lifecycles. |
 | Framework authors | Compare the harness with the capability model and identify what it still needs to structure, test, deploy, and operate complete Agent Applications. |
 | Platform builders and operators | Determine which services must package releases, provision instances, preserve workspaces, enforce authority, expose interfaces, and operate fleets. |
 | Security and governance teams | Locate trust boundaries, authority checks, approval gates, audit records, retention rules, and recovery points. |
@@ -331,11 +331,11 @@ one of these shorter paths.
 
 | Reading path | Questions it answers | Sections |
 |---|---|---|
-| Understand the category | What is an Agent Application, and how does it differ from familiar software? | [Definition](#1-what-is-an-agent-application), [web and mobile comparison](#2-from-web-and-mobile-applications-to-agent-applications), [category boundary](#7-recognizing-an-agent-application) |
-| Design an application | How should a team divide behavior and turn a use case into a tested project? | [Design principles](#4-architectural-drivers-and-design-principles), [build-and-operate method](#9-a-build-and-operate-method), [programming model](#11-a-hybrid-programming-model), [capability model](#12-the-agent-project-and-capability-model) |
+| Understand the category | What is an Agent Application, and how does it differ from familiar software? | [Definition](#1-what-is-an-agent-application), [web and mobile comparison](#2-from-web-and-mobile-applications-to-agent-applications), [category boundary](#6-recognizing-an-agent-application) |
+| Design an application | How should a team divide behavior and turn a use case into a tested project? | [Design principles](#3-architectural-drivers-and-design-principles), [build-and-operate method](#9-a-build-and-operate-method), [programming model](#11-a-hybrid-programming-model), [capability model](#12-the-agent-project-and-capability-model) |
 | Design state and runtime | What persists, what wakes the agent, and how do instances change? | [Reference lifecycle](#10-a-reference-lifecycle), [application lifetimes](#13-application-release-instance-and-session), [workspace](#14-the-durable-workspace), [instance changes](#15-how-instances-change-after-deployment), [execution](#17-instance-execution) |
-| Platform operations and governance | Where are authority and trust enforced, and how is a fleet operated? | [Agent Application Platform](#18-the-agent-application-platform), [security, reliability, and governance](#20-security-reliability-and-governance) |
-| Work on ecosystem boundaries | Which boundaries have protocols, and where might shared contracts or services help? | [Standards and portability](#19-standards-contracts-and-portability), [Agent Application Stores](#21-agent-application-stores), [open questions](#22-open-questions) |
+| Platform operations and governance | Where are authority and trust enforced, and how is a fleet operated? | [Agent Application Platform](#18-the-agent-application-platform), [security, reliability, and governance](#19-security-reliability-and-governance) |
+| Work on ecosystem boundaries | Which boundaries have protocols, and where might shared contracts or services help? | [Standards and portability](#20-standards-contracts-and-portability), [Agent Application Stores](#21-agent-application-stores), [open questions](#22-open-questions) |
 
 The architecture separates common responsibilities from implementation
 choices. Not every application needs every optional capability. A small agent
@@ -371,7 +371,7 @@ interface at all.
 What do these systems have in common? Each gives a tool-using agent a continuing
 scope of work. Later messages or events return to that work, and the results
 remain after a run ends. They have different interfaces and jobs, but the same
-underlying application shape. We call it an Agent Application.
+underlying application shape. This paper calls it an Agent Application.
 
 An **Agent Application** uses one or more persistent, tool-using AI agents to
 produce or maintain durable results. A request, schedule, or outside event can
@@ -453,10 +453,68 @@ release with each instance's local state.
 
 ---
 
-## 3. The Agent Application stack
+## 3. Architectural drivers and design principles
+
+The splits in section 4 exist because a persistent, tool-using agent has to
+keep work, act later, and do so under someone else's authority. This section
+names the pressures. It uses three terms that later sections define more
+carefully. An **instance** is a long-lived copy of the application for one
+person, team, customer, or other privacy domain. Its **workspace** is the
+durable state that copy can reach. A **release** is a fixed version of the
+shared program.
+
+1. The complete application is the unit of development and evaluation.
+   Behavior comes from conventional code, natural-language instructions,
+   declarations, knowledge, and dependencies acting together. A tool can be
+   correct while the agent calls it at the wrong time. Testing a prompt or a
+   model call is not the same as testing the application.
+
+2. The agent should operate over a computer, with limits in policy code.
+   General-purpose agents get their leverage from a filesystem, a shell, and a
+   network: they read and write files, run scripts, install tools, and keep
+   that environment across sessions. As models get better at reasoning and
+   following instructions, that environment should stay general and the
+   harness around it small. An ever-growing kit of special-purpose tools and
+   prompt-level partitions is the weaker path. Credentials, permissions,
+   spending limits, and network rules still have to be real. They belong in
+   code the agent cannot change. They wrap the computer rather than replace
+   it. Section 14 develops this design.
+
+3. The privacy boundary is the instance. The agent has access to its entire
+   workspace. Natural-language instructions that tell it to keep one person's
+   data apart from another's are not a privacy boundary. The model can be
+   tricked into ignoring them. People, records, and work that must not mix
+   belong in separate instances, even when compute is suspended.
+
+4. The shared program and the instance's work have different owners. A
+   publisher ships a release. Each instance then accumulates files, artifacts,
+   local instructions, and unfinished work. A later release can improve the
+   shared program. It must not silently discard that instance's work.
+
+5. Test a release against the workspaces it will meet. If an instance edited
+   a published natural-language instruction, merge that instruction
+   semantically on upgrade. A release can pass every fixture and still fail
+   on one customer's history. Copy and line-based merge miss how one
+   instruction changes another.
+
+6. Consequential actions need evidence and a way to recover. An agent can
+   send a message, change a record, or spend money, then suspend for weeks.
+   An operator should be able to explain what happened, resume interrupted
+   work, and respond when an outside effect cannot be reversed.
+
+7. The work should survive a change of provider. Instances last. Export and
+   migration need to carry artifacts, workspace state, lineage, and
+   references to authority, without copying raw secrets.
+
+Section 4 maps these drivers onto the layers of the system.
+
+---
+
+## 4. The Agent Application stack
 
 An Agent Application spans seven layers, from model inference to the use case
-delivered to a person or organization.
+delivered to a person or organization. These layers implement the drivers in
+section 3.
 
 *Figure 3. Seven-layer Agent Application stack.*
 
@@ -508,11 +566,10 @@ develop, debug, test, deploy, and operate the application.
 The harness / Agent Application framework choice shapes the application. Each
 carries opinions about models, context management, tools, permissions,
 delegation, checkpointing, and debugging. Those choices affect portability,
-reliability, and task cost.
-Directory conventions are part of the programming model. An Agent Application
-Platform can support several frameworks by running their native projects and
-standardizing the boundaries between layers. It does not need to force every
-application into one generic directory structure.
+reliability, and task cost. Directory conventions are part of the programming
+model. An Agent Application Platform can support several frameworks by running
+their native projects and standardizing the boundaries between layers. It does
+not need to force every application into one generic directory structure.
 
 Several boundaries in the stack already have working protocols or products.
 
@@ -535,30 +592,6 @@ Bedrock AgentCore provide parts of the production layer.
 
 ---
 
-## 4. Architectural drivers and design principles
-
-Seven design principles explain why the architecture separates its elements.
-
-1. The complete application is the unit of development and evaluation. Its
-   conventional code, natural-language programs, declarations, knowledge, and
-   dependencies change behavior together.
-2. The privacy boundary determines the instance boundary. Each privacy domain
-   receives a stable instance and durable workspace even when its compute is
-   suspended.
-3. A shared release and an instance's local state have different owners and
-   lifecycles. Updating one should not silently replace the other.
-4. Long-lived instances require semantic upgrades. Evaluation covers clean test
-   fixtures and the workspaces the release will affect.
-5. Identity, permissions, budgets, network access, and approval rules are
-   enforced outside program material that the agent can change.
-6. Consequential work needs evidence and recovery points. An operator should be
-   able to explain an action, resume interrupted work, and respond when an
-   outside effect cannot be reversed.
-7. Useful work should survive a change of provider. Export and migration cover
-   artifacts, workspace state, lineage, and authority references.
-
----
-
 ## 5. From human-operated to agent-operated software
 
 Conventional applications treat a person or a predefined workflow as the
@@ -569,7 +602,7 @@ in advance.
 An Agent Application divides control differently. Developers and operators set
 the guardrails: available tools, permissions, budgets, policies, triggers, and
 approval rules. When a user request, schedule, or outside event starts a run, the
-agent reads the current state and selects the next action. It can plan, define
+agent reads the current state and chooses the next action. It can plan, define
 workflows, invoke tools, create and revise artifacts, delegate work, and
 continue until it reaches an outcome or a boundary that requires outside input.
 
@@ -581,7 +614,7 @@ space and the agent chooses a path through it.
 
 | Conventional application | Agent Application |
 |---|---|
-| A person or fixed workflow selects each operation | The agent selects actions within application guardrails |
+| A person or fixed workflow selects each operation | The agent chooses actions within application guardrails |
 | The user or developer specifies the steps | A request, event, or schedule supplies the goal and current state |
 | Application behavior changes through releases | Instance behavior also reflects its accumulated workspace and approved local changes |
 | State is mostly data | State includes data, memory, programs, tools, and lineage |
@@ -593,7 +626,132 @@ backend worker.
 
 ---
 
-## 6. Where people encounter AI agents
+## 6. Recognizing an Agent Application
+
+The definition in section 1 does not depend on the user interface. Four
+properties distinguish an Agent Application from adjacent systems:
+
+| Defining property | What it looks like |
+|---|---|
+| Persistent agent instance | A new message or event returns to the same agent, privacy domain, and ongoing work |
+| Agent-directed control flow | The agent reasons about the current state and chooses its next action rather than following a fully predetermined workflow |
+| Durable computational workspace | Files, instructions, memory, code, and other working state remain available to later runs |
+| Durable work | Artifacts, workspace state, external records, or continuing processes outlive the event that created them |
+
+The [Hello World Agent Application](https://agentapplication.io/examples/hello-world)
+shows the smallest complete example: a notebook agent saves a note, suspends,
+and uses that note to update a briefing on a later run.
+
+Different products assign the instance and workspace to different privacy
+domains.
+
+| Product | Privacy domain | Durable work |
+|---|---|---|
+| [ChatGPT](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex) | A user or project | Project files, instructions, memory, scheduled work, and finished documents or sites |
+| [Claude Cowork](https://support.claude.com/en/articles/14116274-organize-your-tasks-with-projects-in-claude-cowork) | A Cowork project | Local files, project memory, scheduled tasks, and persistent artifacts |
+| [Lovable](https://docs.lovable.dev/features/agent-mode) | A software project | Source code, project instructions, assets, deployment state, and change history |
+| [Replit Agent](https://docs.replit.com/features/version-control/checkpoints-and-rollbacks) | A software project | Code, installed packages, databases, agent memory, and restorable checkpoints |
+| [OpenClaw](https://docs.openclaw.ai/start/openclaw) | An OpenClaw agent | Workspace files, memory, skills, schedules, and tool-created results |
+| [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, customer relationship management (CRM) records, generated analysis, and scheduled automations |
+| [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
+
+### 6.1 How to decide who gets an agent instance
+
+An agent instance has access to its entire workspace. If a workspace holds
+information about several people, customers, or cases, the agent can combine
+that information in its reasoning, summaries, and artifacts. Those entities
+belong in the same instance only when that mixing is acceptable. The privacy
+boundary therefore decides who gets an instance.
+
+This boundary also limits prompt-injection damage. Teams sometimes keep mixed
+data in one workspace and tell the agent, in natural language, to keep one
+person's material apart from another's. Those instructions are not a privacy
+boundary. The model can be tricked into ignoring them and combining, quoting,
+or leaking the partitioned material. Separate instances keep that material
+outside the agent's reachable state.
+
+The same boundary extends to data reachable through tools and retrieval systems.
+A user-initiated call should not return information that the authenticated user
+cannot access.
+
+The Financial Advisor Agent therefore gets one instance per person or household,
+depending on who is authorized to share financial records. A human resources
+(HR) helper that handles personal employee matters gets one instance per
+employee. A business-to-business (B2B) support agent can keep many tickets for
+one customer in the same workspace, so each customer gets an instance. A
+virtual employee acting as a marketing expert can have one instance shared by a
+whole team because the team itself is the privacy boundary.
+
+The application builder chooses the boundary and a stable instance identifier.
+A Financial Advisor Agent may use `household_id`, so every user in that
+household reaches the same instance and workspace.
+
+### 6.2 A durable computational workspace
+
+The workspace holds the state the agent needs in order to continue: instructions,
+files, memory, artifacts, code, configuration, and derived data. The runtime may
+keep that state in a database or object store. It may also give each session an
+ephemeral filesystem, then retain selected file changes and artifacts so later
+sessions can retrieve them. The underlying storage can vary.
+
+The usual design gives each instance an **isolated persistent virtual
+computer**: a filesystem, a shell, and network access. The agent uses ordinary
+file operations, scripts, and command-line tools on documents, code, local
+databases, installed packages, and work in progress. It does not need a schema
+or a custom API for every new kind of state. The platform can restore compute
+around that environment when the agent wakes, or keep it running when the
+application needs a long-lived process. Section 14 states this design more
+fully.
+
+A later task must be able to use and change the working state left by an earlier
+one. A transcript can remind an agent what it said. A workspace lets the agent
+continue the work itself.
+
+A durable workspace is useful when the work accumulates derived or in-progress
+computational state that an external system of record cannot represent. It can
+also be an expensive part of this model. Section 16 draws that boundary.
+
+### 6.3 Durable work
+
+Durable work may be an artifact the agent created, a workspace change, a record
+in an external system, or a continuing process. The work persists after the
+session that produced it ends. Later sessions and state-access APIs can use it.
+
+### 6.4 What is not an Agent Application?
+
+The boundary is fuzzy, as it is between a web page and a web application. Many
+jobs are served well without a full Agent Application, and some of those jobs
+can later become one.
+
+A chat interface does not make a system an Agent Application. A Q&A chatbot and
+a Financial Advisor Agent can share a conversational UI. The chatbot is not an
+Agent Application if it does not keep working state across sessions and does
+not produce durable work. Turning it into an Agent Application can add
+capabilities such as personalization from prior work.
+
+Several adjacent systems fall outside the category:
+
+| System | Primary unit | Why it falls outside this category |
+|---|---|---|
+| Model endpoint | Inference request | The endpoint returns a response but owns no continuing agent or work |
+| Stateless or transcript-only chatbot | Request or conversation | No instance carries working state from one session to the next |
+| Fixed workflow automation | Predefined workflow and run | The developer fixes the control flow in advance, even if one step calls a model |
+| Autonomous task runner | Task run | The worker and its scratch state end with the task. A task runner can become an Agent Application if it gains a persistent instance and durable work. |
+| Harness / Agent Application framework | Development and runtime machinery | It can be used to build an Agent Application, but is not itself the application delivered to a user |
+
+A conventional n8n or Zapier flow remains workflow automation when its graph
+determines the next step. [Dependabot](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file)
+is a boundary case: it monitors configured package ecosystems and opens
+pull requests according to schedules and update rules. The pull request is
+durable, but the configuration determines the control flow. A simple Q&A bot
+remains a chatbot when each conversation stands alone. An Agent Application may
+contain deterministic workflows and answer questions, but its continuing unit
+is a persistent agent that chooses actions from the current state and leaves
+durable work behind.
+
+---
+
+## 7. Where people encounter AI agents
 
 Agent Applications reach people and software through interfaces suited to their
 work. The **agent widget** is the most common user interface. It may fill the
@@ -636,132 +794,6 @@ background events.
 
 One agent can span several of these surfaces. A copilot can be backed by an Agent
 Application; a channel only determines where the person and agent interact.
-Section 7 defines the category through its execution model.
-
----
-
-## 7. Recognizing an Agent Application
-
-The definition in section 1 does not depend on the user interface. Four
-properties distinguish an Agent Application from adjacent systems:
-
-| Defining property | What it looks like |
-|---|---|
-| Persistent agent instance | A new message or event returns to the same agent, privacy domain, and ongoing work |
-| Agent-directed control flow | The agent reasons about the current state and chooses its next action rather than following a fully predetermined workflow |
-| Durable computational workspace | Files, instructions, memory, code, and other working state remain available to later runs |
-| Durable work | Artifacts, workspace state, external records, or continuing processes outlive the event that created them |
-
-The [Hello World Agent Application](https://agentapplication.io/examples/hello-world)
-shows the smallest complete example: a notebook agent saves a note, suspends,
-and uses that note to update a briefing on a later run.
-
-Different products assign the instance and workspace to different privacy
-domains.
-
-| Product | Privacy domain | Durable work |
-|---|---|---|
-| [ChatGPT](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex) | A user or project | Project files, instructions, memory, scheduled work, and finished documents or sites |
-| [Claude Cowork](https://support.claude.com/en/articles/14116274-organize-your-tasks-with-projects-in-claude-cowork) | A Cowork project | Local files, project memory, scheduled tasks, and persistent artifacts |
-| [Lovable](https://docs.lovable.dev/features/agent-mode) | A software project | Source code, project instructions, assets, deployment state, and change history |
-| [Replit Agent](https://docs.replit.com/features/version-control/checkpoints-and-rollbacks) | A software project | Code, installed packages, databases, agent memory, and restorable checkpoints |
-| [OpenClaw](https://docs.openclaw.ai/start/openclaw) | An OpenClaw agent | Workspace files, memory, skills, schedules, and tool-created results |
-| [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, customer relationship management (CRM) records, generated analysis, and scheduled automations |
-| [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
-
-### 7.1 How to decide who gets an agent instance
-
-An agent instance has access to its entire workspace. If a workspace contains information about
-several people, customers, or cases, the agent can combine that information in
-its reasoning, summaries, and artifacts. Those entities belong in the same
-instance only when that mixing is acceptable. Thus, privacy boundary decides
-who gets an agent instance.
-
-This boundary limits prompt-injection damage. A user may try to make the agent
-ignore its rules and quote or summarize other information in the workspace. If
-the workspace contains data that user may not access, the model is being asked
-to enforce a privacy boundary after it has already seen the data. Separate
-instances keep that data outside the agent's reachable state.
-
-The same boundary extends to data reachable through tools and retrieval systems.
-A user-initiated call should not return information that the authenticated user
-cannot access.
-
-The Financial Advisor Agent therefore gets one instance per person or household,
-depending on who is authorized to share financial records. A human resources
-(HR) helper that handles personal employee matters gets one per employee. A
-business-to-business (B2B) support agent can keep many tickets for one customer
-in the same workspace, and so each customer gets an instance. A
-virtual marketing employee can have one instance shared by a whole team because
-the team itself is the privacy boundary.
-
-An agent application builder decides the boundary and assigns appropriate
-stable instance identifiers. For instance, a Finanical Advisor agent may use
-household_id as the agent instance id, thus creating a new instance per household.
-All users from one household use the same instance id and thus interact with the
-same agent instance and access the same workspace.
-
-### 7.2 A durable computational workspace
-
-The workspace holds the state the agent needs to continue with: instructions, files,
-memory, artifacts, code, configuration, and any derived data. The runtime may keep
-the state in a database or object store. Alternatively, it may give each session an ephemeral
-filesystem, then retain selected file changes and artifacts under that session
-so the instance can retrieve them later. Durable workspace can be implemented using
-a variety of underlying storage mechanisms.
-
-The canonical design exposes an **isolated persistent virtual filesystem for each
-instance**. It can hold arbitrary documents, code, local databases, installed
-packages, and work in progress without requiring a schema for every new kind of
-state. The platform can restore compute around that filesystem when the agent
-wakes, or preserve a complete environment when the application needs one.
-
-A later task must be able to use and change the working state left by an earlier
-one. A transcript can remind an agent what it said; a workspace lets the agent
-continue the work itself.
-
-A durable workspace can be one of the expensive parts of this model. It is
-useful when the work accumulates derived or in-progress computational state that
-an external system of record cannot represent. Section 16 draws that boundary.
-
-### 7.3 Durable work
-
-Durable work may be an agent created artifact, a workspace change, a record in an external
-system, or a continuing process. The work persists after the session that produced it ends.
-It can be accessed in another session or via direct state access APIs.
-
-### 7.4 What is not an Agent Application?
-
-The boundary of what is and isn't an agent application is fuzzy, similar to the boundary
-between a webpage and a web application. Many use cases may be appropriately served
-without a full agent application, but may be enhanced by conversion to an agent application.
-
-A chat interface does not necessarily indicate an Agent Application. A simple Q&A chatbot
-and a Financial Advisor agent both use a conversational chat interface, but the Q&A chatbot
-does not retain context of previous sessions, nor it produces durable work that persists. As
-a result, the Q&A chatbot is not an agent application. Depending on the use cases, if it is
-converted to an agent application, then it can deliver capabilities beyond simple answers,
-such as personalization of the answers based on previous interactions with the user.
-
-Several adjacent systems do not qualify as agent applications:
-
-| System | Primary unit | Why it falls outside this category |
-|---|---|---|
-| Model endpoint | Inference request | The endpoint returns a response but owns no continuing agent or work |
-| Stateless or transcript-only chatbot | Request or conversation | No instance carries working state from one session to the next |
-| Fixed workflow automation | Predefined workflow and run | The developer fixes the control flow in advance, even if one step calls a model |
-| Autonomous task runner | Task run | The worker and its scratch state end with the task. A task runner can become an Agent Application if it gains a persistent instance and durable work. |
-| Harness / Agent Application framework | Development and runtime machinery | It can be used to build an Agent Application, but is not itself the application delivered to a user |
-
-A conventional n8n or Zapier flow remains workflow automation when its graph
-determines the next step. [Dependabot](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file)
-is a boundary case: it monitors configured package ecosystems and opens
-pull requests according to schedules and update rules. The pull request is
-durable, but the configuration determines the control flow. A simple Q&A bot
-remains a chatbot when each conversation stands alone. An Agent Application may
-contain deterministic workflows and answer questions, but its continuing unit
-is a persistent agent that chooses actions from the current state and leaves
-durable work behind.
 
 ---
 
@@ -815,7 +847,7 @@ directly.
 
 ## 9. A build-and-operate method
 
-The architecture is useful when it turns an idea into explicit design
+The architecture is useful when a team turns an idea into explicit design
 decisions. The following method is illustrative. Teams can use different
 documents, tools, and release processes while answering the same questions.
 
@@ -1010,7 +1042,7 @@ the same effect if the runtime mistakes untrusted content for instructions. The
 loading policy identifies which sources may supply instructions, how their
 contents are verified and versioned, and what authority they receive. A document
 loaded as knowledge remains untrusted reference material unless the release
-designates it as an instruction source. Section 20.4 develops these controls.
+designates it as an instruction source. Section 19.4 develops these controls.
 
 These instructions can define a dynamic multi-step process. A procedure packaged
 with the release or adopted as local program state by an instance might direct
@@ -1042,7 +1074,8 @@ prior art and dated sources.
 Natural-language programs are versioned, reviewed, and evaluated with the rest
 of the application. Their behavior depends on the model, harness, tools, and
 runtime context, so behavioral tests establish whether the procedure works.
-Section 15.5 explains why text diffs alone cannot settle upgrades.
+Section 15.5 explains why text diffs alone cannot settle an upgrade when a
+published instruction was edited in the instance.
 
 ### 11.3 Project declarations
 
@@ -1094,7 +1127,7 @@ The runtime must preserve the boundary between instructions and knowledge. A
 policy loaded as executable instruction carries more authority than the same
 words retrieved as reference material. External documents may contain hostile
 instructions, so the runtime loads them as untrusted data and keeps that label
-attached. Section 20.4 develops the security consequences.
+attached. Section 19.4 develops the security consequences.
 
 ### 11.5 Two kinds of execution
 
@@ -1155,8 +1188,9 @@ hidden in an instruction can be ignored. A task that needs judgment can become
 brittle when forced into a fixed graph. A subagent can protect the main agent's
 context, but it also adds cost and another place for coordination to fail. A
 plugin can save months of work, but it also expands the application's code,
-instructions, dependencies, and authority. Good decomposition is what makes an
-Agent Application effective, efficient, and secure.
+instructions, dependencies, and authority. Designing, authoring, and evaluating
+that hybrid program is what makes an Agent Application effective, efficient,
+and secure.
 
 AI coding agents are likely to become the main practitioners of this craft.
 They can inspect an entire project, propose a decomposition, write both code and
@@ -1183,21 +1217,21 @@ another form. This framework-native representation is the **agent project**. It
 contains the code, instructions, knowledge, configuration, and tests used to
 build and run the application.
 
-The project stays in the framework's native form. This is similar to how Next.js and Rails both build
-web applications, but they use different route files, project conventions, and
-release bundles. They interoperate through the web platform and its protocols.
-Agent frameworks can likewise support common protocols while keeping their own
-project layouts and programming models.
+The project stays in the framework's native form. This is similar to how
+Next.js and Rails both build web applications, but they use different route
+files, project conventions, and release bundles. They interoperate through the
+web platform and its protocols. Agent frameworks can likewise support common
+protocols while keeping their own project layouts and programming models.
 
 The choice of framework affects the finished application. Its conventions,
-defaults and design philosophy about model support,
-context strategy, tool system, execution environment, state model, event stream,
-and debugging facilities all shape behavior and cost.
+defaults, and design philosophy about model support, context strategy, tool
+system, execution environment, state model, event stream, and debugging
+facilities all shape behavior and cost.
 
 ### 12.1 A capability model for Agent Applications
 
-Here we collect capabilities found across current Agent Applications. Each
-project uses appropriate subset that its job requires. A small application may need only an
+The table lists capabilities found across current Agent Applications. Each
+project uses the subset its job requires. A small application may need only an
 agent program, a few tools, an interface, and tests. A long-running business
 application may need every row.
 
@@ -1211,7 +1245,7 @@ application may need every row.
 | Interfaces and events | User input, streamed progress, tool calls, approvals, errors, generated UI, and machine-facing APIs | Framework, UI library, and platform |
 | Artifacts | Durable outputs with identity, versions, provenance, permissions, rendering, and export | Project and platform |
 | Triggers and background work | Messages, schedules, webhooks, queues, retries, and long-running jobs that continue without an open chat | Framework and platform runtime |
-| Policy and authority | Identity, secrets, tool permissions, network and resource limits, approval gates, audit, retention, and revocation | Framework and platform, enforced outside the model |
+| Policy and authority | Identity, secrets, tool permissions, network and resource limits, approval gates, audit, retention, and revocation | Framework and platform, enforced outside program material the agent can change |
 | Evaluation and observability | Test cases, trajectory and output checks, security tests, traces, cost measurements, and production feedback | Framework, evaluation service, and platform |
 | Application lifecycle | Local development, dependency review, configuration, deployment, releases, instance creation, migration, rollback, metering, export, and deletion | Framework and platform toolchain |
 
@@ -1300,8 +1334,8 @@ LangSmith deployment path. Vercel AI SDK offers TypeScript primitives and a
 durable Workflow runtime, leaving the project to supply more of the application
 structure.
 
-One goal of this project is to make these differences visible and give the
-community a shared capability model. A harness moves toward becoming a
+This paper makes those differences visible and gives the community a shared
+capability model. A harness moves toward becoming a
 first-class Agent Application framework when it presents these capabilities as
 a coherent system for structuring, developing, testing, deploying, and
 operating an application. Consistency means shared concepts, explicit
@@ -1324,6 +1358,8 @@ and transitive plugin dependencies. They can also define installation
 permissions and supply-chain verification without changing the plugin format.
 
 ---
+
+# Part IV: State, change, and results
 
 ## 13. Application, release, instance, and session
 
@@ -1352,8 +1388,8 @@ domain, such as a user, team, customer account, project, or job. Its workspace,
 authority grants, history, and billing accumulate independently of other
 instances. The user or organization it represents remains responsible even when
 the instance acts for months. An operator upgrades an instance by updating its
-project files to a new release. Local modifications may require a semantic
-merge.
+project files to a new release. If the instance edited a published
+natural-language instruction, that instruction is merged semantically.
 
 A session is one period of execution or interaction within an instance. A user,
 event, or schedule starts it. The session may last one turn or many and need not
@@ -1386,13 +1422,38 @@ each session an ephemeral filesystem, retain selected changes, and record which
 session produced them. Later sessions must be able to find, use, and update the
 retained state.
 
-The reference design gives each instance an isolated persistent virtual
-filesystem. Agents and their tools use ordinary file operations to work with
-documents, code, local databases, installed packages, artifacts, and
-intermediate results. They can add new forms of state without requiring the
-application developer to design a database schema or storage API first.
+The reference design gives each instance a persistent virtual computer: a
+filesystem, a shell, and network access, wrapped by the application's policy
+code. Agents and their tools use ordinary file operations, scripts, and
+command-line programs on documents, code, local databases, installed packages,
+artifacts, and intermediate results. They can add new forms of state without a
+schema or a storage API for each kind of object.
 
-The filesystem does not require a dedicated machine while the instance is idle.
+That environment is why a harness-based agent can do general work. A chat and
+a list of specialized tools can complete a narrow job. A loop that can read,
+write, and run code over a disk can take on work the application author did
+not enumerate in advance. As models get better at reasoning and following
+instructions, the harness should stay small: assemble context, call tools,
+load skills, and run the loop over that computer. The industry often adds
+more special-purpose tools and prompt-level partitions. Those can help a
+narrow product. They are a poor substitute for a computer when the job is
+open-ended.
+
+[Manus Cloud
+Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer)
+keeps a persistent filesystem, installed tools, and running processes.
+[Grok Bot](https://docs.x.ai/grok-bot/overview) runs on a persistent cloud
+machine with a filesystem, terminal, and browser. [Claude Managed
+Agents](https://platform.claude.com/docs/en/managed-agents/overview) give
+Claude bash, file operations, and a persistent sandbox filesystem.
+[Perplexity Computer](https://www.perplexity.ai/hub/blog/introducing-perplexity-computer)
+is framed as a worker that uses a computer, including local files on
+[Windows](https://www.perplexity.ai/hub/blog/personal-computer-on-windows).
+These products differ in tenancy and product scope. They agree that the
+agent should operate over a computer rather than only a transcript and a
+tool list.
+
+The computer does not require a dedicated machine while the instance is idle.
 A platform can snapshot it, restore compute when work arrives, and suspend it
 afterward. At scale, the platform can store a shared base image and only the
 files each instance has changed. Appendix D describes the storage contract.
@@ -1439,7 +1500,7 @@ plan.
 
 ### 14.2 The workspace is the privacy boundary
 
-The runtime agent can read the whole workspace. Files, memory, indexes,
+The runtime agent has access to the whole workspace. Files, memory, indexes,
 summaries, and artifacts may enter its context or affect later work. Folder
 names and file permissions within a shared workspace do not create separate
 privacy domains.
@@ -1450,8 +1511,8 @@ whenever the instance can retrieve them.
 
 The platform enforces privacy between workspaces. It isolates their storage and
 compute, controls where their contents can be sent, and restores or deletes one
-without touching another. Section 7.1 gives examples of where applications draw
-that boundary; section 20 covers the controls that enforce it.
+without touching another. Section 6.1 gives examples of where applications draw
+that boundary; section 19 covers the controls that enforce it.
 
 ### 14.3 Instance identity and workspace state
 
@@ -1477,10 +1538,13 @@ can also change between releases. It may learn facts, accumulate files, adopt
 user preferences, or receive new instructions. Some applications let the
 runtime agent write a skill or generate code for later use.
 
-These local changes cause instances in the same fleet to diverge. The platform
-tracks the shared release separately from the changes made inside each
-instance. For every local change, it records the author, tests, approval rule,
-and rollback method.
+These local changes cause instances in the same fleet to diverge. If they add
+or edit natural-language instructions, they diverge in program as well as
+state. Operators then manage a fleet whose members no longer share one
+program: rollout, audit, and policy have to follow each instance's local
+program and state, not only the shared release. The platform tracks the shared
+release separately from the changes made inside each instance. For every local
+change, it records the author, tests, approval rule, and rollback method.
 
 ### 15.1 Who can author a change
 
@@ -1552,22 +1616,33 @@ records local history after creation:
 - tool and permission changes;
 - forks, merges, and rollback points.
 
-### 15.5 Upgrades require semantic merges
+### 15.5 Merge edited published instructions semantically
 
-A text merge finds edits to the same lines. It cannot detect contradictions
-between instructions in different files.
+Copy or a line-based three-way merge is enough for ordinary code,
+configuration, and files the instance did not edit. Natural-language
+instructions are different. One instruction can change the effect of another,
+including instructions in different files. A text merge finds edits to the
+same lines. It cannot tell whether two instructions agree.
+
+Semantic merge is required when the instance edited a published
+natural-language instruction. A later release of that instruction cannot be
+applied by replacing the file or by merging lines. The platform applies the
+publisher's intended behavior, preserves unrelated local changes, and tests
+the result against the instance's workspace.
+
+If the instance only added local instructions and left the published files
+alone, the platform can copy the new published files. It still has to evaluate
+the result. Local instructions can collide with the new published ones.
 
 Suppose a publisher raises the threshold for escalating a support case. One
 customer's instance has also learned to "handle routine cases without
-escalating." A three-way merge may accept both sentences even when their
-combined behavior is wrong. It may also report a conflict between two
-differently worded instructions that mean the same thing.
+escalating." Copying the new published file succeeds as a text operation. The
+combined behavior can still be wrong. A three-way merge of an edited published
+instruction can likewise accept two sentences that contradict, or report a
+conflict between two paraphrases of the same rule.
 
-When instances can diverge from a release, the platform must upgrade each one
-semantically. It applies the publisher's intended behavior, preserves unrelated
-local changes, and tests the result against the instance's workspace. If the
-test finds a problem, the platform blocks that instance's upgrade and creates a
-review task for the fleet manager.
+If an upgrade test fails, the platform blocks that instance's upgrade and
+creates a review task for the fleet manager.
 
 ### 15.6 Evaluate releases against instance state
 
@@ -1623,7 +1698,7 @@ and compare versions without replaying the conversation that produced it.
 ### 16.2 Surfaces
 
 Interactive Agent Applications usually expose the agent widget described in
-section 6. It presents conversation, session history, artifacts, approvals, and
+section 7. It presents conversation, session history, artifacts, approvals, and
 generated UI in one interface for an instance. An application may also have a
 dedicated artifact editor, workspace browser, approval queue, or operations view
 for runs, cost, errors, and schedules. APIs connect the application to other
@@ -1634,7 +1709,7 @@ Each surface operates on the same instance and durable state.
 
 ---
 
-# Part IV: Operating Agent Applications
+# Part V: Operating Agent Applications
 
 ## 17. Instance execution
 
@@ -1699,8 +1774,8 @@ coordination across separate instances as an open problem.
 ### 17.5 Human authority and approval
 
 Approval rules should reflect how hard an action is to undo. Editing a draft is
-easy to reverse, while refunding a charge may require a second transaction.
-Sending a private document to the wrong person may be irreversible.
+reversible. Refunding a charge may require a second transaction. Sending a
+private document to the wrong person may be irreversible.
 
 For each action, the policy specifies whether the agent may act silently, act
 and report, ask first, or never act.
@@ -1708,7 +1783,7 @@ and report, ask first, or never act.
 An approval lets a reviewer stop irreversible work before it occurs. Manual
 review becomes less reliable at high volume because a reviewer handling fifty
 items an hour may start to rubber-stamp them. Code and policy systems must
-enforce hard limits, as section 20.3 describes.
+enforce hard limits, as section 19.3 describes.
 
 ---
 
@@ -1718,7 +1793,7 @@ An **Agent Application Platform** turns a tested Agent Project into an immutable
 release and operates long-lived instances with durable workspaces, identity
 management, security controls, governance, observability, evaluation, and fleet
 management. It provisions instances at the application's privacy boundary,
-attaches scoped authority, and runs their sessions. A store or publisher may
+attaches scoped credentials, and runs their sessions. A store or publisher may
 provide distribution and commercial services separately.
 
 Ordinary cloud infrastructure supplies compute, storage, networking, and
@@ -1773,7 +1848,137 @@ service boundaries for platform builders.
 
 ---
 
-## 19. Standards, contracts, and portability
+## 19. Security, reliability, and governance
+
+An Agent Application reads untrusted content, executes code, holds credentials,
+accumulates private material, and acts over long periods under delegated
+authority. A malicious instruction can arrive through a web page, email,
+document, support ticket, tool result, or old workspace file. The controls below
+limit what compromised or mistaken behavior can affect.
+
+*Figure 7. Trust and authority boundaries.*
+
+![Trust and authority boundaries showing untrusted inputs entering an isolated
+Agent Instance through identity routing and source labels. The runtime operates
+through sandboxed code execution and a durable workspace, while a separate
+policy plane controls tool access and preserves evidence and recovery
+records.](/images/architecture/trust-authority-boundaries.drawio.svg)
+
+The model can propose actions inside these boundaries. Identity, resource-level
+authorization, approval decisions, network policy, spending limits, and audit
+records remain outside program material the agent can modify.
+
+### 19.1 The agent cannot choose its own authority
+
+The developer declares the permissions the application may need. The user,
+organization, or resource owner decides what to grant. The agent can use that
+authority but cannot expand it. Permissions can expire or be revoked while the
+instance is suspended or running.
+
+The platform must also use a narrow execution identity so an agent cannot
+inherit broader platform access.
+
+Commerce policies grant search, negotiation, ordering, and payment authority
+separately. A commercial grant can limit the merchant, what may be bought,
+maximum price, time window, payment instrument, and confirmation rules.
+Commerce and payment protocols can carry intent, checkout state, authorization,
+payment requirements, and receipts. Policy code enforces the limits and handles
+revocation. Appendix D.4 lists the current protocols.
+
+### 19.2 Review the complete plugin
+
+A plugin affects executable software and model behavior. Review and approve its
+complete content digest: executable code, natural-language instructions,
+component descriptions, tool schemas, declarations, hooks, and client
+extensions. A skill can steer an existing tool in a new way even when the
+plugin adds no capability. Hooks require extra scrutiny because they can run at
+lifecycle points without model selection.
+
+A production release keeps a component inventory analogous to a software bill
+of materials. For each plugin it records the source, version, digest, exported
+components, executable files, requested capabilities, network destinations, and
+active host extensions. Credentials remain governed references scoped to an
+instance.
+Neither a plugin nor one of its components can grant itself access.
+
+An update shows behavioral and capability changes along with file changes. The
+platform reruns affected evaluations before activation and keeps the previous
+resolved graph available for rollback.
+
+### 19.3 Put hard limits in code
+
+Policy code the agent cannot change authorizes each action the model proposes.
+Keep these controls outside program material the agent can edit:
+
+- authentication and agent-instance identity;
+- permission checks on the exact record or resource being read or changed;
+- tenant and workspace isolation;
+- secret delivery;
+- spending and rate limits;
+- approval gates;
+- allowed network destinations;
+- artifact sharing;
+- retention and deletion.
+
+A permission such as `crm.write` is too broad by itself. The system that controls
+the resource must also check which customer account the agent is changing. A
+record-level check prevents a compromised or misled agent from reaching another
+account or sending private files to an unapproved server.
+
+Reads need the same control. A database, document connector, search index, or RAG
+service must enforce access before returning data to the agent. When that
+connector is an MCP server, much of this enforcement belongs in its
+authentication and authorization path. For user-initiated work, the safe default
+is the intersection of the instance's delegated authority and the authenticated
+user's permissions. Loading a broad collection into the model's context and
+asking the model to hide unauthorized records defeats this boundary.
+
+Credentials should be short-lived and limited to the current action whenever
+possible.
+
+### 19.4 Preserve source labels
+
+The runtime distinguishes developer instructions, organization policy, user
+directions, reference material, and outside content. It keeps those source labels
+when text is summarized, passed to a subagent, or saved and read later.
+
+Reading an untrusted document may narrow what the current run is allowed to do
+or trigger an approval requirement. Prompt injection remains possible, so policy
+uses source labels to limit what a misled agent can reach. Instance and workspace
+isolation provide the outer boundary. Users with different data rights need
+separate workspaces, and scoped tools limit what the agent can reach outside its
+workspace. Appendix D describes this mechanism in more detail.
+
+### 19.5 Agent-generated code
+
+During a run, the agent may write a script, execute it, inspect the output, and
+use the result to continue working. It may save that script at a known path in
+its workspace so later sessions can run or revise it.
+
+The runtime applies the instance's network, resource, and permission limits to
+this code. Saving the script makes it part of the instance's local program state.
+It does not change the shared application release. If the publisher wants every
+instance to receive the script, a developer reviews and tests it before adding
+it to a new release.
+
+### 19.6 Evidence and recovery
+
+An audit record identifies the agent, its authority, the sources it used, the
+tools it called, and what changed. It must be understandable to someone who was
+not present during the run. Keep this compact record for as long as the result
+matters. Store detailed model inputs and outputs for a shorter period unless the
+use case or law requires more; they are large and often contain sensitive data.
+Before a consequential action, keep a workspace checkpoint and record any
+outside systems the agent will change.
+
+A checkpoint can restore files but cannot recall an email or a disclosed secret.
+For each outside action, the application must record how it can be reversed,
+offset, or reported. Appendix D covers replay and recovery techniques; Appendix
+B records one current legal retention example.
+
+---
+
+## 20. Standards, contracts, and portability
 
 Standards cover specific boundaries in the stack: tools, reusable instructions,
 component packages, agent events, communication between independent agents, and
@@ -1803,136 +2008,6 @@ exchange boundary while internal design remains framework-specific.
 
 ---
 
-## 20. Security, reliability, and governance
-
-An Agent Application reads untrusted content, executes code, holds credentials,
-accumulates private material, and acts over long periods under delegated
-authority. A malicious instruction can arrive through a web page, email,
-document, support ticket, tool result, or old workspace file. The controls below
-limit what compromised or mistaken behavior can affect.
-
-*Figure 7. Trust and authority boundaries.*
-
-![Trust and authority boundaries showing untrusted inputs entering an isolated
-Agent Instance through identity routing and source labels. The runtime operates
-through sandboxed code execution and a durable workspace, while a separate
-policy plane controls tool access and preserves evidence and recovery
-records.](/images/architecture/trust-authority-boundaries.drawio.svg)
-
-The model can propose actions inside these boundaries. Identity, resource-level
-authorization, approval decisions, network policy, spending limits, and audit
-records remain outside program material the agent can modify.
-
-### 20.1 The agent cannot choose its own authority
-
-The developer declares the permissions the application may need. The user,
-organization, or resource owner decides what to grant. The agent can use that
-authority but cannot expand it. Permissions can expire or be revoked while the
-instance is suspended or running.
-
-The platform must also use a narrow execution identity so an agent cannot
-inherit broader platform access.
-
-Commerce policies grant search, negotiation, ordering, and payment authority
-separately. A commercial grant can limit the merchant, what may be bought,
-maximum price, time window, payment instrument, and confirmation rules.
-Commerce and payment protocols can carry intent, checkout state, authorization,
-payment requirements, and receipts. Policy code enforces the limits and handles
-revocation. Appendix D.4 lists the current protocols.
-
-### 20.2 Review the complete plugin
-
-A plugin affects executable software and model behavior. Review and approve its
-complete content digest: executable code, natural-language instructions,
-component descriptions, tool schemas, declarations, hooks, and client
-extensions. A skill can steer an existing tool in a new way even when the
-plugin adds no capability. Hooks require extra scrutiny because they can run at
-lifecycle points without model selection.
-
-A production release keeps a component inventory analogous to a software bill
-of materials. For each plugin it records the source, version, digest, exported
-components, executable files, requested capabilities, network destinations, and
-active host extensions. Credentials remain governed references scoped to an
-instance.
-Neither a plugin nor one of its components can grant itself access.
-
-An update shows behavioral and capability changes along with file changes. The
-platform reruns affected evaluations before activation and keeps the previous
-resolved graph available for rollback.
-
-### 20.3 Put hard limits in code
-
-Policy code authorizes each action proposed by the model. Keep these controls
-outside the model's reach:
-
-- authentication and agent-instance identity;
-- permission checks on the exact record or resource being read or changed;
-- tenant and workspace isolation;
-- secret delivery;
-- spending and rate limits;
-- approval gates;
-- allowed network destinations;
-- artifact sharing;
-- retention and deletion.
-
-A permission such as `crm.write` is too broad by itself. The system that controls
-the resource must also check which customer account the agent is changing. A
-record-level check prevents a compromised or misled agent from reaching another
-account or sending private files to an unapproved server.
-
-Reads need the same control. A database, document connector, search index, or RAG
-service must enforce access before returning data to the agent. When that
-connector is an MCP server, much of this enforcement belongs in its
-authentication and authorization path. For user-initiated work, the safe default
-is the intersection of the instance's delegated authority and the authenticated
-user's permissions. Loading a broad collection into the model's context and
-asking the model to hide unauthorized records defeats this boundary.
-
-Credentials should be short-lived and limited to the current action whenever
-possible.
-
-### 20.4 Preserve source labels
-
-The runtime distinguishes developer instructions, organization policy, user
-directions, reference material, and outside content. It keeps those source labels
-when text is summarized, passed to a subagent, or saved and read later.
-
-Reading an untrusted document may narrow what the current run is allowed to do
-or trigger an approval requirement. Prompt injection remains possible, so policy
-uses source labels to limit what a misled agent can reach. Instance and workspace
-isolation provide the outer boundary. Users with different data rights need
-separate workspaces, and scoped tools limit what the agent can reach outside its
-workspace. Appendix D describes this mechanism in more detail.
-
-### 20.5 Agent-generated code
-
-During a run, the agent may write a script, execute it, inspect the output, and
-use the result to continue working. It may save that script at a known path in
-its workspace so later sessions can run or revise it.
-
-The runtime applies the instance's network, resource, and permission limits to
-this code. Saving the script makes it part of the instance's local program state.
-It does not change the shared application release. If the publisher wants every
-instance to receive the script, a developer reviews and tests it before adding
-it to a new release.
-
-### 20.6 Evidence and recovery
-
-An audit record identifies the agent, its authority, the sources it used, the
-tools it called, and what changed. It must be understandable to someone who was
-not present during the run. Keep this compact record for as long as the result
-matters. Store detailed model inputs and outputs for a shorter period unless the
-use case or law requires more; they are large and often contain sensitive data.
-Before a consequential action, keep a workspace checkpoint and record any
-outside systems the agent will change.
-
-A checkpoint can restore files but cannot recall an email or a disclosed secret.
-For each outside action, the application must record how it can be reversed,
-offset, or reported. Appendix D covers replay and recovery techniques; Appendix
-B records one current legal retention example.
-
----
-
 ## 21. Agent Application Stores
 
 An **Agent Application Store**, or **Agent App Store**, distributes Agent
@@ -1959,7 +2034,7 @@ the customer to a plan with a larger allowance.
 
 ---
 
-# Part V: Open questions and conclusion
+# Part VI: Open questions and conclusion
 
 ## 22. Open questions
 
@@ -1981,9 +2056,13 @@ fact.
 
 ### 22.2 How do we test and merge natural-language programs?
 
-Two instructions can conflict even when they edit different files. Platforms
-need affordable tests that compare intended behavior before and after a change,
-first for the release and then for affected instances.
+Two instructions can conflict even when they sit in different files. Copy and
+line-based merge are enough when published instructions were not edited in the
+instance, but the platform still has to test that local instructions do not
+collide with the new release. When published instructions were edited,
+platforms need a semantic merge and affordable tests that compare intended
+behavior before and after the change, first for the release and then for
+affected instances.
 
 ### 22.3 How do we migrate years of accumulated state?
 
@@ -2042,8 +2121,10 @@ Persistence is the architectural break from request-oriented AI software. An
 instance returns to the same work across sessions and accumulates context,
 artifacts, unfinished work, instructions, and generated code. A new release can
 therefore improve the shared application while failing against the state of one
-instance. Release evaluation, staged semantic upgrades, lineage, checkpoints,
-and targeted repair address that condition.
+instance. Release evaluation against instance state, staged upgrades, lineage,
+checkpoints, and targeted repair address that condition. If the instance
+edited a published natural-language instruction, the upgrade merges that
+instruction semantically.
 
 Agent Application frameworks structure and test the project. Agent Application
 Platforms turn releases into long-lived instances and operate their workspaces,
@@ -2056,9 +2137,9 @@ MCP, Agent Skills, Agent Plugins, AG-UI, A2A, and commerce protocols already
 cover several boundaries. Other contracts may emerge where independent systems
 need to exchange artifacts, workspace exports, lineage, identity, authority, or
 billing records. The internal project and release model can remain native to
-each framework. The common map shows what the system must account for, who owns
-each responsibility, and where
-interoperability is useful.
+each framework. Teams can use this map to reason about the complete system,
+decide who owns each responsibility, compare implementations, and see which
+boundaries need to interoperate.
 
 ---
 
@@ -2188,7 +2269,7 @@ on June 17, 2026 as an open-source, filesystem-first TypeScript framework for
 durable agents. Its agent directory packages instructions, skills, tools,
 subagents, channels, and schedules. The runtime supplies checkpointed durable
 sessions, sandboxed compute, approval gates, evaluations, tracing, and channel
-adapters. Section 3 uses **Agent Application framework** as this paper's category
+adapters. Section 4 uses **Agent Application framework** as this paper's category
 label for that combination.
 
 **Agent Plugins.** [Agent Plugins
@@ -2228,7 +2309,7 @@ on January 11, 2026. On April 28, 2026, Google announced that it was
 Alliance](https://blog.google/products-and-platforms/platforms/google-pay/agent-payments-protocol-fido-alliance/),
 and FIDO announced new [agentic authentication and payments standards
 work](https://fidoalliance.org/fido-alliance-to-develop-standards-for-trusted-ai-agent-interactions/).
-Section 20.1 places commerce and payments at the delegated-authority boundary;
+Section 19.1 places commerce and payments at the delegated-authority boundary;
 Appendix D.4 maps the current protocols to their narrower roles.
 
 **General-purpose Agent Applications.** [ChatGPT
@@ -2285,16 +2366,25 @@ and private memory, while its scheduler persists recurring jobs. [Lightfield](ht
 builds versioned customer context and runs CRM agents in chat or through
 automations. [Manus Cloud
 Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer)
-keeps files, installed tools, and running processes across sessions. These
-products organize the continuing instance around a person, a business workspace,
-or a computer rather than a software project.
+keeps files, installed tools, and running processes across sessions.
+[Grok Bot](https://docs.x.ai/grok-bot/overview) documents a persistent cloud
+VM with a filesystem, terminal, and browser. [Claude Managed
+Agents](https://platform.claude.com/docs/en/managed-agents/overview) document
+bash, file operations, and a persistent sandbox filesystem. [Perplexity
+Computer](https://www.perplexity.ai/hub/blog/introducing-perplexity-computer)
+describes a general-purpose worker that uses a computer, and [Personal
+Computer for Windows](https://www.perplexity.ai/hub/blog/personal-computer-on-windows)
+works across local files. Section 14 uses these as evidence for a computer
+as the agent's working environment, not as a required product shape. These
+products organize the continuing instance around a person, a business
+workspace, or a computer rather than a software project.
 
 **Frameworks and sandboxes.** The [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
 provides an agent loop, tools, handoffs, guardrails, sessions, tracing, and
 sandbox agents. [LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)
 provides durable orchestration for long-running stateful agents. [E2B](https://www.e2b.dev/docs)
 and [Vercel Sandbox](https://vercel.com/blog/agent-stack) provide isolated Linux
-environments for agent-run code. These are the named examples behind section 3.
+environments for agent-run code. These are the named examples behind section 4.
 
 **Partial Agent Application Platforms.** The [Karta platform
 page](https://karta.sh/platform) documents durable per-user computers, immutable
@@ -2360,8 +2450,8 @@ site](https://www.runplaybooks.ai/#video-intro) describes the compiler and
 debugger. The project was sunset in April 2026; section 11.2 cites it as early
 technical prior art rather than as a current framework recommendation.
 
-**Named systems and formats.** Claims about named systems in sections 1, 3, 6,
-7, 9, 11, 12, 18, 19, and 20, as well as Appendix D, come from each vendor's own
+**Named systems and formats.** Claims about named systems in sections 1, 4, 6,
+7, 9, 11, 12, 14, 18, 19, and 20, as well as Appendix D, come from each vendor's own
 documentation as of August 9, 2026 and should be rechecked before citation.
 
 ---
@@ -2371,7 +2461,7 @@ documentation as of August 9, 2026 and should be rechecked before citation.
 | Document | Purpose |
 |---|---|
 | The Agent Applications Manifesto | A short public argument for software that does the work |
-| Programming Agent Applications | How to decompose a use case across code, natural-language programs, tools, agents, workflows, dependencies, state, policy, and evaluation |
+| Programming Agent Applications | How to design, author, and evaluate a hybrid program of code, natural-language programs, tools, agents, workflows, dependencies, state, and policy |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances |
 | Agent Applications for SaaS Companies | Adoption paths for embedded copilots, exported capabilities, and first-party Agent Applications |
@@ -2436,10 +2526,15 @@ Installing content is a local program change; activation changes the running
 application, and authorization changes what it may reach. The lineage record
 keeps those events separate.
 
-A semantic upgrade has three steps: identify the behavior the publisher intended
-to change, apply that change while preserving unrelated local behavior, and run
-evaluations against the instance's own checkpoint. Text diffs remain useful for
-review, but they cannot decide whether two natural-language instructions agree.
+Copy and line-based merge are enough for ordinary code, configuration, and
+files the instance did not edit. When an instance has edited a published
+natural-language instruction, a semantic upgrade has three steps: identify the
+behavior the publisher intended to change, apply that change while preserving
+unrelated local behavior, and run evaluations against the instance's own
+checkpoint. If the instance only added local instructions, copy the new
+published files, then evaluate for collisions with the local program. Text
+diffs remain useful for review, but they cannot decide whether two
+natural-language instructions agree.
 
 ## D.3 Cost model
 
@@ -2579,7 +2674,7 @@ An [Agent Project](/concepts/agent-project) keeps the native layout of its
 framework. An [Agent Application Platform](/concepts/platform) can support
 several frameworks without translating every project into one generic schema.
 
-See the paper's [stack](/paper#3-the-agent-application-stack),
+See the paper's [stack](/paper#4-the-agent-application-stack),
 [vocabulary](/paper#8-vocabulary), [build-and-operate
 method](/paper#9-a-build-and-operate-method), and [capability
 model](/paper#12-the-agent-project-and-capability-model).
@@ -2679,7 +2774,7 @@ computational environment used by the agent. Keeping them separate lets an
 operator restore or move the workspace without changing the instance's identity
 or permissions.
 
-See the paper's sections on [privacy domains](/paper#7-1-how-to-decide-who-gets-an-agent-instance),
+See the paper's sections on [privacy domains](/paper#6-1-how-to-decide-who-gets-an-agent-instance),
 [application lifetimes](/paper#13-application-release-instance-and-session),
 and [instance identity](/paper#14-3-instance-identity-and-workspace-state).
 
@@ -2703,11 +2798,12 @@ The term describes a logical contract. A platform may use databases or object
 storage. It can also give each session an ephemeral filesystem, retain selected
 changes, and make them available to later sessions.
 
-The paper's reference design gives every instance an isolated persistent virtual
-filesystem. The agent can keep documents, code, local databases, installed
-packages, artifacts, and unfinished work there without first defining a schema
-for each kind of state. The platform can snapshot and restore the filesystem, so
-an idle instance does not need a machine to keep running.
+The paper's reference design gives every instance a persistent virtual
+computer: a filesystem, a shell, and network access, wrapped by policy code.
+The agent can keep documents, code, local databases, installed packages,
+artifacts, and unfinished work there without first defining a schema for each
+kind of state. The platform can snapshot and restore that environment, so an
+idle instance does not need a machine to keep running.
 
 The workspace is also the privacy boundary. It includes every file, database
 record, object, and session artifact the instance can retrieve. Information that
@@ -2723,7 +2819,7 @@ and deletion rules. Credentials remain in a managed secret store.
 A context window ends with the model call. The workspace remains available to
 later sessions.
 
-See the paper's [category test](/paper#7-2-a-durable-computational-workspace) and
+See the paper's [category test](/paper#6-2-a-durable-computational-workspace) and
 [workspace architecture](/paper#14-the-durable-workspace).
 
 
@@ -2781,7 +2877,7 @@ and its frontend. [MCP Apps](https://modelcontextprotocol.io/extensions/apps/ove
 standardizes interactive views that tools deliver inside a compatible host.
 
 See the paper's section on [where people encounter AI
-agents](/paper#6-where-people-encounter-ai-agents).
+agents](/paper#7-where-people-encounter-ai-agents).
 
 
 # Agent Lineage
@@ -2864,7 +2960,7 @@ product, which it calls an **Agent Application**.
 
 | Reader | How to use the paper |
 |---|---|
-| Application architects and developers | Define the application's job and privacy boundary, decompose its program, and design its release and instance lifecycles. |
+| Application architects and developers | Define the application's job and privacy boundary, design, author, and evaluate its program, and design its release and instance lifecycles. |
 | Framework authors | Compare a harness with the capability model and identify the development and production support needed for complete Agent Applications. |
 | Platform builders and operators | Assign responsibility for releases, instances, workspaces, authority, interfaces, and fleet operations. |
 | Security and governance teams | Locate trust boundaries, approval gates, audit records, retention rules, and recovery points. |
@@ -2980,7 +3076,7 @@ The paper introduces a set of related documents, each with a different job:
 | Document | Purpose | Status |
 |---|---|---|
 | The Agent Applications Manifesto | A short public argument for software that does the work | Planned |
-| Programming Agent Applications | How to decompose a use case across code, natural-language programs, tools, agents, workflows, dependencies, state, policy, and evaluation | Planned |
+| Programming Agent Applications | How to design, author, and evaluate a hybrid program of code, natural-language programs, tools, agents, workflows, dependencies, state, and policy | Planned |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery | Planned |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances | Planned |
 | Agent Applications for SaaS Companies | Adoption paths for embedded copilots, exported capabilities, and first-party Agent Applications | Planned |

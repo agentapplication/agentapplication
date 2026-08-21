@@ -17,11 +17,12 @@ The term describes a logical contract. A platform may use databases or object
 storage. It can also give each session an ephemeral filesystem, retain selected
 changes, and make them available to later sessions.
 
-The paper's reference design gives every instance an isolated persistent virtual
-filesystem. The agent can keep documents, code, local databases, installed
-packages, artifacts, and unfinished work there without first defining a schema
-for each kind of state. The platform can snapshot and restore the filesystem, so
-an idle instance does not need a machine to keep running.
+The paper's reference design gives every instance a persistent virtual
+computer: a filesystem, a shell, and network access, wrapped by policy code.
+The agent can keep documents, code, local databases, installed packages,
+artifacts, and unfinished work there without first defining a schema for each
+kind of state. The platform can snapshot and restore that environment, so an
+idle instance does not need a machine to keep running.
 
 The workspace is also the privacy boundary. It includes every file, database
 record, object, and session artifact the instance can retrieve. Information that
@@ -37,5 +38,5 @@ and deletion rules. Credentials remain in a managed secret store.
 A context window ends with the model call. The workspace remains available to
 later sessions.
 
-See the paper's [category test](/paper#7-2-a-durable-computational-workspace) and
+See the paper's [category test](/paper#6-2-a-durable-computational-workspace) and
 [workspace architecture](/paper#14-the-durable-workspace).

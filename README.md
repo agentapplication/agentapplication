@@ -17,8 +17,9 @@ sessions.
 The paper presents a vendor-neutral architecture for the complete system. It
 follows an Agent Project through release and deployment, then explains how the
 resulting instances retain work and change over time. It also defines the
-responsibilities of Agent Application Frameworks, Platforms, and Stores, and
-places authority enforcement outside the model. Frameworks retain their native
+responsibilities of Agent Application Frameworks, Platforms, and Stores. The
+platform attaches scoped credentials and enforces permissions, spending limits,
+network destinations, and approvals. Frameworks retain their native
 project and release formats, while shared protocols and future contracts sit at
 the boundaries between systems.
 
