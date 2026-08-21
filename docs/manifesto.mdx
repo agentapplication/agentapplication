@@ -1,0 +1,146 @@
+---
+title: "The Agent Applications Manifesto"
+sidebarTitle: "Manifesto"
+description: "A short public argument for software that does the work: persistent, tool-using agents that keep results across sessions."
+---
+
+<Note>
+  Working Draft 0.9.1 · August 2026 · [Read the paper](/paper) · [Review the draft](/review)
+</Note>
+
+ChatGPT and Claude use agent widgets. An OpenClaw agent may appear as a
+WhatsApp or Telegram contact. GitHub Copilot's coding agent and Cursor Cloud
+Agents can start from an issue or pull request and return their work there. A
+Microsoft Copilot Studio autonomous agent can wake in response to a business
+event without presenting a conversational interface at all.
+
+These systems have different interfaces and jobs. Each gives a tool-using agent
+a continuing scope of work. Later messages or events return to that work, and
+the results remain after a run ends.
+
+The [paper](/paper) calls that shape an **Agent Application**. Developers and
+operators set the tools, permissions, budgets, policies, triggers, and approval
+rules. A request, schedule, or outside event starts a run. The agent reads the
+current state and chooses the next action. The results outlive the model call
+that produced them.
+
+## Software that does the work
+
+A conventional application waits for a person or a fixed workflow to choose
+each operation. The software exposes menus, screens, forms, and APIs. A person
+sequences the work, or a developer encodes that sequence in advance.
+
+An Agent Application divides control differently. Code defines the allowed
+space. The agent chooses a path through it. It can plan, invoke tools, create
+and revise artifacts, delegate work, and continue until it reaches an outcome
+or a boundary that requires outside input. A person does not have to approve
+every action.
+
+| Conventional application | Agent Application |
+|---|---|
+| A person or fixed workflow selects each operation | The agent chooses actions within application guardrails |
+| The user or developer specifies the steps | A request, event, or schedule supplies the goal and current state |
+| Application behavior changes through releases | Instance behavior also reflects its accumulated workspace and approved local changes |
+| State is mostly data | State includes data, memory, programs, tools, and lineage |
+| Deployment creates equivalent copies | Instantiation creates diverging descendants |
+
+Persistence is the architectural break from request-oriented AI software.
+Compute can stop when the instance is idle. The instance and its work remain.
+
+A chat interface does not make a system an Agent Application. Four properties
+distinguish the category from a model endpoint, a transcript-only chatbot, a
+fixed workflow, or a task runner whose scratch state ends with the task:
+
+| Defining property | What it looks like |
+|---|---|
+| Persistent agent instance | A new message or event returns to the same agent, privacy domain, and ongoing work |
+| Agent-directed control flow | The agent reasons about the current state and chooses its next action rather than following a fully predetermined workflow |
+| Durable computational workspace | Files, instructions, memory, code, and other working state remain available to later runs |
+| Durable work | Artifacts, workspace state, external records, or continuing processes outlive the event that created them |
+
+## Products that already have this shape
+
+| Product | Privacy domain | Durable work |
+|---|---|---|
+| [ChatGPT](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex) | A user or project | Project files, instructions, memory, scheduled work, and finished documents or sites |
+| [Claude Cowork](https://support.claude.com/en/articles/14116274-organize-your-tasks-with-projects-in-claude-cowork) | A Cowork project | Local files, project memory, scheduled tasks, and persistent artifacts |
+| [Lovable](https://docs.lovable.dev/features/agent-mode) | A software project | Source code, project instructions, assets, deployment state, and change history |
+| [Replit Agent](https://docs.replit.com/features/version-control/checkpoints-and-rollbacks) | A software project | Code, installed packages, databases, agent memory, and restorable checkpoints |
+| [OpenClaw](https://docs.openclaw.ai/start/openclaw) | An OpenClaw agent | Workspace files, memory, skills, schedules, and tool-created results |
+| [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, customer relationship management (CRM) records, generated analysis, and scheduled automations |
+| [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
+
+The definition does not depend on the user interface. The same agent may appear
+as a full-screen conversation, a copilot inside another product, a phone
+number, or a background worker.
+
+If a product belongs in this table, or does not, [open a
+discussion](https://github.com/agentapplication/agentapplication/discussions/1).
+
+## After desktop, web, and mobile
+
+Desktop, web, and mobile applications each gave developers a recognizable way
+to assemble a complete product. Agent Applications change how control, context,
+and work are handled.
+
+| Computing era | Application model | Characteristic stack |
+|---|---|---|
+| Personal computing | Desktop application | Native code, operating systems, GUI toolkits, local files, installers |
+| Internet computing | Web application | HTTP, browsers, servers, databases, cloud infrastructure |
+| Mobile computing | Mobile application | Mobile SDKs, touch interfaces, sensors, app stores, device identity |
+| Agent computing | Agent Application | Models and conventional compute, harnesses / Agent Application frameworks, native projects, Agent Application Platforms, durable instances and workspaces |
+
+## Instances diverge
+
+Long-lived instances accumulate different facts, artifacts, generated code, and
+unfinished work. If they can also add or edit natural-language instructions,
+they diverge in program as well as state.
+
+Operators then manage a fleet whose members no longer share one program.
+Rollout, audit, and policy have to follow each instance's local program and
+state, not only the shared release. A new release can improve the shared
+application while failing against the state of one instance. If the instance
+edited a published instruction, the upgrade merges that instruction by meaning.
+Copy and line-based merge miss how one instruction changes another.
+
+The [Hello World](/examples/hello-world) example is the smallest complete case:
+a notebook agent saves a note, suspends, and uses that note to update a
+briefing on a later run.
+
+## Framework, platform, and store
+
+![Seven-layer Agent Application stack, from models and agent compute through the Agent Application Framework, Agent Application Project, Agent Application Platform, optional Agent Application Store, and delivered use cases.](/images/architecture/stack.drawio.svg)
+
+The layers describe responsibilities, not seven products that a team must buy.
+One provider may combine several layers.
+
+An **Agent Application Framework** is a harness that also supplies a coherent
+project structure, development tools, evaluations, packaging, deployment, and
+production runtime support. An **Agent Application Platform** turns a tested
+project into an immutable release, provisions long-lived instances with durable
+workspaces, and enforces identity, permissions, spending limits, network
+destinations, and approvals. An **Agent Application Store** is a catalog and
+commerce service through which people find, acquire, and pay for Agent
+Applications.
+
+Keeping those responsibilities distinct makes architectures and vendor claims
+easier to compare. Each framework keeps its own project and release formats.
+[MCP](https://modelcontextprotocol.io/), [Agent
+Skills](https://agentskills.io/specification), [Agent
+Plugins](https://agent-plugins.org/specification), and
+[A2A](https://a2a-protocol.org/latest/specification/) already cover some of the
+boundaries where independent systems meet.
+
+## Read the paper
+
+This page is the public argument. The [paper](/paper) is the architecture: the
+definition, the capability model, the lifecycle, the security and governance
+view, and the open questions.
+
+The paper is a working draft. It is most useful if its boundaries survive
+contact with real products. [Review the draft](/review), or start from an open
+thread:
+
+- [Which current products are Agent Applications?](https://github.com/agentapplication/agentapplication/discussions/1)
+- [Is Dependabot an Agent Application?](https://github.com/agentapplication/agentapplication/discussions/2)
+- [How should a platform upgrade instances that edited their own instructions?](https://github.com/agentapplication/agentapplication/discussions/4)

@@ -28,7 +28,7 @@
     "groups": [
       {
         "group": "Overview",
-        "pages": ["index", "examples/hello-world", "paper"]
+        "pages": ["index", "manifesto", "examples/hello-world", "paper"]
       },
       {
         "group": "Concepts",
@@ -55,7 +55,10 @@
     }
   },
   "seo": {
-    "indexing": "all"
+    "indexing": "all",
+    "metatags": {
+      "og:image": "https://agentapplication.io/images/social/github-og.png"
+    }
   },
   "contextual": {
     "options": [

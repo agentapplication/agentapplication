@@ -4,7 +4,8 @@
 reference architecture for building and operating AI agent systems. Current
 paper: [Working Draft 0.9.1](https://agentapplication.io/paper), August 2026.
 
-[Paper](https://agentapplication.io/paper)
+[Manifesto](https://agentapplication.io/manifesto)
+· [Paper](https://agentapplication.io/paper)
 · [Hello World](https://agentapplication.io/examples/hello-world)
 · [Review](https://agentapplication.io/review)
 · [Plain text](https://agentapplication.io/llms-full.txt)
@@ -102,6 +103,8 @@ that note to update a briefing on a later run.
 
 ## Read the work
 
+- The [manifesto](https://agentapplication.io/manifesto) is the short public
+  argument.
 - The [paper](https://agentapplication.io/paper) is the full argument, category
   definition, and architecture.
 - [About this paper](https://agentapplication.io/about) explains the audience,
