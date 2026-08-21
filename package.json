@@ -3,9 +3,11 @@
   "private": true,
   "scripts": {
     "dev": "cd docs && mint dev",
+    "generate:diagram-themes": "node scripts/apply-diagram-dark-mode.mjs",
+    "check:diagram-themes": "node scripts/apply-diagram-dark-mode.mjs --check",
     "generate:llms": "node scripts/generate-llms-full.mjs",
     "check:llms": "node scripts/generate-llms-full.mjs --check",
-    "validate": "npm run check:llms && cd docs && mint validate",
+    "validate": "npm run check:llms && npm run check:diagram-themes && cd docs && mint validate",
     "check-links": "cd docs && mint broken-links"
   }
 }
