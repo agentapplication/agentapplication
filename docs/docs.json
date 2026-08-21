@@ -28,7 +28,7 @@
     "groups": [
       {
         "group": "Overview",
-        "pages": ["index", "manifesto", "examples/hello-world", "paper"]
+        "pages": ["index", "examples/hello-world", "paper"]
       },
       {
         "group": "Concepts",
@@ -49,6 +49,12 @@
       }
     ]
   },
+  "redirects": [
+    {
+      "source": "/manifesto",
+      "destination": "/"
+    }
+  ],
   "footer": {
     "socials": {
       "github": "https://github.com/agentapplication/agentapplication"

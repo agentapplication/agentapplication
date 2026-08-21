@@ -7,103 +7,10 @@
 # Agent Applications
 Source: https://agentapplication.io/
 
-A vendor-neutral reference architecture for building and operating AI agent systems.
+Persistent, tool-using agents that keep work across sessions are a distinct application category.
 
 <Note>
   **A working paper** · Draft 0.9.1 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
-</Note>
-
-ChatGPT and Claude use agent widgets. An OpenClaw agent may appear as a
-WhatsApp or Telegram contact. GitHub Copilot's coding agent and Cursor Cloud
-Agents can start from an issue or pull request and return their work there. A
-Microsoft Copilot Studio autonomous agent can wake in response to a business
-event without presenting a conversational interface at all. These systems have
-different interfaces and jobs. Each gives a tool-using agent a continuing
-scope of work. Later messages or events return to that work, and the results
-remain after a run ends.
-
-This paper calls that shape an [Agent
-Application](/paper#1-what-is-an-agent-application). A request, event, or
-schedule can start work. The agent chooses intermediate actions within
-application guardrails, while its instance retains a workspace, authority,
-artifacts, and unfinished work after the run ends.
-
-The [working paper](/paper) presents a vendor-neutral reference architecture for
-building and operating these systems. It identifies the main elements, assigns
-responsibilities to them, and follows an Agent Project through release,
-deployment, operation, and change. It also locates standards such as the [Model
-Context Protocol (MCP)](https://modelcontextprotocol.io/) and [Agent
-Skills](https://agentskills.io/specification) at the boundaries they cover.
-
-The paper is a working draft. We invite readers to test its claims against real products, implementation experience, prior art, and counterexamples.
-
-## What the paper gives you
-
-- A common vocabulary for projects, releases, instances, workspaces, artifacts,
-  frameworks, platforms, and stores
-- A [build-and-operate method](/paper#9-a-build-and-operate-method) for turning a
-  use case into a tested application design
-- A [capability model](/paper#12-1-a-capability-model-for-agent-applications) for
-  comparing frameworks and assigning responsibility
-- Lifecycle, security, and governance views for operating long-lived instances
-  without losing their accumulated work
-- An account of existing standards and the exchange boundaries where future
-  contracts may help
-
-The paper includes [guided reading
-paths](/paper#guided-reading-paths) for application developers, framework
-authors, platform operators, buyers, and standards contributors.
-
-## Core terms
-
-| Term | Meaning |
-|---|---|
-| [Agent Application](/paper#1-what-is-an-agent-application) | The complete product built around one or more persistent, tool-using agents that produce durable work. |
-| [Agent Project](/concepts/agent-project) | The framework-native project representation used to create releases. |
-| [Agent Application Framework](/concepts/framework) | A harness that includes coherent project structure, development tools, evaluations, packaging, deployment, and production runtime support. |
-| [Agent Application Programming](/paper#11-7-agent-application-programming) | The discipline of programming Agent Applications: designing, authoring, and evaluating a hybrid program of code, natural-language programs, tools, agents, workflows, state, and policy. |
-| [Agent Application Platform](/concepts/platform) | A service that turns tested Agent Projects into immutable releases and operates long-lived instances with durable workspaces, identity management, security controls, governance, observability, evaluation, and fleet management. |
-| [Agent Application Store](/paper#21-agent-application-stores) | A catalog and commerce service through which people find, acquire, and pay for Agent Applications. |
-
-## Read the work
-
-- [The manifesto](/manifesto) is the short public argument.
-- [The paper](/paper) presents the full argument, category definition, and architecture.
-- [Hello World](/examples/hello-world) shows the model in a small application.
-- [About this paper](/about) explains the audience, scope, and status of the work.
-- [Companion documents](/companion-documents) lists the practical and technical documents planned around the paper.
-
-## Contribute
-
-We welcome community engagement as the paper evolves.
-
-- Use [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions) for open-ended proposals, architecture questions, and boundary cases.
-- Open an [issue](https://github.com/agentapplication/agentapplication/issues) for a concrete error, missing source, or broken page.
-- Send a [pull request](https://github.com/agentapplication/agentapplication/pulls) for a focused correction, example, or documentation improvement.
-
-[Read the review guide](/review) for the questions the draft most needs help answering. Before preparing a pull request, read [CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md).
-
-## Cite
-
-```bibtex
-@misc{kelkar2026agentapplications,
-  title  = {Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems},
-  author = {Amol Kelkar},
-  year   = {2026},
-  url    = {https://agentapplication.io/paper}
-}
-```
-
-Correspondence: [hello@amolkelkar.me](mailto:hello@amolkelkar.me)
-
-
-# The Agent Applications Manifesto
-Source: https://agentapplication.io/manifesto
-
-A short public argument for software that does the work: persistent, tool-using agents that keep results across sessions.
-
-<Note>
-  Working Draft 0.9.1 · August 2026 · [Read the paper](/paper) · [Review the draft](/review)
 </Note>
 
 ChatGPT and Claude use agent widgets. An OpenClaw agent may appear as a
@@ -229,19 +136,44 @@ Plugins](https://agent-plugins.org/specification), and
 [A2A](https://a2a-protocol.org/latest/specification/) already cover some of the
 boundaries where independent systems meet.
 
-## Read the paper
+The [paper](/paper) is the architecture: the definition, the capability model,
+the lifecycle, the security and governance view, and the open questions. It
+includes [guided reading paths](/paper#guided-reading-paths) for application
+developers, framework authors, platform operators, buyers, and standards
+contributors.
 
-This page is the public argument. The [paper](/paper) is the architecture: the
-definition, the capability model, the lifecycle, the security and governance
-view, and the open questions.
+## Contribute
 
 The paper is a working draft. It is most useful if its boundaries survive
-contact with real products. [Review the draft](/review), or start from an open
-thread:
+contact with real products.
 
 - [Which current products are Agent Applications?](https://github.com/agentapplication/agentapplication/discussions/1)
 - [Is Dependabot an Agent Application?](https://github.com/agentapplication/agentapplication/discussions/2)
 - [How should a platform upgrade instances that edited their own instructions?](https://github.com/agentapplication/agentapplication/discussions/4)
+
+Use [Discussions](https://github.com/agentapplication/agentapplication/discussions)
+for other proposals, architecture questions, boundary cases, and prior art.
+Open an [issue](https://github.com/agentapplication/agentapplication/issues)
+for a concrete error, missing source, or broken page. Send a
+[pull request](https://github.com/agentapplication/agentapplication/pulls) for a
+focused correction, example, or documentation improvement.
+
+[Read the review guide](/review) before sending a longer critique.
+[CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md)
+explains how to prepare a pull request.
+
+## Cite
+
+```bibtex
+@misc{kelkar2026agentapplications,
+  title  = {Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems},
+  author = {Amol Kelkar},
+  year   = {2026},
+  url    = {https://agentapplication.io/paper}
+}
+```
+
+Correspondence: [hello@amolkelkar.me](mailto:hello@amolkelkar.me)
 
 
 # Hello World Agent Application
@@ -2593,7 +2525,6 @@ documentation as of August 9, 2026 and should be rechecked before citation.
 
 | Document | Purpose |
 |---|---|
-| The [Agent Applications Manifesto](https://agentapplication.io/manifesto) | A short public argument for software that does the work |
 | Programming Agent Applications | How to design, author, and evaluate a hybrid program of code, natural-language programs, tools, agents, workflows, dependencies, state, and policy |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances |
@@ -2601,12 +2532,12 @@ documentation as of August 9, 2026 and should be rechecked before citation.
 | Agent Application Stores and Economics | Catalogs, review, installation, entitlements, pricing, billing, publisher terms, and market structure |
 
 Section 12 of this paper contains the Agent Application capability model. The
-manifesto is published at
-[agentapplication.io/manifesto](https://agentapplication.io/manifesto). The
-other documents remain planned. A proposed contract becomes a candidate for a
-specification when independent implementations need to exchange the same
-information across a stable boundary. The current status of these documents is
-maintained at [agentapplication.io/companion-documents](https://agentapplication.io/companion-documents).
+short public argument is the [site overview](https://agentapplication.io/).
+The documents in the table remain planned. A proposed contract becomes a
+candidate for a specification when independent implementations need to
+exchange the same information across a stable boundary. The current status of
+these documents is maintained at
+[agentapplication.io/companion-documents](https://agentapplication.io/companion-documents).
 
 ---
 
@@ -3141,7 +3072,7 @@ interfaces, identity and authority, artifact sharing, workspace migration, and
 commerce. The paper maps standards that already cover some boundaries and
 identifies others that may need further work.
 
-Read the [manifesto](/manifesto), the [full paper](/paper), the [companion
+Read the [overview](/), the [full paper](/paper), the [companion
 documents](/companion-documents), or [review the draft](/review).
 
 
@@ -3206,11 +3137,11 @@ Source: https://agentapplication.io/companion-documents
 
 Practical and technical documents that build on the Agent Applications paper.
 
-The paper introduces a set of related documents, each with a different job:
+The [overview](/) is the short public argument. The paper introduces further
+documents, each with a different job:
 
 | Document | Purpose | Status |
 |---|---|---|
-| The [Agent Applications Manifesto](/manifesto) | A short public argument for software that does the work | Published |
 | Programming Agent Applications | How to design, author, and evaluate a hybrid program of code, natural-language programs, tools, agents, workflows, dependencies, state, and policy | Planned |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery | Planned |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances | Planned |
