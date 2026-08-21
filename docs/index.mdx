@@ -10,11 +10,20 @@ keywords: ["AI agent", "Agent Application", "Agent harness", "Agent Application 
   **A working paper** · Draft 0.9.1 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
 </Note>
 
-[Agent Applications](/paper#1-what-is-an-agent-application) are AI systems built
-around persistent, tool-using agents. A request, event, or schedule can start
-work. The agent chooses intermediate actions within application guardrails,
-while its instance retains a workspace, authority, artifacts, and unfinished
-work after the run ends.
+ChatGPT and Claude use agent widgets. An OpenClaw agent may appear as a
+WhatsApp or Telegram contact. GitHub Copilot's coding agent and Cursor Cloud
+Agents can start from an issue or pull request and return their work there. A
+Microsoft Copilot Studio autonomous agent can wake in response to a business
+event without presenting a conversational interface at all. These systems have
+different interfaces and jobs. Each gives a tool-using agent a continuing
+scope of work. Later messages or events return to that work, and the results
+remain after a run ends.
+
+This paper calls that shape an [Agent
+Application](/paper#1-what-is-an-agent-application). A request, event, or
+schedule can start work. The agent chooses intermediate actions within
+application guardrails, while its instance retains a workspace, authority,
+artifacts, and unfinished work after the run ends.
 
 The [working paper](/paper) presents a vendor-neutral reference architecture for
 building and operating these systems. It identifies the main elements, assigns

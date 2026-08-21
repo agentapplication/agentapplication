@@ -13,11 +13,20 @@ A vendor-neutral reference architecture for building and operating AI agent syst
   **A working paper** · Draft 0.9.1 · August 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
 </Note>
 
-[Agent Applications](/paper#1-what-is-an-agent-application) are AI systems built
-around persistent, tool-using agents. A request, event, or schedule can start
-work. The agent chooses intermediate actions within application guardrails,
-while its instance retains a workspace, authority, artifacts, and unfinished
-work after the run ends.
+ChatGPT and Claude use agent widgets. An OpenClaw agent may appear as a
+WhatsApp or Telegram contact. GitHub Copilot's coding agent and Cursor Cloud
+Agents can start from an issue or pull request and return their work there. A
+Microsoft Copilot Studio autonomous agent can wake in response to a business
+event without presenting a conversational interface at all. These systems have
+different interfaces and jobs. Each gives a tool-using agent a continuing
+scope of work. Later messages or events return to that work, and the results
+remain after a run ends.
+
+This paper calls that shape an [Agent
+Application](/paper#1-what-is-an-agent-application). A request, event, or
+schedule can start work. The agent chooses intermediate actions within
+application guardrails, while its instance retains a workspace, authority,
+artifacts, and unfinished work after the run ends.
 
 The [working paper](/paper) presents a vendor-neutral reference architecture for
 building and operating these systems. It identifies the main elements, assigns
@@ -533,9 +542,6 @@ instances and exposes them through user and machine interfaces. L6 is the
 optional Agent Application Store, which handles acquisition, entitlements,
 billing, publisher payments, and monetization.
 
-[Karta](https://karta.sh/platform) is one implementation that provides
-platform services at L5 and agent monetization capabilities at L6.
-
 An artifact can be shared outside its instance under its own access policy.
 That access does not open the workspace that produced it.
 
@@ -587,8 +593,8 @@ Several boundaries in the stack already have working protocols or products.
 The boundaries between harnesses, frameworks, and platforms are still moving.
 Claude Code and Codex define project conventions and local development. Vercel
 Eve adds a prescribed layout, durable execution, sandboxes, approvals,
-evaluations, tracing, and delivery across several channels. Karta.sh and Amazon
-Bedrock AgentCore provide parts of the production layer.
+evaluations, tracing, and delivery across several channels. Amazon Bedrock
+AgentCore provides parts of the production layer.
 
 ---
 
@@ -1064,12 +1070,9 @@ guarantees. Its guidance uses
 behavior.
 
 A harness can improve reliability by adding structure, execution validation,
-and debugging. For example,
-[Playbooks](https://www.runplaybooks.ai/#video-intro) compiles structured
-Markdown into an intermediate language and provides a debugger with breakpoints,
-variables, and a call stack. These mechanisms make natural-language programs
-more inspectable and their execution easier to validate. Appendix B records the
-prior art and dated sources.
+and debugging. Those mechanisms make natural-language programs more inspectable
+and their execution easier to validate. Appendix B records the prior art and
+dated sources.
 
 Natural-language programs are versioned, reviewed, and evaluated with the rest
 of the application. Their behavior depends on the model, harness, tools, and
@@ -1820,12 +1823,11 @@ An Agent Application Platform provides these shared lifecycle services:
 | Cost management | Attributes model, tool, compute, storage, and review costs to each run, instance, customer, and release |
 | Usage control | Enforces entitlements and usage limits supplied by the publisher or an Agent Application Store |
 
-Amazon Bedrock AgentCore, Karta, Vercel Eve, and Pickaxe each cover part of this list in their public documentation:
+Amazon Bedrock AgentCore, Vercel Eve, and Pickaxe each cover part of this list in their public documentation:
 
 | Platform | Documented coverage |
 |---|---|
 | [Amazon Bedrock AgentCore](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/) | A managed harness and runtime, isolated sessions, memory, identity, tools, evaluations, observability, and payments in preview |
-| [Karta](https://karta.sh/platform) | Immutable releases, durable per-instance workspaces, native harness execution, embeds and APIs, schedules, fleet controls, metering, and end-user monetization |
 | [Vercel Eve](https://vercel.com/blog/introducing-eve) | A filesystem-first framework with durable workflows, sandboxes, approvals, subagents, evaluations, channels, and ordinary Vercel deployment |
 | [Pickaxe](https://pickaxe.co/features) | A visual builder, links and embeds, APIs and messaging channels, user access, persistent memory, portals, usage limits, and built-in monetization |
 
@@ -2386,10 +2388,7 @@ provides durable orchestration for long-running stateful agents. [E2B](https://w
 and [Vercel Sandbox](https://vercel.com/blog/agent-stack) provide isolated Linux
 environments for agent-run code. These are the named examples behind section 4.
 
-**Partial Agent Application Platforms.** The [Karta platform
-page](https://karta.sh/platform) documents durable per-user computers, immutable
-releases, native harnesses, user-facing surfaces, fleet controls, metering, and
-end-user monetization. The [Amazon Bedrock AgentCore
+**Partial Agent Application Platforms.** The [Amazon Bedrock AgentCore
 overview](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/) and
 [runtime guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-how-it-works.html)
 document its managed harness, runtime, memory, identity, tools, evaluation, and
@@ -2408,17 +2407,11 @@ documentation](https://code.claude.com/docs/en/slash-commands), [subagent
 documentation](https://code.claude.com/docs/en/sub-agents), [hooks
 reference](https://code.claude.com/docs/en/hooks), and [MCP
 documentation](https://code.claude.com/docs/en/mcp) establish the project files
-reflected in Appendix A's illustrative layout. Karta's [harness-selection
-series](https://karta.sh/blog/harness-selection-part-5-recommendation) provides
-one workload-based comparison of current harnesses for the selection step in
-section 9.
+reflected in Appendix A's illustrative layout.
 
 **Harness capability snapshot.** Section 12.4 compares Goose, Claude Code, Deep
 Agents, OpenCode, and Vercel AI SDK. Every entry links to the relevant
-first-party documentation. Karta's [executable capability
-check](https://karta.sh/blog/harness-selection-part-2-capability-parity)
-independently verifies MCP, Skills, hooks, subagents, code execution, shell
-access, and web access across four of the five projects in the table.
+first-party documentation.
 
 **Prior art on the name.** Ge et al., "LLM as OS, Agents as Apps: Envisioning
 AIOS, Agents and the AIOS-Agent Ecosystem," arXiv:2312.03815, December 2023,
@@ -2440,15 +2433,7 @@ provides one published example of gains in instruction following and long chains
 of tool calls across model generations.
 
 **Natural-language programming prior art.** Dijkstra, "On the foolishness of
-natural language programming," EWD667, 1978. The [Playbooks
-repository](https://github.com/playbooks-ai/playbooks) documents work beginning
-in June 2022 on a structured natural-language programming system with a semantic
-compiler and intermediate representation (PBAsm). It also documents a VS Code
-debugger released in May 2025 with breakpoints, variable inspection, and
-call-stack navigation. The [Playbooks
-site](https://www.runplaybooks.ai/#video-intro) describes the compiler and
-debugger. The project was sunset in April 2026; section 11.2 cites it as early
-technical prior art rather than as a current framework recommendation.
+natural language programming," EWD667, 1978.
 
 **Named systems and formats.** Claims about named systems in sections 1, 4, 6,
 7, 9, 11, 12, 14, 18, 19, and 20, as well as Appendix D, come from each vendor's own
