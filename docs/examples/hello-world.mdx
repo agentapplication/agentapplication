@@ -1,120 +1,249 @@
 ---
 title: "Hello World Agent Application"
 sidebarTitle: "Hello World"
-description: "A minimal Agent Application: one persistent notebook agent, one durable workspace, and work that continues across runs."
+description: "Select a framework/harness, program a notebook Agent Project, test it locally, then deploy it so a platform creates one instance per user."
 ---
-
-# Hello World: a durable notebook
 
 The smallest useful Agent Application can return to work it saved during an
 earlier run and decide what to do next from the state it finds.
 
 This example is a notebook agent for one user. It saves notes in its workspace
-and maintains a short briefing that the user can open without reading through
-the conversation. The files live in
+and maintains a short briefing the user can open without reading the
+conversation. The files live in
 [`examples/durable-notebook/`](https://github.com/agentapplication/agentapplication/tree/main/examples/durable-notebook).
-They use generic names. A harness still has to supply its own project layout
-and APIs.
+
+For this walkthrough, we will use Goose as the harness / [Agent Application Framework](/concepts/framework),
+and [Karta](https://karta.sh) as the [Agent Application Platform](/concepts/platform)
+to deploy the agent. Same agent can be written for other harness/frameworks, with
+corresponding folder structure and that agent can be deployed to platforms
+that support that particular harness.
+
+## 0: Agent project folder
+
+The paper describes an Agent Project by parts, not by specific filenames:
+
+```text
+agent-application/
+|-- natural-language-instructions
+|-- computer-code-tools
+|-- system-integrations
+|-- evaluations
+|-- package-dependencies
+|-- platform-configuration
+`-- ...
+```
+
+Goose maps those parts onto its own files. After this point the example uses
+only that Goose layout:
 
 ```text
 examples/durable-notebook/
-|-- instructions.md
+|-- AGENTS.md                 # natural-language-instructions
+|-- skills/                   # natural-language-instructions (empty in this app)
 |-- tools/
-|   `-- save-note.ts
-`-- evals/
-    `-- persistence.yaml
+|   `-- save-note.ts          # computer-code-tools
+|-- evals/
+|   `-- persistence.yaml      # evaluations
+|-- recipe.yaml               # Goose recipe for goose run
+|-- package.json              # package-dependencies
+`-- karta.toml                # platform-configuration, used in section 4
 ```
 
-## The program
+## 1. Framework selection
 
-`instructions.md` contains the behavior written in natural language:
+Pick a harness that can load instructions, call tools, keep a working
+directory across sessions, and later run as a native project on a platform.
+This example uses [Goose](https://goose-docs.ai/docs/getting-started/installation)
+because it is open source, model-agnostic, and already compared in the paper's
+[capability model](/paper#12-4-how-current-harnesses-expose-the-capabilities).
+The same application can be written for other harnesses such as Claude Code
+and Deep Agents.
+
+Install the Goose CLI and configure a model:
+
+```sh
+curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash
+goose configure
+```
+
+On macOS you can instead run `brew install block-goose-cli`. First launch asks
+you to choose a provider. See Goose's [installation
+guide](https://goose-docs.ai/docs/getting-started/installation).
+
+## 2. Agent Application Programming
+
+[Agent Application Programming](/paper#11-7-agent-application-programming)
+is designing, authoring, and evaluating the hybrid program. The result is an
+[Agent Project](/concepts/agent-project) in Goose's native layout, using the
+parts from [section 12.2](/paper#12-2-what-a-project-may-contain).
+
+The job: one user, a research notebook, durable notes and a briefing. The
+privacy boundary is that user. The walkthrough uses two example users, Ada
+and Bea. They are different people and must not share a workspace.
+
+**Natural-language instructions.** Goose loads `AGENTS.md` from this directory
+when a session starts. This app has no skills, so `skills/` stays empty.
 
 ```markdown
-You maintain a research notebook for one user.
+You maintain a research notebook for one user in this working directory.
 
-When the user asks you to remember something, append it to notes.md with the
-date and source. When asked for a briefing, read notes.md and update briefing.md.
-Never remove an earlier note unless the user asks you to.
+When the user asks you to remember something, run:
+
+    node tools/save-note.ts "<the text to remember>"
+
+Do not append to notes.md any other way. When asked for a briefing, read
+notes.md and write or update briefing.md with the write tool.
 ```
 
-`save-note.ts` provides the deterministic file operation:
+**Computer-code tools.** `tools/save-note.ts` is a script Goose runs with the
+developer shell tool:
 
 ```ts
 import { appendFile } from "node:fs/promises";
 
-export async function saveNote(text: string) {
-  await appendFile("notes.md", `- ${new Date().toISOString()}: ${text}\n`);
-  return { saved: "notes.md" };
+const text = process.argv.slice(2).join(" ").trim();
+if (!text) {
+  console.error("usage: node tools/save-note.ts <text>");
+  process.exit(1);
 }
+
+await appendFile("notes.md", `- ${new Date().toISOString()}: ${text}\n`);
+console.log("saved notes.md");
 ```
 
-The framework connects these pieces. Every implementation still has to make the
-following choices:
+**System integrations.** None in this app. The notebook does not call MCP
+servers or other connectors.
+
+**Evaluations.** `evals/persistence.yaml` is the behavior to keep: Ada's note
+survives suspension, and Bea cannot see it.
+
+**Package dependencies.** `package.json` marks the folder as an ES module so
+Node can run `tools/save-note.ts`.
+
+**Platform configuration.** `karta.toml` is used in section 4.
 
 | Choice | Notebook behavior |
 |---|---|
-| Primary program | Load `instructions.md` when the notebook agent runs |
-| Tool registration | Expose `saveNote` as a `save_note` tool with one string argument |
-| Instance routing | Use the authenticated user ID, so Ada and Bea get different instances |
-| Workspace | Keep files between sessions and isolate one user's files from another's |
+| Natural-language instructions | Load `AGENTS.md` when Goose starts in this directory |
+| Computer-code tools | Run `node tools/save-note.ts` to append notes; write `briefing.md` with Goose's write tool |
+| Instance routing | One instance per user, each with a workspace the others cannot reach |
+| Workspace | Keep files between sessions. Isolation is a dedicated virtual filesystem per instance, not two folders on one disk |
 | Artifact | Present `briefing.md` as durable output the user can open |
 | Background work | None for this example |
 
-Claude Agent SDK, Google ADK, LangGraph, OpenAI Agents SDK, and Vercel AI SDK
-use different APIs and configuration for this setup.
+## 3. Local testing
 
-The persistence evaluation runs two sessions against the same instance and one
-against a different instance:
+Local Goose checks that the notebook continues in the same folder after the
+process exits. The developer builtin is required so Goose can run the save
+script and write files. Stay in the project:
 
-```yaml
-name: notes survive suspension
-steps:
-  - run:
-      instance: ada
-      input: Remember that the launch moved to September 18.
-  - suspend: ada
-  - run:
-      instance: ada
-      input: Prepare a launch briefing.
-  - run:
-      instance: bea
-      input: Prepare a launch briefing.
-assert:
-  - workspace: ada
-    fileContains:
-      notes.md: September 18
-      briefing.md: September 18
-  - workspace: bea
-    fileAbsent: notes.md
+```sh
+cd examples/durable-notebook
+goose session --with-builtin developer
 ```
 
-A runnable implementation would use its framework's agent definition, tool
-registration, state service, and evaluation API. The test still checks the same
-behavior: Ada's note survives a restart, and Bea cannot see it.
+Say: "Remember that the launch moved to September 18." Exit. `notes.md`
+should still be in this directory.
 
-## Two runs, one continuing instance
+Start Goose again in the same folder:
 
-On Monday, Ada says, "Remember that the launch moved to September 18." The
-platform routes the request to Ada's notebook instance. The agent writes the
-fact to `notes.md`, then the runtime suspends.
+```sh
+goose session --with-builtin developer
+```
 
-On Friday, Ada asks for a launch briefing. The platform wakes the same instance
-and restores its workspace. The agent reads Monday's note and writes
-`briefing.md`. Ada can open that file directly, share it, or return next week and
-ask the agent to revise it.
+Say: "Prepare a launch briefing." The agent should read the earlier note and
+write `briefing.md`.
 
-| Defining property | Where it appears |
+You can also run one turn without the interactive prompt:
+
+```sh
+goose run --with-builtin developer --recipe recipe.yaml \
+  --params task="Remember that the launch moved to September 18."
+goose run --with-builtin developer --recipe recipe.yaml \
+  --params task="Prepare a launch briefing."
+```
+
+`goose configure` must have a model. `recipe.yaml` is valid Goose recipe
+input (`goose recipe validate recipe.yaml`).
+
+| Defining property | Where it appears locally |
 |---|---|
-| Persistent agent instance | Ada's stable instance key selects the same notebook on every run and keeps it separate from other users |
-| Agent-directed control flow | The agent decides whether to call `save_note`, read earlier notes, or revise the briefing within the instructions and tools provided by the application |
-| Durable computational workspace | `notes.md`, `briefing.md`, and unfinished work remain available after suspension |
-| Durable work | The notes and briefing outlive the conversations that created them |
+| Persistent agent instance | The second session returns to the same project folder |
+| Agent-directed control flow | Goose chooses whether to write a note, read notes, or revise the briefing |
+| Durable computational workspace | Files remain after `goose session` exits |
+| Durable work | `notes.md` and `briefing.md` outlive the conversations that created them |
 
-## The same notebook with a plugin
+On Monday, Ada says, "Remember that the launch moved to September 18." On
+Friday she asks for a briefing. The same workspace, durable artifact.
 
-The example above keeps `save-note.ts` in the project so all of its code is
-visible. Another version could get the note tool and briefing procedure from a
-portable plugin:
+Ada and Bea still must not share a workspace. Copying the project into two
+folders on the same disk does not provide that isolation. The agent can see
+the whole filesystem, and a natural-language rule not to look in the other
+folder is not a privacy boundary. Each user needs an instance whose workspace
+is a dedicated virtual filesystem the other instance cannot reach. That is
+platform work, in section 4.
+
+The YAML eval states both checks: Ada's note survives suspension, and Bea
+cannot see it. Local Goose covers the first. The second needs isolated
+instances.
+
+## 4. Agent Application Platform deployment
+
+A platform turns the tested Goose project into a release and operates
+long-lived instances. It provisions an instance at the notebook's privacy
+boundary (one user), attaches a dedicated virtual filesystem as that
+instance's workspace, and serves a URL. Two signed-in users must get two
+instances. Their files never sit as sibling folders on one shared disk.
+
+[Karta](https://karta.sh) is one platform that runs Goose projects in their
+native format. Install the CLI, sign in, enable deploy for this folder, and
+ship it:
+
+```sh
+npm install -g @karta.sh/cli
+karta login
+cd examples/durable-notebook
+karta setup --enable --method git
+karta deploy
+karta open
+```
+
+Commands are from Karta's [CLI overview](https://docs.karta.sh/cli/overview)
+and [quickstart](https://docs.karta.sh/quickstart). Platform configuration is
+`karta.toml`. It names the agent and selects the Goose harness:
+
+```toml
+name = "durable-notebook"
+deploy = true
+
+[harness]
+type = "goose"
+version = "1"
+```
+
+`karta deploy` builds an immutable release and activates it at a stable URL.
+The platform then creates instances as users arrive. In Karta, the instance is
+a [karta](https://docs.karta.sh/concepts/instances-and-memory): one id is one
+durable computer with its own workspace and memory. Map the id to Ada and to Bea. Each gets a private notebook. The same
+project, two instances.
+
+Open the hosted page (`karta open`). Sign in as Ada, leave the September 18
+note, sign out. Sign in as Bea. Bea must not see Ada's notes. Sign in as Ada
+again; the briefing work is still there.
+
+`karta dev --user ada` and `karta dev --user bea` exercise that routing on
+your machine against the same session API production serves. They do not
+replace Goose's own local workflow in section 3.
+
+The same hello-world-on-Goose shape, including other harness twins, is also
+published at [karta-sh/examples](https://github.com/karta-sh/examples). This
+repository does not operate a platform.
+
+## Optional: the notebook as a plugin
+
+The example above keeps `save-note.ts` in the project so its code is visible.
+Another version could get the note tool and briefing procedure from a portable
+plugin:
 
 ```text
 research-notebook-tools/
@@ -126,12 +255,6 @@ research-notebook-tools/
 ```
 
 The plugin uses the [Agent Plugins 1.0](https://agent-plugins.org/specification)
-package format. Its skill contains the briefing procedure, while `mcp.json`
-describes the server that exposes the note tool. The notebook project installs
-and selects those components through its framework's plugin mechanism.
-
-The framework's package or release system should record the exact plugin
-version, source, and digest. Installing or activating the plugin does not grant
-it filesystem access or external credentials. The plugin version must use the
-same instance routing and workspace isolation as the project-owned version, and
-it must pass the same persistence test.
+package format. Installation does not grant filesystem access or credentials.
+The plugin version must use the same instance routing and workspace isolation,
+and it must pass the same persistence test.

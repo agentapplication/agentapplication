@@ -1,0 +1,8 @@
+# Deploy manifest. `karta setup --enable --method git` can rewrite this file.
+# See https://docs.karta.sh/build/karta-toml
+name = "durable-notebook"
+deploy = true
+
+[harness]
+type = "goose"
+version = "1"

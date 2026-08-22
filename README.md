@@ -97,9 +97,9 @@ they diverge in program as well as state. Operators then manage a fleet whose
 members no longer share one program: rollout, audit, and policy have to follow
 each instance's local program and state, not only the shared release.
 
-The [Hello World](https://agentapplication.io/examples/hello-world) example is
-the smallest complete case: a notebook agent saves a note, suspends, and uses
-that note to update a briefing on a later run. The files are in
+The [Hello World](https://agentapplication.io/examples/hello-world) example
+selects Goose, programs a notebook Agent Project, tests it locally, and
+deploys it so a platform can create one instance per user. The files are in
 [`examples/durable-notebook/`](examples/durable-notebook).
 
 ## Read the work

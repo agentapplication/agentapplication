@@ -1,0 +1,25 @@
+version: "1.0.0"
+title: Durable notebook
+description: Persistent research notebook for one user
+instructions: |
+  You maintain a research notebook for one user in this working directory.
+
+  When the user asks you to remember something, run:
+
+      node tools/save-note.ts "<the text to remember>"
+
+  Do not append to notes.md any other way. When asked for a briefing, read
+  notes.md and write or update briefing.md with the write tool. Never remove
+  an earlier note unless the user asks you to.
+prompt: "{{ task }}"
+parameters:
+  - key: task
+    input_type: string
+    requirement: required
+    description: What to tell the notebook agent
+extensions:
+  - type: builtin
+    name: developer
+    bundled: true
+    timeout: 300
+    description: File and shell tools
