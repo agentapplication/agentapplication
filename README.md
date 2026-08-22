@@ -66,6 +66,21 @@ If a product belongs in this table, or does not, [open a
 discussion](https://github.com/agentapplication/agentapplication/discussions)
 or send a pull request with a source.
 
+## First review
+
+Read the [overview](https://agentapplication.io/) through the
+[four properties](https://agentapplication.io/#four-properties) and the
+[product table](https://agentapplication.io/#products-that-already-have-this-shape).
+Take one product you know well. Using those four properties, is it an Agent
+Application, not one, or a boundary case? If the definition is too tight, too
+vague, or missing something you need in order to make that call, say what. A
+missing facet only counts if you need it to tell Agent Applications from
+chatbots, workflows, or task runners.
+
+[Discussion 1](https://github.com/agentapplication/agentapplication/discussions/1)
+is the public place for that, or email
+[amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review).
+
 ## The stack
 
 ![Seven-layer Agent Application stack, from models and agent compute through the Agent Application Framework, Agent Application Project, Agent Application Platform, optional Agent Application Store, and delivered use cases.](docs/images/social/stack.png)
@@ -109,8 +124,8 @@ deploys it so a platform can create one instance per user. The files are in
   definition, and architecture.
 - [About this paper](https://agentapplication.io/about) explains the audience,
   scope, and status of the work.
-- [Review the draft](https://agentapplication.io/review) lists the questions
-  the draft most needs help answering.
+- [Review the draft](https://agentapplication.io/review) is the first ask:
+  one product you know, then the definition.
 
 Application developers, framework authors, platform operators, buyers, and
 standards contributors have [guided reading
@@ -118,10 +133,9 @@ paths](https://agentapplication.io/paper#guided-reading-paths).
 
 ## Contribute
 
-The paper is a working draft. The most useful first contribution is a product
-that the definition wrongly includes or excludes, with a link to how that
-product actually works. Counterexamples, prior art, and implementation
-experience are also welcome.
+The paper is a working draft. The [first review](https://agentapplication.io/review#first-review)
+is one product you know, then the definition. Counterexamples, prior art, and
+implementation experience are also welcome.
 
 Open threads:
 

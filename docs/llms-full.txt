@@ -23,38 +23,13 @@ These systems have different interfaces and jobs. Each gives a tool-using agent
 a continuing scope of work. Later messages or events return to that work, and
 the results remain after a run ends.
 
-The [paper](/paper) calls that shape an **Agent Application**. Developers and
-operators set the tools, permissions, budgets, policies, triggers, and approval
-rules. A request, schedule, or outside event starts a run. The agent reads the
-current state and chooses the next action. The results outlive the model call
-that produced them.
+The [paper](/paper) calls that product an **Agent Application**: one or more
+persistent, tool-using AI agents that produce or maintain durable results. The
+application sets tools, permissions, and other guardrails. A request, schedule,
+or outside event starts a run. The agent reads the current state and chooses
+the next action. The results outlive the model call that produced them.
 
-## Software that does the work
-
-A conventional application waits for a person or a fixed workflow to choose
-each operation. The software exposes menus, screens, forms, and APIs. A person
-sequences the work, or a developer encodes that sequence in advance.
-
-An Agent Application divides control differently. Code defines the allowed
-space. The agent chooses a path through it. It can plan, invoke tools, create
-and revise artifacts, delegate work, and continue until it reaches an outcome
-or a boundary that requires outside input. A person does not have to approve
-every action.
-
-| Conventional application | Agent Application |
-|---|---|
-| A person or fixed workflow selects each operation | The agent chooses actions within application guardrails |
-| The user or developer specifies the steps | A request, event, or schedule supplies the goal and current state |
-| Application behavior changes through releases | Instance behavior also reflects its accumulated workspace and approved local changes |
-| State is mostly data | State includes data, memory, programs, tools, and lineage |
-| Deployment creates equivalent copies | Instantiation creates diverging descendants |
-
-Persistence is the architectural break from request-oriented AI software.
-Compute can stop when the instance is idle. The instance and its work remain.
-
-A chat interface does not make a system an Agent Application. Four properties
-distinguish the category from a model endpoint, a transcript-only chatbot, a
-fixed workflow, or a task runner whose scratch state ends with the task:
+## Four properties
 
 | Defining property | What it looks like |
 |---|---|
@@ -62,6 +37,29 @@ fixed workflow, or a task runner whose scratch state ends with the task:
 | Agent-directed control flow | The agent reasons about the current state and chooses its next action rather than following a fully predetermined workflow |
 | Durable computational workspace | Files, instructions, memory, code, and other working state remain available to later runs |
 | Durable work | Artifacts, workspace state, external records, or continuing processes outlive the event that created them |
+
+A transcript can remind an agent what it said. A workspace lets the agent
+continue the work. Durable work is a result that remains after the run that
+created it: an artifact, a workspace change, a record in another system, or a
+process still running. A file the agent wrote can be both.
+
+The **privacy domain** is who that instance belongs to: a person, a project, a
+customer, or a company.
+
+A chat interface does not make a system an Agent Application. The same agent
+may appear as a full-screen conversation, a copilot inside another product, a
+phone number, or a background worker.
+
+These systems fall outside the category:
+
+| System | Why it falls outside |
+|---|---|
+| Model endpoint | It returns a response and owns no continuing agent or work |
+| Transcript-only chatbot | No instance carries working state from one session to the next |
+| Fixed workflow | The developer already chose the steps, even if a step calls a model |
+| Task runner | The worker and its scratch state end with the task |
+
+The boundary is fuzzy, as it is between a web page and a web application.
 
 ## Products that already have this shape
 
@@ -75,12 +73,21 @@ fixed workflow, or a task runner whose scratch state ends with the task:
 | [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, customer relationship management (CRM) records, generated analysis, and scheduled automations |
 | [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
 
-The definition does not depend on the user interface. The same agent may appear
-as a full-screen conversation, a copilot inside another product, a phone
-number, or a background worker.
-
-If a product belongs in this table, or does not, [open a
+If this table is missing a product, or includes one it should not, [open a
 discussion](https://github.com/agentapplication/agentapplication/discussions/1).
+
+## First review
+
+Take one product you know well. Using the four properties, is it an Agent
+Application, not one, or a boundary case? If the definition is too tight, too
+vague, or missing something you need in order to make that call, say what. A
+missing facet only counts if you need it to tell Agent Applications from
+chatbots, workflows, or task runners.
+
+Post in
+[discussion 1](https://github.com/agentapplication/agentapplication/discussions/1),
+or email
+[amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review).
 
 ## After desktop, web, and mobile
 
@@ -144,8 +151,7 @@ contributors.
 
 ## Contribute
 
-The paper is a working draft. It is most useful if its boundaries survive
-contact with real products.
+The paper is a working draft. Open threads:
 
 - [Which current products are Agent Applications?](https://github.com/agentapplication/agentapplication/discussions/1)
 - [Is Dependabot an Agent Application?](https://github.com/agentapplication/agentapplication/discussions/2)
@@ -158,8 +164,8 @@ for a concrete error, missing source, or broken page. Send a
 [pull request](https://github.com/agentapplication/agentapplication/pulls) for a
 focused correction, example, or documentation improvement.
 
-[Read the review guide](/review) before sending a longer critique.
-[CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md)
+The [first review](/review#first-review) is one product you know, then the
+definition. [CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md)
 explains how to prepare a pull request.
 
 ## Cite
@@ -3170,6 +3176,18 @@ draft, including cases that challenge the proposed terms or contracts.
 The paper provides [guided reading paths](/paper#guided-reading-paths) for these
 different uses.
 
+## The initiative
+
+The work is a public effort to make **Agent Application** a recognizable
+category the way **web application** is. MCP, Agent Skills, and related
+contracts already sit at specific boundaries. This paper names the complete
+product those boundaries plug into.
+
+It is maintained in the open. The first draft has a named author. The
+category will only hold if people who ship these systems test it. The
+[first review](/review#first-review) is one product you know, then the
+definition.
+
 ## What the paper is trying to do now
 
 The paper defines the elements of an Agent Application, assigns responsibilities
@@ -3210,57 +3228,53 @@ documents](/companion-documents), or [review the draft](/review).
 # Review the draft
 Source: https://agentapplication.io/review
 
-How to send holes, counterexamples, boundary cases, and prior art for Working Draft 0.9.1.
+First review: one product you know, then the definition against that product.
 
-This is **Working Draft 0.9.1**, and the work is now being developed in public at
+Working Draft 0.9.1. Public at
 [agentapplication/agentapplication](https://github.com/agentapplication/agentapplication).
-We welcome help with the paper, examples, definitions, and the open contracts
-that may follow it.
 
-## Join the work
+## First review
 
-- Use [GitHub Discussions](https://github.com/agentapplication/agentapplication/discussions)
-  for open-ended proposals, architecture questions, boundary cases, and prior
-  art.
-- Use [GitHub Issues](https://github.com/agentapplication/agentapplication/issues)
-  for concrete errors, missing citations, and documentation problems.
-- Open a [pull request](https://github.com/agentapplication/agentapplication/pulls)
-  when you have a specific edit, example, or correction. The
-  [contribution guide](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md)
-  explains how to prepare one.
+You do not need the whole paper.
 
-## Review the category boundary
+1. Read the [overview](/) through [Four properties](/#four-properties) and the
+   [product table](/#products-that-already-have-this-shape).
+2. Take one product you know well.
+3. Using those four properties, say whether it is an Agent Application, not
+   one, or a boundary case.
+4. If the definition is too tight, too vague, or missing something you need in
+   order to make that call, say what. A missing facet only counts if you need
+   it to tell Agent Applications from chatbots, workflows, or task runners.
 
-The paper identifies four defining properties: a persistent agent instance,
-agent-directed control flow, a durable computational workspace, and durable
-work. If a real product crosses that boundary in a way the definition misses,
-we want to understand the case.
+Post in
+[discussion 1](https://github.com/agentapplication/agentapplication/discussions/1).
+Private notes:
+[amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review).
 
-A useful review might:
+## Other ways to help
 
-- Identify a claim that is wrong and give a case that disproves it.
-- Point to prior work that already solves or names something the paper treats
-  as open. Relevant fields include adaptive software, persistent actors,
-  end-user programming, package systems, distributed systems, and autonomous
-  agent research.
-- Give a real system that the definition wrongly includes or excludes.
-- Flag a term that already has a different meaning in another field.
+- [Discussions](https://github.com/agentapplication/agentapplication/discussions)
+  for open-ended proposals, architecture questions, and prior art.
+- [Issues](https://github.com/agentapplication/agentapplication/issues)
+  for a concrete error, missing citation, or broken page.
+- [Pull requests](https://github.com/agentapplication/agentapplication/pulls)
+  for a focused edit. See
+  [CONTRIBUTING.md](https://github.com/agentapplication/agentapplication/blob/main/CONTRIBUTING.md).
 
-## Review the architecture
+## After that
 
-The paper also assigns responsibilities to frameworks, projects, releases,
-instances, platforms, and stores. Useful architecture feedback can identify a
-missing responsibility, show that one has been assigned to the wrong element,
-or describe a real system whose boundaries do not fit the model.
+If a real product does not fit the four properties, send it. The same for a
+system the table wrongly includes, a term that already means something else
+in another field, or prior work that already names something the paper treats
+as open.
 
-If you would rather send feedback privately, email
-[amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review)
-with the subject "Agent Applications paper review."
+The paper assigns responsibilities to frameworks, projects, releases,
+instances, platforms, and stores. Name a missing responsibility, one assigned
+to the wrong element, or a real system whose boundaries do not fit.
 
-The same repository tracks possible companion contracts. A contract becomes a
-candidate for a specification when independent implementations need to exchange
-information across a stable boundary. See [Companion
-documents](/companion-documents) for the current list.
+Companion contracts belong in the repo only when two independent
+implementations need to exchange information across a stable boundary. See
+[Companion documents](/companion-documents).
 
 
 # Companion documents

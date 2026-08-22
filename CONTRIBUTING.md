@@ -14,6 +14,23 @@ around it.
 - [Pull requests](https://github.com/agentapplication/agentapplication/pulls)
   are for focused edits, examples, and corrections that are ready for review.
 
+## First review
+
+Read the [overview](https://agentapplication.io/) through
+[Four properties](https://agentapplication.io/#four-properties) and the
+[product table](https://agentapplication.io/#products-that-already-have-this-shape).
+Take one product you know well. Using those four properties, is it an Agent
+Application, not one, or a boundary case? If the definition is too tight, too
+vague, or missing something you need in order to make that call, say what. A
+missing facet only counts if you need it to tell Agent Applications from
+chatbots, workflows, or task runners.
+
+[Discussion 1](https://github.com/agentapplication/agentapplication/discussions/1)
+is the public place for that. Email
+[amol@agentapplication.io](mailto:amol@agentapplication.io?subject=Agent%20Applications%20paper%20review)
+if you would rather write privately. The same ask is on the
+[review page](https://agentapplication.io/review#first-review).
+
 ## Useful contributions
 
 ### Add or challenge a product
