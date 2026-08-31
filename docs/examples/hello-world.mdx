@@ -13,7 +13,7 @@ conversation. The files live in
 [`examples/durable-notebook/`](https://github.com/agentapplication/agentapplication/tree/main/examples/durable-notebook).
 
 For this walkthrough, we will use Goose as the harness / [Agent Application Framework](/concepts/framework),
-and [Karta](https://karta.sh) as the [Agent Application Platform](/concepts/platform)
+and [Dharta](https://dharta.ai) as the [Agent Application Platform](/concepts/platform)
 to deploy the agent. Same agent can be written for other harness/frameworks, with
 corresponding folder structure and that agent can be deployed to platforms
 that support that particular harness.
@@ -46,7 +46,7 @@ examples/durable-notebook/
 |   `-- persistence.yaml      # evaluations
 |-- recipe.yaml               # Goose recipe for goose run
 |-- package.json              # package-dependencies
-`-- karta.toml                # platform-configuration, used in section 4
+`-- dharta.toml               # platform-configuration, used in section 4
 ```
 
 ## 1. Framework selection
@@ -120,7 +120,7 @@ survives suspension, and Bea cannot see it.
 **Package dependencies.** `package.json` marks the folder as an ES module so
 Node can run `tools/save-note.ts`.
 
-**Platform configuration.** `karta.toml` is used in section 4.
+**Platform configuration.** `dharta.toml` is used in section 4.
 
 | Choice | Notebook behavior |
 |---|---|
@@ -195,22 +195,22 @@ boundary (one user), attaches a dedicated virtual filesystem as that
 instance's workspace, and serves a URL. Two signed-in users must get two
 instances. Their files never sit as sibling folders on one shared disk.
 
-[Karta](https://karta.sh) is one platform that runs Goose projects in their
+[Dharta](https://dharta.ai) is one platform that runs Goose projects in their
 native format. Install the CLI, sign in, enable deploy for this folder, and
 ship it:
 
 ```sh
-npm install -g @karta.sh/cli
-karta login
+npm install -g @dharta/cli
+dharta login
 cd examples/durable-notebook
-karta setup --enable --method git
-karta deploy
-karta open
+dharta setup --enable --method git
+dharta deploy
+dharta open
 ```
 
-Commands are from Karta's [CLI overview](https://docs.karta.sh/cli/overview)
-and [quickstart](https://docs.karta.sh/quickstart). Platform configuration is
-`karta.toml`. It names the agent and selects the Goose harness:
+Commands are from Dharta's [CLI overview](https://docs.dharta.ai/cli/overview)
+and [quickstart](https://docs.dharta.ai/quickstart). Platform configuration is
+`dharta.toml`. It names the agent and selects the Goose harness:
 
 ```toml
 name = "durable-notebook"
@@ -221,22 +221,22 @@ type = "goose"
 version = "1"
 ```
 
-`karta deploy` builds an immutable release and activates it at a stable URL.
-The platform then creates instances as users arrive. In Karta, the instance is
-a [karta](https://docs.karta.sh/concepts/instances-and-memory): one id is one
+`dharta deploy` builds an immutable release and activates it at a stable URL.
+The platform then creates instances as users arrive. In Dharta, the instance is
+a [karta](https://docs.dharta.ai/concepts/instances-and-memory): one id is one
 durable computer with its own workspace and memory. Map the id to Ada and to Bea. Each gets a private notebook. The same
 project, two instances.
 
-Open the hosted page (`karta open`). Sign in as Ada, leave the September 18
+Open the hosted page (`dharta open`). Sign in as Ada, leave the September 18
 note, sign out. Sign in as Bea. Bea must not see Ada's notes. Sign in as Ada
 again; the briefing work is still there.
 
-`karta dev --user ada` and `karta dev --user bea` exercise that routing on
+`dharta dev --user ada` and `dharta dev --user bea` exercise that routing on
 your machine against the same session API production serves. They do not
 replace Goose's own local workflow in section 3.
 
 The same hello-world-on-Goose shape, including other harness twins, is also
-published at [karta-sh/examples](https://github.com/karta-sh/examples). This
+published at [dharta-ai/examples](https://github.com/dharta-ai/examples). This
 repository does not operate a platform.
 
 ## Optional: the notebook as a plugin

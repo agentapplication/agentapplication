@@ -15,7 +15,7 @@ run `goose configure`.
 The paper groups an Agent Project by parts. Goose stores
 natural-language instructions in `AGENTS.md`, computer-code tools in
 `tools/`, evaluations in `evals/`, package metadata in `package.json`,
-and platform configuration in `karta.toml`. `recipe.yaml` is the Goose
+and platform configuration in `dharta.toml`. `recipe.yaml` is the Goose
 recipe for `goose run`. There are no skills or system integrations in
 this app.
 
@@ -45,13 +45,13 @@ user needs a dedicated virtual filesystem. That is platform work.
 
 ## 4. Platform
 
-[Karta](https://karta.sh) is one platform that deploys this Goose project and
+[Dharta](https://dharta.ai) is one platform that deploys this Goose project and
 gives each user an instance with its own virtual filesystem.
 
 ```sh
-npm install -g @karta.sh/cli
-karta login
-karta setup --enable --method git
-karta deploy
-karta open
+npm install -g @dharta/cli
+dharta login
+dharta setup --enable --method git
+dharta deploy
+dharta open
 ```

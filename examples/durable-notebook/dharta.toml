@@ -1,0 +1,8 @@
+# Deploy manifest. `dharta setup --enable --method git` can rewrite this file.
+# See https://docs.dharta.ai/build/dharta-toml
+name = "durable-notebook"
+deploy = true
+
+[harness]
+type = "goose"
+version = "1"
