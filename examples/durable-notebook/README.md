@@ -15,7 +15,9 @@ run `goose configure`.
 The paper groups an Agent Project by parts. Goose stores
 natural-language instructions in `AGENTS.md`, computer-code tools in
 `tools/`, evaluations in `evals/`, package metadata in `package.json`,
-and platform configuration in `dharta.toml`. `recipe.yaml` is the Goose
+and platform configuration in `dharta.toml`. `agentapp.yaml` is the portable
+draft [Agent Application Manifest](https://agentapplication.io/manifest)
+for the same project. `recipe.yaml` is the Goose
 recipe for `goose run`. There are no skills or system integrations in
 this app.
 

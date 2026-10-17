@@ -44,6 +44,10 @@
         ]
       },
       {
+        "group": "Specifications",
+        "pages": ["manifest"]
+      },
+      {
         "group": "About the paper",
         "pages": ["about", "review", "companion-documents"]
       }
@@ -53,6 +57,10 @@
     {
       "source": "/manifesto",
       "destination": "/"
+    },
+    {
+      "source": "/schemas/agentapp/0.1/agentapp.schema.json",
+      "destination": "https://raw.githubusercontent.com/agentapplication/agentapplication/main/schemas/agentapp/0.1/agentapp.schema.json"
     }
   ],
   "footer": {

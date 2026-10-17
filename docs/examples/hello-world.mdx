@@ -46,6 +46,7 @@ examples/durable-notebook/
 |   `-- persistence.yaml      # evaluations
 |-- recipe.yaml               # Goose recipe for goose run
 |-- package.json              # package-dependencies
+|-- agentapp.yaml             # platform-configuration, portable draft manifest
 `-- dharta.toml               # platform-configuration, used in section 4
 ```
 
@@ -121,6 +122,10 @@ survives suspension, and Bea cannot see it.
 Node can run `tools/save-note.ts`.
 
 **Platform configuration.** `dharta.toml` is used in section 4.
+`agentapp.yaml` is a draft [Agent Application Manifest](/manifest): it
+declares one instance per user, a workspace whose files must persist, message
+triggers, no network access, and the persistence evaluation, in a form any
+compatible platform can read.
 
 | Choice | Notebook behavior |
 |---|---|

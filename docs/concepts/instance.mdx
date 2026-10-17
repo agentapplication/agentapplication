@@ -26,6 +26,16 @@ shared instance, while an administrator may manage many private instances. The
 stable instance identity routes work to the right workspace. It records whom
 the agent represents and what it may do; its history records what it has done.
 
+An instance either acts for its users with their delegated authority or has
+an identity of its own, such as its own email address or directory account.
+The choice decides who is accountable for its actions and how revocation
+reaches it.
+
+Some consumer products give each person one instance that hosts several
+agents, including agents published by other people. The paper treats the
+person's agent as the application and the published agents as components
+installed into it.
+
 ## Release, instance, and session
 
 An application continues across releases. A release fixes one version of the

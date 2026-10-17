@@ -1,0 +1,69 @@
+# Agent Application Manifest, Draft 0.1.
+# See https://agentapplication.io/manifest
+$schema: https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json
+
+application:
+  id: io.agentapplication.examples.durable-notebook
+  name: Durable notebook
+  version: 0.1.0
+  description: A one-user research notebook whose notes survive suspension.
+  publisher:
+    name: Agent Applications project
+    url: https://agentapplication.io
+  license: Apache-2.0
+  repository: https://github.com/agentapplication/agentapplication
+
+project:
+  framework:
+    name: goose
+    version: "1"
+  entrypoints:
+    - recipe.yaml
+
+components:
+  - type: instructions
+    path: AGENTS.md
+  - type: tool
+    path: tools/save-note.ts
+    description: Appends a dated note to notes.md.
+
+dependencies:
+  packageManifests:
+    - package.json
+
+instances:
+  privacyDomain: person
+  key:
+    name: user_id
+    description: One instance per signed-in user. Ada and Bea never share a workspace.
+
+workspace:
+  persistence:
+    system: reproducible
+    process: none
+  paths:
+    - notes.md
+    - briefing.md
+  layoutVersion: 1
+
+environment:
+  # tools/save-note.ts runs with `node` directly, which needs Node.js 22.18 or later.
+  capabilities:
+    - shell
+    - filesystem
+
+triggers:
+  - type: message
+
+interfaces:
+  - type: widget
+
+authority:
+  identity: delegated
+  network:
+    egress: []
+
+evaluations:
+  - path: evals/persistence.yaml
+    kind: behavior
+    description: A note survives suspension, and a second user does not see it.

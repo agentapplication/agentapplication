@@ -1,0 +1,736 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json",
+  "title": "Agent Application Manifest",
+  "description": "Draft 0.1. Declares what an Agent Application Platform needs to deploy a framework-native Agent Project and operate its instances. The manifest references the native project; it does not restate the agent program. See https://agentapplication.io/manifest.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "application",
+    "project",
+    "instances"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "description": "The manifest specification version, as the URL of this schema. This is the only specification version field.",
+      "type": "string",
+      "const": "https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json"
+    },
+    "application": {
+      "$ref": "#/$defs/application"
+    },
+    "project": {
+      "$ref": "#/$defs/project"
+    },
+    "components": {
+      "description": "Optional inventory of components the project contributes, for review and the release component inventory. The native project remains authoritative.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "dependencies": {
+      "$ref": "#/$defs/dependencies"
+    },
+    "instances": {
+      "$ref": "#/$defs/instances"
+    },
+    "workspace": {
+      "$ref": "#/$defs/workspace"
+    },
+    "environment": {
+      "$ref": "#/$defs/environment"
+    },
+    "triggers": {
+      "description": "What may start a session.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/trigger"
+      }
+    },
+    "interfaces": {
+      "description": "Surfaces through which people and software reach an instance.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/interface"
+      }
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "evaluations": {
+      "description": "Evaluation suites in the project.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evaluation"
+      }
+    },
+    "extensions": {
+      "$ref": "#/$defs/extensions"
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "description": "A path relative to the directory that contains the manifest. It must not be absolute or leave that directory.",
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "anyOf": [
+          {
+            "pattern": "^/"
+          },
+          {
+            "pattern": "^[A-Za-z]:"
+          },
+          {
+            "pattern": "(^|/)\\.\\.(/|$)"
+          }
+        ]
+      }
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "description": "A content digest in the form algorithm:hex.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+:[a-f0-9]{32,}$"
+    },
+    "application": {
+      "description": "The product identity. It continues across releases.",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "A stable, globally unique identifier in reverse-domain form.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(\\.[a-z0-9]+(-[a-z0-9]+)*)+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "description": "The application version that this source revision will release as. Semantic Versioning is recommended. This is not the manifest specification version.",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "publisher": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "license": {
+          "description": "An SPDX license expression.",
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "project": {
+      "description": "Where the framework-native Agent Project is and which framework runs it.",
+      "type": "object",
+      "required": [
+        "framework"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "framework": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "description": "The harness or Agent Application Framework, for example goose, claude-code, eve, or deepagents.",
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "description": "The supported version or version range.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "root": {
+          "description": "The native project root. Defaults to the manifest's directory.",
+          "$ref": "#/$defs/relativePath"
+        },
+        "entrypoints": {
+          "description": "Native files the framework starts from.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        }
+      }
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "type",
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "instructions: a root instruction file such as AGENTS.md. agent-skill: a directory in Agent Skills (SKILL.md) format. subagent: a native subagent definition. tool: computer-code tool or hook source. mcp-config: MCP server configuration. knowledge: packaged reference material. artifact-definition: a renderer or template for an Agent Artifact. migration: a workspace migration.",
+          "enum": [
+            "instructions",
+            "agent-skill",
+            "subagent",
+            "tool",
+            "mcp-config",
+            "knowledge",
+            "artifact-definition",
+            "migration"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "plugins": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "source"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "description": "Where the plugin comes from, for example an OCI reference, a git URL, or a registry name.",
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "description": "A version or version range. The release record pins the exact content.",
+                "type": "string",
+                "minLength": 1
+              },
+              "digest": {
+                "$ref": "#/$defs/digest"
+              },
+              "format": {
+                "description": "The package format, for example the Agent Plugins schema URL.",
+                "type": "string",
+                "minLength": 1
+              },
+              "activate": {
+                "description": "Components to activate. Omit to activate none by default; the platform records activation separately from installation.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "packageManifests": {
+          "description": "Conventional package manifests and lock files, such as package.json or pyproject.toml.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        }
+      }
+    },
+    "instances": {
+      "description": "The privacy boundary and the rule that selects an instance.",
+      "type": "object",
+      "required": [
+        "privacyDomain",
+        "key"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "privacyDomain": {
+          "description": "Who one instance belongs to. People, records, and work that must not mix belong to different instances.",
+          "enum": [
+            "person",
+            "household",
+            "team",
+            "organization",
+            "customer",
+            "project",
+            "channel",
+            "job",
+            "custom"
+          ]
+        },
+        "key": {
+          "description": "The stable identifier that routes requests and events to an instance.",
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "description": {
+              "$ref": "#/$defs/description"
+            }
+          }
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        }
+      }
+    },
+    "workspace": {
+      "description": "What the instance's durable workspace must preserve.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "system": {
+              "description": "Software and system changes made inside the instance. 'reproducible' means the platform may discard them because the release or setup step recreates them.",
+              "enum": [
+                "required",
+                "reproducible",
+                "none"
+              ]
+            },
+            "process": {
+              "description": "Running processes and their memory across suspension.",
+              "enum": [
+                "required",
+                "preferred",
+                "none"
+              ]
+            }
+          },
+          "description": "Which layers beyond durable data must persist. Durable data, such as files, databases, and memory the agent writes, is always preserved."
+        },
+        "paths": {
+          "description": "Paths, relative to the workspace root, that hold durable working state. Informational; the whole logical workspace is durable.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        },
+        "layoutVersion": {
+          "description": "The version of the workspace layout this release expects. A change requires a migration.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxSize": {
+          "description": "The largest current working state the application expects, for example 2GiB.",
+          "type": "string",
+          "pattern": "^[0-9]+(KiB|MiB|GiB|TiB)$"
+        }
+      }
+    },
+    "environment": {
+      "description": "The execution environment the release needs. The platform may satisfy it with any compatible sandbox.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "description": "An OCI image reference. Pin by digest for production.",
+          "type": "string",
+          "minLength": 1
+        },
+        "packages": {
+          "description": "Packages to install, keyed by package manager.",
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "setup": {
+          "description": "A script the platform runs when it builds or recreates the environment.",
+          "$ref": "#/$defs/relativePath"
+        },
+        "capabilities": {
+          "description": "Features the environment must provide.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "shell",
+              "filesystem",
+              "browser",
+              "network",
+              "gpu",
+              "desktop"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "message",
+            "schedule",
+            "webhook",
+            "event"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "schedule"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "cron"
+            ],
+            "properties": {
+              "cron": {
+                "description": "A five-field cron expression.",
+                "type": "string",
+                "pattern": "^\\S+( \\S+){4}$"
+              },
+              "timezone": {
+                "description": "An IANA time zone. Defaults to the instance's time zone, then UTC.",
+                "type": "string"
+              },
+              "prompt": {
+                "description": "A native file that holds the instructions for the scheduled session.",
+                "$ref": "#/$defs/relativePath"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "webhook",
+                  "event"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "source": {
+                "description": "The external system or event type.",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "interface": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "description": "widget: an agent widget. api: a machine-facing API. channel: a messaging, email, or voice channel. a2a: the instance publishes an A2A Agent Card. embedded: a copilot inside another product.",
+          "enum": [
+            "widget",
+            "api",
+            "channel",
+            "a2a",
+            "embedded"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "channel"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "channel"
+            ],
+            "properties": {
+              "channel": {
+                "description": "The channel kind, for example slack, email, whatsapp, or phone.",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "authority": {
+      "description": "Authority the release requests. The user, organization, or resource owner decides what to grant; the agent cannot expand it.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "description": "delegated: the instance acts for the user or members of its privacy domain. principal: the instance needs its own identity. either: the platform may choose.",
+          "enum": [
+            "delegated",
+            "principal",
+            "either"
+          ]
+        },
+        "connections": {
+          "description": "External accounts and services the application asks to reach.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "access"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$"
+              },
+              "description": {
+                "$ref": "#/$defs/description"
+              },
+              "access": {
+                "enum": [
+                  "read",
+                  "write",
+                  "read-write"
+                ]
+              },
+              "scopes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        },
+        "secrets": {
+          "description": "Named secret references. Values never appear in the manifest, the project, or the release.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$"
+              },
+              "description": {
+                "$ref": "#/$defs/description"
+              },
+              "required": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        },
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "egress": {
+              "description": "Requested outbound destinations, as host names or wildcard host names. An empty list requests no network access.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^(\\*\\.)?[A-Za-z0-9.-]+(:[0-9]+)?$"
+              }
+            }
+          }
+        },
+        "spending": {
+          "description": "Requested spending ceilings for actions that cost money, separate from inference cost.",
+          "type": "object",
+          "required": [
+            "currency"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "perAction": {
+              "type": "number",
+              "minimum": 0
+            },
+            "perMonth": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "approvals": {
+          "description": "The default rule for named classes of action.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "action",
+              "rule"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "description": "A class of action, for example send-email or tool:crm.update.",
+                "type": "string",
+                "minLength": 1
+              },
+              "rule": {
+                "description": "silent: act without asking. report: act, then report. ask: ask first. never: do not act.",
+                "enum": [
+                  "silent",
+                  "report",
+                  "ask",
+                  "never"
+                ]
+              },
+              "description": {
+                "$ref": "#/$defs/description"
+              }
+            }
+          }
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "required": [
+        "path",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "kind": {
+          "enum": [
+            "behavior",
+            "security",
+            "regression",
+            "upgrade",
+            "cost"
+          ]
+        },
+        "runner": {
+          "description": "The command or tool that runs the suite, if not the framework default.",
+          "type": "string",
+          "minLength": 1
+        },
+        "requiredForRelease": {
+          "type": "boolean",
+          "default": true
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        }
+      }
+    },
+    "extensions": {
+      "description": "Framework- or platform-specific settings, keyed by reverse-domain name.",
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(\\.[a-z0-9]+(-[a-z0-9]+)*)+$"
+      },
+      "additionalProperties": {
+        "type": "object"
+      }
+    }
+  }
+}

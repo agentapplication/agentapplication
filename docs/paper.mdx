@@ -1,10 +1,10 @@
 ---
 title: "Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems"
 sidebarTitle: "The paper"
-description: "Working Draft 0.9.1, August 2026. A vendor-neutral reference architecture for building and operating AI agent systems."
+description: "Working Draft 0.9.2, October 2026. A vendor-neutral reference architecture for building and operating AI agent systems."
 ---
 
-**Working Draft 0.9.1 · August 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
+**Working Draft 0.9.2 · October 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
 
 ---
 
@@ -56,7 +56,12 @@ through which people find, acquire, and pay for Agent Applications.
 
 The architecture locates current standards such as the Model Context Protocol
 (MCP), Agent Skills, Agent Plugins, and Agent2Agent (A2A) at the boundaries
-they cover, and identifies where new standards are still needed. Teams can use
+they cover, and identifies where new standards are still needed. For the
+boundary between a framework-native project and the platform that operates it,
+the paper introduces a draft **Agent Application Manifest**: one file that
+declares the privacy domain, workspace persistence, triggers, requested
+authority, and evaluations a platform needs, without restating the agent
+program. Teams can use
 the paper to reason about the complete system, decide who owns each
 responsibility, compare implementations, and see which boundaries need to
 interoperate.
@@ -82,9 +87,11 @@ The architecture identifies the elements that commonly appear, the
 responsibilities they carry, and the boundaries between them. A product may
 combine several elements in one service or obtain them from different vendors.
 
-This paper is not a technical standard, a portable package format, or a
-reference implementation. A concrete system can use different names, source
-layouts, technologies, and deployment models. The useful questions are whether
+This paper is not a technical standard or a reference implementation. A
+concrete system can use different names, source layouts, technologies, and
+deployment models. Section 20.1 introduces one narrow draft contract, the
+Agent Application Manifest, which declares what a platform needs to deploy a
+framework-native project. It does not replace any project format. The useful questions are whether
 the system handles the responsibilities described here, who owns each one, and
 which boundaries need to interoperate.
 
@@ -363,6 +370,15 @@ Eve adds a prescribed layout, durable execution, sandboxes, approvals,
 evaluations, tracing, and delivery across several channels. Amazon Bedrock
 AgentCore provides parts of the production layer.
 
+The harness and the execution environment are also separating. The [OpenAI
+Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview.md)
+runs one harness against several third-party sandbox providers, and both
+OpenAI and Anthropic let customers run agent sandboxes on their own
+infrastructure. Lower in the stack, [Agent
+Substrate](https://github.com/agent-substrate/substrate) runs any harness that
+ships as a container image and supplies only isolation, snapshots, identity,
+and egress control. Each layer is becoming separately replaceable.
+
 ---
 
 ## 5. From human-operated to agent-operated software
@@ -427,6 +443,9 @@ domains.
 | [OpenClaw](https://docs.openclaw.ai/start/openclaw) | An OpenClaw agent | Workspace files, memory, skills, schedules, and tool-created results |
 | [Lightfield](https://docs.lightfield.app/) | A company | Versioned customer context, customer relationship management (CRM) records, generated analysis, and scheduled automations |
 | [Manus Cloud Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer) | A persistent cloud computer | Files, installed tools, databases, bots, and running processes |
+| [Meta Muse](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/) | A person | Files on a dedicated virtual machine, memory, connected accounts, and completed tasks |
+| [OpenAI dots](https://learn.chatgpt.com/docs/dots) | A person | Files, software, and browser sessions on the dot's computer, memory notes, and scheduled tasks |
+| [Grok Bot](https://docs.x.ai/grok-bot/computers) | A team member, or a Slack channel | Files and logins on a durable disk shared by the member's Bots, per-Bot memory, and routines |
 
 ### 6.1 How to decide who gets an agent instance
 
@@ -454,6 +473,12 @@ employee. A business-to-business (B2B) support agent can keep many tickets for
 one customer in the same workspace, so each customer gets an instance. A
 virtual employee acting as a marketing expert can have one instance shared by a
 whole team because the team itself is the privacy boundary.
+
+A shared conversation space can also be a privacy domain. [Grok Bot Team
+Bots](https://docs.x.ai/grok-bot/team-bots) run each teammate's private chat
+on that teammate's own computer, but run Slack channel conversations on a
+separate computer for the Bot. The documentation warns users not to share
+anything in a channel thread that everyone in the channel should not see.
 
 The application builder chooses the boundary and a stable instance identifier.
 A Financial Advisor Agent may use `household_id`, so every user in that
@@ -603,6 +628,7 @@ these names: **Agent App Programming**, for example, is the shortened form of
 | **Agent Application Store** | A catalog and commerce service through which people find, acquire, and pay for Agent Applications. It exchanges entitlements and usage records with compatible platforms. |
 | **Agent Cloud** | Specialized cloud infrastructure for persistent agents, used when contrasting this runtime with ordinary cloud infrastructure. It may sit beneath or inside an Agent Application Platform. |
 | **Component** | A named unit that a project or dependency contributes, such as a skill, MCP server, tool, hook, subagent, trigger, renderer, or knowledge source. |
+| **Agent Application Manifest** | A draft portable file, `agentapp.yaml`, that declares what a platform needs to deploy a framework-native Agent Project and operate its instances. It points to the native project rather than restating the agent program. Section 20.1 introduces it. |
 | **Agent Plugin** | An installable extension package that contributes reusable components to an Agent Project or host. A release identifies its exact content by digest and by version when one exists. The plugin does not own the application's product identity, top-level instance, privacy boundary, workspace, or release lifecycle. |
 | **Plugin Dependency** | A project declaration that incorporates a plugin subject to a version, source, and compatibility requirement. |
 | **Plugin Activation** | The decision to expose selected components from an installed plugin to the application runtime. Activation does not grant credentials or other authority. |
@@ -612,7 +638,8 @@ The broad meanings are useful in ordinary discussion. A developer will say, "I
 am building an agent," just as a web developer says, "I am building a web app."
 When architecture or operations require precision, this paper names the agent
 project, release, instance, session, runtime agent, workspace, or interface
-directly.
+directly. Vendors use some of the same words for different parts; Appendix E maps
+current product terms to this vocabulary.
 
 ---
 
@@ -1068,6 +1095,14 @@ design.
 | [A2A](https://a2a-protocol.org/latest/specification/) | Discovery, messages, tasks, and artifacts between independently addressable agents | Internal subagents or a framework's workflow model |
 | [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview) | Interactive UI supplied by a tool and rendered by a host | The application's full user interface or artifact model |
 
+The boundaries are starting to overlap. The MCP [Skills
+extension](https://modelcontextprotocol.io/seps/2640-skills-extension) lets an
+MCP server publish Agent Skills, and [MCP Server
+Cards](https://modelcontextprotocol.io/seps/2127-mcp-server-cards) add a
+discovery document for HTTP servers alongside the A2A Agent Card. A2A moved
+to the [Agentic AI Foundation](https://aaif.io/blog/a2a-joins-aaif) in August
+2026, which already hosts MCP and `AGENTS.md`.
+
 These standards play roles similar to HTTP, HTML, and package formats in web
 applications. A framework can use several of them while keeping its own source
 layout, build process, and deployment model.
@@ -1134,6 +1169,16 @@ supply registries and dependency resolution, including project dependency files
 and transitive plugin dependencies. They can also define installation
 permissions and supply-chain verification without changing the plugin format.
 
+Adoption is growing. OpenAI's [plugin
+documentation](https://developers.openai.com/plugins/build/plugins.md) now
+recommends a root `plugin.json` in the Agent Plugins schema, with the earlier
+`.codex-plugin` location kept as a fallback. A 1.1 working draft of the
+specification began in August 2026 and, as of October, still leaves
+permissions and provenance to clients. NVIDIA's draft [agent package
+specification](https://github.com/NVIDIA/agent-package-spec) proposes
+packaging skills and plugins as signed OCI artifacts with file inventories
+and attestations.
+
 ---
 
 # Part IV: State, change, and results
@@ -1185,6 +1230,32 @@ Agent Application instances
   `-- Instance: Luis, Release 3 unmodified
 ```
 
+### 13.1 Person-centered hosts
+
+The lifecycle above starts from an application: one release creates many
+instances, each with its own workspace. Several consumer products start from
+the person instead. The durable unit is one person's computer, and several
+agents run inside it.
+
+[Grok Bot](https://docs.x.ai/grok-bot/computers) gives each team member one
+hosted computer where every Bot that member runs does its work. A [Team
+Bot](https://docs.x.ai/grok-bot/team-bots) owner publishes a Bot with its
+plugins, secrets, skills, and files. A teammate's chat with that Bot runs on
+the teammate's own computer, which also hosts the teammate's personal Bots and
+Team Bots from other owners. They share its files, browser sessions, and app
+logins. [Meta Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse)
+gives each person a dedicated virtual machine, and [OpenAI
+dots](https://learn.chatgpt.com/docs/dots/computers-and-apps) give each dot
+its own computer.
+
+This paper treats the person's general-purpose agent as the Agent
+Application. The person's computer is its instance and workspace, and the
+person is the privacy domain. A published Bot that runs inside that computer
+behaves like an Agent Plugin (section 12.5): it
+contributes instructions, skills, tools, and files, but it does not own the
+instance, workspace, or privacy boundary. Its installation, activation, and
+updates are local program changes recorded in the host instance's lineage.
+
 ---
 
 ## 14. The durable workspace
@@ -1219,8 +1290,13 @@ open-ended.
 [Manus Cloud
 Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer)
 keeps a persistent filesystem, installed tools, and running processes.
-[Grok Bot](https://docs.x.ai/grok-bot/overview) runs on a persistent cloud
-machine with a filesystem, terminal, and browser. [Claude Managed
+[Grok Bot](https://docs.x.ai/grok-bot/computers) gives each member one hosted
+computer with a durable disk, a terminal, and a browser, shared by all of
+that member's Bots. [Meta
+Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse)
+runs each person's agent in an isolated Linux virtual machine with a browser.
+[OpenAI dots](https://learn.chatgpt.com/docs/dots/computers-and-apps) each have
+a computer with their own files, software, and browser sessions. [Claude Managed
 Agents](https://platform.claude.com/docs/en/managed-agents/overview) give
 Claude bash, file operations, and a persistent sandbox filesystem.
 [Perplexity Computer](https://www.perplexity.ai/hub/blog/introducing-perplexity-computer)
@@ -1282,6 +1358,13 @@ summaries, and artifacts may enter its context or affect later work. Folder
 names and file permissions within a shared workspace do not create separate
 privacy domains.
 
+Separate memory for each agent in a workspace does not create one either.
+[Grok Bot](https://docs.x.ai/grok-bot/overview) keeps each Bot's
+conversations and learned context separate, but all of a member's Bots share
+the computer's files, browser sessions, and app logins. The documentation
+describes isolation between users as strict. Per-Bot memory is a partition
+inside one privacy domain.
+
 The boundary covers the logical workspace rather than one filesystem volume. It
 includes database rows, objects, session-bound files, and external records
 whenever the instance can retrieve them.
@@ -1300,11 +1383,51 @@ access, move, or restore the workspace without changing the agent's identity or
 permissions. It also keeps per-instance configuration outside the workspace and
 out of the runtime agent's reach.
 
+Products choose between two identity models. In the first, the instance acts
+as the user with delegated authority: [Grok
+Bot](https://docs.x.ai/grok-bot/security) Bots act as the signed-in member and
+have no identity of their own. In the second, the instance has its own
+principal. Google's coworker agents receive their own [agent identity and
+email address](https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026),
+Microsoft's [Copilot
+Autopilot](https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/)
+receives a directory identity, and agents in [Manus
+Cue](https://help.manus.im/en/articles/17190150-what-is-new-in-manus-2-0) each have an email
+address, phone number, and wallet. The choice decides who is accountable for an
+action, how revocation reaches the instance, and whether the instance can hold
+accounts of its own. A product can mix the two: Grok Bot Team Bots use the
+caller's own OAuth grant for some plugins and a credential shared by the Bot
+for others.
+
 ### 14.4 Memory and workspace
 
 A memory system selects facts or past interactions for the model's context.
 Persisted memory belongs to the logical workspace whenever the instance can
 retrieve it. The memory may live in files, a database, or another service.
+
+### 14.5 Computer, disk, and process state
+
+A persistent computer has layers that persist differently. Current systems
+treat them separately:
+
+| Layer | Example contents | [Grok Bot](https://docs.x.ai/grok-bot/computers) | [Agent Substrate](https://github.com/agent-substrate/substrate) |
+|---|---|---|---|
+| Durable data | Files, databases, logins, memory | A durable disk survives when the computer is recreated or terminated | A durable directory is kept at the lowest snapshot level |
+| System changes | Installed software and packages | Removed when the computer is recreated; software installed by an administrator's setup step is reinstalled | Kept at a higher snapshot level on microVMs only |
+| Process state | Running programs and memory | Lost when the computer is terminated; a Bot in the middle of a turn pauses and resumes when the computer is recreated | Kept at the highest snapshot level |
+
+Agent Substrate also separates a short pause, which keeps a checkpoint on the
+current node, from a suspension, which writes a snapshot to object storage
+and frees the compute. Its snapshot level is a ceiling that the runtime meets
+on a best-effort basis.
+
+The workspace contract therefore states which layers persist across
+suspension, replacement of the computer, and upgrade. Installed software is
+either reproducible from a declaration, such as the release or an
+administrator's setup step, or it is instance state that needs lineage. A
+running process counts as durable work only if the platform checkpoints it.
+Higher fidelity costs more to store and restore; Appendix D.3 describes the
+cost model.
 
 ---
 
@@ -1336,6 +1459,15 @@ Authorship does not confer the right to activate a change. An agent may draft a
 skill that requires a person's approval. The application may activate a
 low-risk change automatically after its tests pass, according to a policy set
 in advance.
+
+Consumer products follow the same model even though they expose no release to
+the user. The vendor's product is the release, and each person's
+customizations are local changes. [Grok
+Bot](https://docs.x.ai/grok-bot/skills-routines-and-automations) can learn a
+skill from a browser demonstration, and [Meta
+Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse)
+can write a connector for a service that offers an API. Both are
+agent-authored changes to one instance.
 
 ### 15.2 Risk depends on the change
 
@@ -1520,6 +1652,14 @@ savings of suspension. Resume cost grows with the instance's writable delta,
 retained checkpoints, and file count. Retention policies and workspace size caps
 limit these costs.
 
+[Agent Substrate](https://github.com/agent-substrate/substrate) shows one
+mechanism for this workload. It maps many stateful actors onto a smaller pool
+of warm workers, snapshots idle actors to object storage, and restores one
+when a request addressed to it arrives. Requests wait while the pool is
+saturated. The project reports resume in under 400 milliseconds and ten to
+thirty times oversubscription; these are the project's own claims for a
+pre-1.0 release.
+
 ### 17.3 Checkpointed long-running work
 
 Work that runs for hours or months must recover from interruptions, mistakes,
@@ -1544,7 +1684,10 @@ An instance may contain one principal agent with several subagents, or a set of
 peers. Agents inside the same instance share its identity, workspace, and
 authority, so the instance remains the unit of accountability. A plugin can
 contribute a subagent definition, but the subagent runs under the application's
-instance and delegated limits. An A2A peer is independently addressable and may
+instance and delegated limits. [Grok
+Bot](https://docs.x.ai/grok-bot/overview) is a current example: several Bots
+run on one member's computer, each on its own screen, and share its files and
+logins. An A2A peer is independently addressable and may
 have its own workspace, identity, and authority boundary. Section 22 identifies
 coordination across separate instances as an open problem.
 
@@ -1557,9 +1700,22 @@ private document to the wrong person may be irreversible.
 For each action, the policy specifies whether the agent may act silently, act
 and report, ask first, or never act.
 
+An approval also has a scope. [Meta
+Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse)
+grants access once, for a session, for a task, for a fixed time, or
+permanently. [Grok Bot](https://docs.x.ai/grok-bot/team-bots) offers "Allow
+once," "Always allow for this Bot," and "Always allow for all Team Bots." The
+policy records the scope with the decision so that a later action cannot
+borrow an approval given for a narrower one.
+
 An approval lets a reviewer stop irreversible work before it occurs. Manual
 review becomes less reliable at high volume because a reviewer handling fifty
-items an hour may start to rubber-stamp them. Code and policy systems must
+items an hour may start to rubber-stamp them. Several products now add a
+separate reviewer model that decides whether an action can proceed, needs a
+person's approval, or must stop: [OpenAI dots](https://learn.chatgpt.com/docs/dots),
+Grok Bot's [Auto Review](https://docs.x.ai/grok-bot/security), and Muse's
+Sentinel agent. A reviewer model can reduce the number of requests a person
+sees, but it is a model and can be misled. Code and policy systems must still
 enforce hard limits, as section 19.3 describes.
 
 ---
@@ -1581,6 +1737,18 @@ Platform may build on that specialized infrastructure, provide it directly, or
 assemble the same capabilities from general cloud services. Above this
 infrastructure, the platform manages the application lifecycle and the services
 used by developers and publishers.
+
+[Agent Substrate](https://github.com/agent-substrate/substrate), an
+open-source Google project announced in May 2026, is a clear example of an
+Agent Cloud. It runs on Kubernetes and operates stateful actors: each actor is
+an instance created from an actor template, isolated in a gVisor sandbox or a
+microVM, given a short-lived workload identity, and suspended to object
+storage when idle. An egress gateway applies default-deny network rules and
+injects credentials outside the sandbox. Substrate does not define an agent,
+build a release, schedule work, request approvals, or run evaluations.
+Frameworks such as [kagent](https://kagent.dev/blog/the-future-of-kagent) and
+Google's [Agent Executor](https://github.com/google/ax) build on it and add
+agent definitions, models, tools, and skills. The project is pre-1.0.
 
 An Agent Application Platform provides these shared lifecycle services:
 
@@ -1712,6 +1880,18 @@ asking the model to hide unauthorized records defeats this boundary.
 Credentials should be short-lived and limited to the current action whenever
 possible.
 
+The strongest current pattern keeps credentials out of the agent's
+environment entirely. [Agent
+Substrate](https://github.com/agent-substrate/substrate) states that actors
+never hold API keys or cloud tokens; its egress gateway injects them into
+approved outbound requests. [Meta
+Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse)
+gives the agent surrogate tokens and has a separate component replace them
+with real credentials at the network boundary. [Grok
+Bot](https://docs.x.ai/grok-bot/team-bots) keeps connector tokens on its
+backend and redacts secret values from command output and file reads. A
+prompt-injected agent in these designs has no credential to leak.
+
 ### 19.4 Preserve source labels
 
 The runtime distinguishes developer instructions, organization policy, user
@@ -1782,6 +1962,41 @@ between platforms. Work on a contract should begin with two independent
 implementations and a specific exchange problem. The contract stays at the
 exchange boundary while internal design remains framework-specific.
 
+### 20.1 A draft Agent Application Manifest
+
+One boundary now warrants a draft before that bar is met: the boundary
+between a framework-native project and the platform that operates it.
+Independent platforms for persistent agents are appearing at every layer,
+from Kubernetes runtimes such as Agent Substrate to consumer products such as
+Grok Bot and OpenAI dots. None of them shares a deployment declaration. A
+draft published now gives implementers something to test before each
+platform settles on its own.
+
+A comparison of thirteen current agent definition and packaging formats in
+October 2026 found the pattern that shapes the draft. The formats disagree
+most about the agent program. One instruction field has four names, and
+"skills" means a SKILL.md directory in some formats, a capability tag in
+another, and an advertised A2A skill in a third. The same formats mostly omit
+what a platform needs to operate an instance. Three declare schedules, none
+declares the privacy domain, and only kagent touches workspace persistence,
+through a snapshot policy for Agent Substrate. Secret handling is the clearest
+point of agreement: most formats that address secrets keep their values out
+of the definition.
+
+The [Agent Application Manifest](/manifest) is therefore one file,
+`agentapp.yaml`, that sits beside the native project and points to it. It
+declares the application identity, framework, components, dependencies,
+privacy domain and instance key, required workspace persistence, environment,
+triggers, interfaces, requested authority, and evaluation suites. It leaves
+models, instructions, and tool definitions in the framework's native files.
+`devcontainer.json` is the closest precedent: one file that several tools
+read to create a development environment while the project keeps its own
+build system.
+
+The manifest is Draft 0.1. It becomes a candidate specification when two
+independent platforms read it. Until then, field names and scope may change in
+response to implementation experience.
+
 ---
 
 ## 21. Agent Application Stores
@@ -1830,6 +2045,12 @@ still needs controlled ways to read across those boundaries without copying
 private data or losing the source, permissions, and retention rules of each
 fact.
 
+[Grok Bot Team Bots](https://docs.x.ai/grok-bot/team-bots) show one current
+design and its risk. Team memory is read in every teammate's conversation,
+while notes with each person stay private to that person. Shared secrets are
+hidden from teammates and from the Bot, but the Bot can use every secret in
+any teammate's conversation.
+
 ### 22.2 How do we test and merge natural-language programs?
 
 Two instructions can conflict even when they sit in different files. Copy and
@@ -1862,7 +2083,9 @@ saved for months. The source and trust level must survive those transformations.
 
 Customers need to move workspaces, artifacts, lineage, and authority records. A
 shared format must carry enough information to resume work without forcing every
-application into the same internal design.
+application into the same internal design. The draft manifest in section 20.1
+covers deployment requirements only. Workspace export and lineage remain
+open.
 
 ### 22.7 How should long-lived instances be priced?
 
@@ -1874,7 +2097,13 @@ still occupy storage and retain schedules.
 
 An agent may outlive the employee who created it. Revoking a grant must reach
 suspended instances and future runs. Audit-retention rules may also conflict
-with a customer's request to delete personal data.
+with a customer's request to delete personal data. Agents that hold their own
+email addresses, phone numbers, or wallets (section 14.3) raise the question
+of who owns those accounts when the instance is archived or deleted. The IETF
+WIMSE working group adopted an [AI agent identity
+draft](https://datatracker.ietf.org/doc/draft-ietf-wimse-aims/) in September
+2026, and the [MCP roadmap](https://blog.modelcontextprotocol.io/posts/mcp-roadmap/)
+lists agent identity as a priority.
 
 ### 22.9 Who will own the Agent Application framework layer?
 
@@ -1910,10 +2139,11 @@ combine these roles, but keeping their responsibilities distinct makes
 architectures and vendor claims easier to compare.
 
 MCP, Agent Skills, Agent Plugins, AG-UI, A2A, and commerce protocols already
-cover several boundaries. Other contracts may emerge where independent systems
-need to exchange artifacts, workspace exports, lineage, identity, authority, or
-billing records. The internal project and release model can remain native to
-each framework. Teams can use this map to reason about the complete system,
+cover several boundaries. The draft Agent Application Manifest starts on
+another: what a platform needs to know to operate a project's instances. Other
+contracts may emerge where independent systems need to exchange artifacts,
+workspace exports, lineage, identity, authority, or billing records. The
+internal project and release model can remain native to each framework. Teams can use this map to reason about the complete system,
 decide who owns each responsibility, compare implementations, and see which
 boundaries need to interoperate.
 
@@ -1993,8 +2223,9 @@ same parts would still exist somewhere in the project or platform.
 
 # Appendix B: Dated evidence
 
-This appendix records evidence that may change over time. It is current as of
-August 9, 2026. If an entry becomes stale, recheck the cited example; the main
+This appendix records evidence that may change over time. Entries added or
+revised in the October 2026 update are current as of October 16, 2026; the
+other entries are current as of August 9, 2026. If an entry becomes stale, recheck the cited example; the main
 argument should not depend on that example remaining current.
 
 **Web and mobile application comparison.** Common descriptions define a [web
@@ -2142,8 +2373,8 @@ builds versioned customer context and runs CRM agents in chat or through
 automations. [Manus Cloud
 Computer](https://help.manus.im/en/articles/15392111-what-is-the-cloud-computer)
 keeps files, installed tools, and running processes across sessions.
-[Grok Bot](https://docs.x.ai/grok-bot/overview) documents a persistent cloud
-VM with a filesystem, terminal, and browser. [Claude Managed
+[Grok Bot](https://docs.x.ai/grok-bot/computers) gives each member one hosted
+computer with a durable disk, shared by all of that member's Bots. [Claude Managed
 Agents](https://platform.claude.com/docs/en/managed-agents/overview) document
 bash, file operations, and a persistent sandbox filesystem. [Perplexity
 Computer](https://www.perplexity.ai/hub/blog/introducing-perplexity-computer)
@@ -2153,6 +2384,53 @@ works across local files. Section 14 uses these as evidence for a computer
 as the agent's working environment, not as a required product shape. These
 products organize the continuing instance around a person, a business
 workspace, or a computer rather than a software project.
+
+**Persistent-computer agents, August to October 2026.** Meta announced
+[Muse](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/)
+on September 8, 2026. Meta's [security
+post](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse)
+describes an isolated Linux virtual machine per user, a separate Sentinel
+agent that controls network egress and connector actions, surrogate tokens,
+and scoped grants. OpenAI's [dots](https://learn.chatgpt.com/docs/dots)
+documentation, published with the late-September launch, describes an
+always-on agent whose [computer](https://learn.chatgpt.com/docs/dots/computers-and-apps)
+keeps its own files, software, and browser sessions between periods of use;
+one [community
+report](https://community.openai.com/t/dot-s-computer-is-fantastic-persistent-vm-proper-remote-access-and-direct-chat-links-would-be-a-game-changer/1403240)
+says files did not persist for that user. Grok Bot's documentation now
+describes [one computer per member](https://docs.x.ai/grok-bot/computers),
+hibernation, a durable disk that survives when the computer is recreated,
+[Team Bots](https://docs.x.ai/grok-bot/team-bots), and an [Auto
+Review](https://docs.x.ai/grok-bot/security) model. Manus 2.0 introduced
+[Cue](https://help.manus.im/en/articles/17190150-what-is-new-in-manus-2-0), in
+which each agent has its own email address, phone number, wallet, and
+computer. In enterprise products, Microsoft announced [Copilot
+Autopilot](https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/)
+on September 25, 2026 and Google announced [coworker
+agents](https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026)
+with their own agent identities on October 8, 2026; both are in private
+preview. Sections 6, 13.1, 14, 15, 17.5, and 19.3 use these products.
+
+**Agent Substrate.** Google announced [Agent
+Substrate](https://cloud.google.com/blog/products/containers-kubernetes/bringing-you-agent-sandbox-on-gke-and-agent-substrate)
+on May 20, 2026 and tagged its first full release, v0.1.0, on September 10,
+2026. The [repository](https://github.com/agent-substrate/substrate) is
+Apache-2.0 licensed and describes the project as pre-1.0. A CNCF Sandbox vote
+passed on September 28, 2026; the contribution agreement was still unsigned on
+October 16. The [GKE
+documentation](https://docs.cloud.google.com/kubernetes-engine/ai-ml/about-agent-substrate)
+describes it as available for evaluation and non-production use. Its actor
+templates, actors, snapshot levels, worker pools, and egress gateway support
+sections 4, 14.5, 17.2, 18, and 19.3. Its roadmap uses "A2A" for
+actor-to-actor communication, not the Agent2Agent protocol.
+
+**Persistent workspaces for sandboxes.** Cloudflare added [container
+filesystem snapshots](https://blog.cloudflare.com/faster-agent-sandboxes/) in
+public beta on September 30, 2026. Vercel introduced
+[Drives](https://vercel.com/blog/introducing-vercel-drives-persistent-storage-for-agents),
+persistent and forkable storage for Vercel Sandbox, in October 2026.
+[kubernetes-sigs/agent-sandbox](https://github.com/kubernetes-sigs/agent-sandbox/releases/tag/v1.0.0)
+reached v1.0.0 on August 28, 2026.
 
 **Frameworks and sandboxes.** The [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
 provides an agent loop, tools, handoffs, guardrails, sessions, tracing, and
@@ -2208,9 +2486,21 @@ of tool calls across model generations.
 **Natural-language programming prior art.** Dijkstra, "On the foolishness of
 natural language programming," EWD667, 1978.
 
+**Agent definition format comparison.** Section 20.1 summarizes a
+comparison, made on October 16, 2026 from first-party documentation, schemas,
+and source code, of thirteen formats: Claude Managed Agents `ant apply`
+projects, the OpenAI Agents API saved agent, Vercel Eve, Google Agent
+Executor, kagent, Docker Agent, GitAgent, Oracle Open Agent Spec, Agent
+Plugins 1.0.0, the NVIDIA agent package proposal, `draft-schemacommons-aaif`,
+Letta Agent File, and the A2A Agent Card. The OpenAI API reference page and
+the kagent documentation site were unavailable that day, so those entries come
+from guides and source code. The [manifest page](/manifest) lists the
+formats that carry each field.
+
 **Named systems and formats.** Claims about named systems in sections 1, 4, 6,
-7, 9, 11, 12, 14, 18, 19, and 20, as well as Appendix D, come from each vendor's own
-documentation as of August 9, 2026 and should be rechecked before citation.
+7, 9, 11, 12, 13, 14, 15, 17, 18, 19, 20, and 22, as well as Appendices D and E, come from each vendor's own
+documentation as of August 9, 2026, or October 16, 2026 for material added in
+the October update, and should be rechecked before citation.
 
 ---
 
@@ -2218,6 +2508,7 @@ documentation as of August 9, 2026 and should be rechecked before citation.
 
 | Document | Purpose |
 |---|---|
+| [Agent Application Manifest](/manifest) | Draft 0.1: a portable declaration of what a platform needs to deploy a framework-native project and operate its instances |
 | Programming Agent Applications | How to design, author, and evaluate a hybrid program of code, natural-language programs, tools, agents, workflows, dependencies, state, and policy |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances |
@@ -2226,7 +2517,8 @@ documentation as of August 9, 2026 and should be rechecked before citation.
 
 Section 12 of this paper contains the Agent Application capability model. The
 short public argument is the [site overview](https://agentapplication.io/).
-The documents in the table remain planned. A proposed contract becomes a
+The manifest is a published draft; the other documents in the table remain
+planned. A proposed contract becomes a
 candidate for a specification when independent implementations need to
 exchange the same information across a stable boundary. The current status of
 these documents is maintained at
@@ -2341,12 +2633,26 @@ Several current formats cover part of this architecture:
 | [SPIFFE](https://spiffe.io/docs/latest/spiffe/concepts/) | Workload identity |
 | C2PA | Content provenance |
 
+Formats added in 2026 also define whole agents: [Claude Managed Agents `ant
+apply`](https://platform.claude.com/docs/en/cli-sdks-libraries/cli/apply)
+projects, the [OpenAI Agents
+API](https://developers.openai.com/api/docs/guides/agents-api/overview.md)
+saved agent, the Vercel Eve `agent/` directory,
+[GitAgent](https://github.com/open-gitagent/gitagent), Google [Agent
+Executor](https://github.com/google/ax) manifests, kagent agent templates, the
+[NVIDIA agent package](https://github.com/NVIDIA/agent-package-spec) proposal,
+and the individual Internet-Draft
+[`draft-schemacommons-aaif`](https://datatracker.ietf.org/doc/draft-schemacommons-aaif/).
+AWS [Dogwood](https://aws.amazon.com/blogs/opensource/introducing-dogwood-runtime-verification-for-ai-agents/)
+extends Cedar to policies over sequences of agent actions.
+
 No widely adopted format carries the complete framework-native agent project,
 resolved dependency graph, workspace requirements, behavior tests, identity and
 authority record, communication events, artifacts, and instance lineage
 together. A single format for all of them would still need evidence from
-independent implementations. New contracts should address the specific
-boundaries where those implementations need to interoperate.
+independent implementations. The draft [Agent Application
+Manifest](/manifest) in section 20.1 covers only the deployment
+requirements and points to the native project for the rest.
 
 ## D.5 Authority and source tracking
 
@@ -2395,3 +2701,57 @@ rate-limited background jobs for the rest.
 Agent workspaces need all three ideas: a declared workspace version, explicit
 conversions where data has a schema, and agent-assisted migration for notes,
 generated code, installed packages, and other material that must be interpreted.
+
+---
+
+# Appendix E: Vendor terms
+
+Current products and runtimes use different words for the parts of the
+architecture, and sometimes the same word for different parts. The table maps
+this paper's terms to the terms in each system's own documentation as of
+October 16, 2026. A dash means the system has no documented equivalent. The
+mapping is approximate: it shows which concept plays each role, not that the
+concepts are identical.
+
+| System | Agent Project | Release | Instance | Workspace | Session |
+|---|---|---|---|---|---|
+| [Agent Substrate](https://github.com/agent-substrate/substrate) | — (runs container images) | `ActorTemplate`, a compute and snapshot template treated as immutable | `Actor` | `DurableDir` and the actor's snapshot | — |
+| [Google Agent Executor](https://github.com/google/ax) | `Workspace` and `Model` manifests, plus the agent image named in a `Task` | — | `Task` | The working directory a `Workspace` prepares | — |
+| [kagent](https://github.com/kagent-dev/kagent) (`v1alpha3`, in development) | `AgentTemplate` and `Harness` | Prepared revision | `AgentInstance` | Agent Substrate snapshots | — |
+| [OpenAI Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview.md) | Saved agent | — (updates apply only to new sessions) | Session | The session's environment | Turn |
+| [Claude Managed Agents](https://platform.claude.com/docs/en/managed-agents/overview) | `ant apply` project: agents, environments, skills, memory stores, and deployments | Agent version | Session; for scheduled work, a deployment whose sessions share memory stores | The session's filesystem, and memory stores shared across sessions | — |
+| [Vercel Eve](https://vercel.com/docs/eve/concepts) | `agent/` directory | Vercel deployment | Session | The agent's sandbox | Turn |
+| [Grok Bot](https://docs.x.ai/grok-bot/overview) | A Bot's setup: plugins, secrets, skills, and files | A published Team Bot, treated in section 13.1 as a component | A member's computer and Bots, or a Bot's Slack channel computer | Durable disk, plus memory for each Bot | A chat thread or routine run |
+| [OpenAI dots](https://learn.chatgpt.com/docs/dots) | — (defined by the vendor) | — | A dot | The dot's computer and memory notes | — |
+
+Agent Substrate also names the tenant boundary: an `Atespace` is the
+isolation boundary an actor belongs to, separate from Kubernetes namespaces.
+Grok Bot draws the privacy domain at the member, or at the Slack channel for
+channel conversations.
+
+Several terms collide:
+
+- **Session.** The OpenAI Agents API defines a session as "a durable instance
+  of an agent." Claude Managed Agents and Vercel Eve also use *session* for a
+  unit that keeps conversation and work across many interactions. That is
+  closer to this paper's *instance*. Their *turn* is closer to this paper's
+  *session*.
+- **Workspace.** An Agent Executor `Workspace` describes what to prepare in
+  the agent's working directory: repositories, files such as `AGENTS.md`, MCP
+  servers, and skills. It mixes project declarations with the workspace's
+  starting contents. In Claude Managed Agents, *workspace* is an administrative
+  grouping of API resources.
+- **Deployment.** A Claude Managed Agents deployment is a schedule that starts
+  sessions with attached resources, not the act of deploying a release.
+- **Template.** An Agent Substrate `ActorTemplate` fixes compute and snapshot
+  settings. A kagent `AgentTemplate` holds the agent program.
+- **Skills.** Agent Skills means a `SKILL.md` directory. The A2A Agent Card
+  uses *skill* for an advertised capability, and `draft-schemacommons-aaif`
+  uses it for a capability tag.
+- **Manifest.** This paper's Agent Application Manifest is one file,
+  `agentapp.yaml`, that declares what a platform needs to operate a project's
+  instances. Agent Executor calls any of its YAML resource files a manifest,
+  OpenAI calls `plugin.json` a plugin manifest, and an OCI image manifest
+  lists the contents of a container image or artifact.
+- **A2A.** In Agent Substrate's roadmap, *A2A* means actor-to-actor
+  communication. Elsewhere it means the Agent2Agent protocol.

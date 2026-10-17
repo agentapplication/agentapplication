@@ -36,6 +36,12 @@ the framework and platform record the project source, resolved dependencies,
 runtime, active components, requested authority, evaluations, and migration
 rules in their native release format.
 
+A project can also include an [Agent Application Manifest](/manifest),
+`agentapp.yaml`. The draft manifest tells any compatible platform which
+framework runs the project, who gets an instance, what the workspace must
+keep, what starts a session, and what authority the application requests. It
+points to the native files and does not replace them.
+
 Developers will usually say they are "building an agent." The term *agent
 project* becomes useful when the source directory must be distinguished from an
 [instance](/concepts/instance), a session, or the runtime agent doing the work.

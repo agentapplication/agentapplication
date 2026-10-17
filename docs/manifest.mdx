@@ -1,0 +1,293 @@
+---
+title: "Agent Application Manifest"
+sidebarTitle: "Manifest (draft)"
+description: "Draft 0.1, October 2026. A portable declaration of what a platform needs to deploy an Agent Project and operate its instances."
+---
+
+<Note>
+  **Specification · Draft 0.1 · October 2026.** This is a draft for
+  implementers to test, not a standard. It becomes a candidate specification
+  when two independent Agent Application Platforms read it. Comment in
+  [Discussions](https://github.com/agentapplication/agentapplication/discussions).
+</Note>
+
+An Agent Application Manifest is one file, `agentapp.yaml`, at the root of
+an Agent Project. It tells an Agent Application Platform what the project
+needs to become a release and run as instances: which framework runs it, who
+gets an instance, what the workspace must keep, what starts a session, and
+what authority the application asks for.
+
+The manifest does not restate the agent program. Models, instructions,
+skills, tools, and subagents stay in the framework's native files, where the
+framework already defines them. The manifest points to those files.
+
+## Why a manifest
+
+Platforms that run persistent agents now exist at every layer, from
+Kubernetes runtimes to consumer products. Their definition formats disagree on
+the agent program itself: the same instruction field is called `instruction`,
+`instructions`, `system`, and `system_prompt`, and "skills" means four
+different things. The same formats mostly omit what a platform needs to
+operate an instance. Few declare schedules, none declares the privacy
+boundary, and only one sets which workspace state survives suspension. Section 20.1 of the [paper](/paper) gives the evidence.
+
+The manifest covers that gap, at the boundary between the framework and the
+platform. [`devcontainer.json`](https://containers.dev/implementors/spec/) is
+the closest precedent: one file that several tools read to create a
+development environment, while the project keeps its own build system.
+
+## Scope
+
+The manifest covers:
+
+- the application identity and the native project's framework and entry points;
+- an optional inventory of components, for review;
+- plugin dependencies;
+- the privacy domain and the key that selects an instance;
+- what the workspace must preserve;
+- the execution environment;
+- triggers and interfaces;
+- requested authority: identity model, connections, secret names, network
+  destinations, spending ceilings, and default approval rules;
+- evaluation suites.
+
+Draft 0.1 does not cover:
+
+- the agent program (models, instructions, tool definitions);
+- secret values, granted authority, or per-instance settings;
+- workspace contents, export, or lineage;
+- packaging, signing, or distribution;
+- runtime protocols, which MCP, A2A, and AG-UI already cover.
+
+## File
+
+- The file is named `agentapp.yaml` and sits at the project root. A project
+  has at most one manifest.
+- Its content is a JSON document written in YAML. Tools may accept the same
+  document as `agentapp.json`; a project that contains both is invalid.
+- The `$schema` field names the specification version. It is the only
+  version field for the specification. `application.version` is the
+  application's own version.
+- The JSON Schema is
+  [`schemas/agentapp/0.1/agentapp.schema.json`](https://github.com/agentapplication/agentapplication/blob/main/schemas/agentapp/0.1/agentapp.schema.json),
+  identified by `https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json`,
+  which redirects to the repository file.
+- Paths are relative to the manifest's directory and cannot leave it.
+- An Agent Application Manifest is not an OCI image manifest. A release
+  packaged as an OCI artifact has both: the OCI manifest lists the artifact's
+  layers, and `agentapp.yaml` is one of the files inside it.
+
+## Examples
+
+The [Hello World](/examples/hello-world) notebook keeps its Goose recipe and
+its platform's `dharta.toml`. The manifest sits beside them:
+
+```yaml agentapp.yaml
+$schema: https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json
+
+application:
+  id: io.agentapplication.examples.durable-notebook
+  name: Durable notebook
+  version: 0.1.0
+
+project:
+  framework:
+    name: goose
+    version: "1"
+  entrypoints:
+    - recipe.yaml
+
+instances:
+  privacyDomain: person
+  key:
+    name: user_id
+
+workspace:
+  persistence:
+    system: reproducible
+    process: none
+
+triggers:
+  - type: message
+
+authority:
+  identity: delegated
+  network:
+    egress: []
+
+evaluations:
+  - path: evals/persistence.yaml
+    kind: behavior
+```
+
+The full file is in
+[`examples/durable-notebook/agentapp.yaml`](https://github.com/agentapplication/agentapplication/blob/main/examples/durable-notebook/agentapp.yaml).
+
+The paper's Financial Advisor Agent ([Appendix A](/paper#appendix-a-an-illustrative-project-layout))
+shows more of the format:
+
+```yaml agentapp.yaml
+$schema: https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json
+
+application:
+  id: com.example.financial-advisor
+  name: Financial Advisor Agent
+  version: 1.1.0
+
+project:
+  framework:
+    name: goose
+    version: ">=1.0"
+  entrypoints:
+    - AGENTS.md
+
+components:
+  - type: agent-skill
+    path: skills/retirement-analysis
+  - type: tool
+    path: tools/financial-data.ts
+  - type: mcp-config
+    path: mcp.json
+  - type: migration
+    path: migrations/
+
+instances:
+  privacyDomain: household
+  key:
+    name: household_id
+    description: Every authorized member of a household reaches the same instance.
+
+workspace:
+  persistence:
+    system: reproducible
+    process: none
+  layoutVersion: 3
+
+triggers:
+  - type: message
+  - type: schedule
+    name: account-review
+    cron: "0 6 * * 1"
+  - type: event
+    name: document-uploaded
+    source: workspace.file.created
+
+interfaces:
+  - type: widget
+  - type: channel
+    channel: email
+
+authority:
+  identity: delegated
+  connections:
+    - name: financial-institutions
+      access: read
+  network:
+    egress:
+      - api.example-aggregator.com
+  approvals:
+    - action: share-artifact
+      rule: ask
+    - action: change-account
+      rule: never
+
+evaluations:
+  - path: evals/security
+    kind: security
+  - path: evals/regression
+    kind: upgrade
+```
+
+## Fields
+
+Every field traces to a paper section, and to existing formats that carry the
+same information where any do. A field with neither does not belong in the
+draft.
+
+| Field | Required | What it declares | Paper | Existing formats with similar data |
+|---|---|---|---|---|
+| `application` | Yes | Reverse-domain `id`, `name`, `version`, publisher, and license | 13 | Agent Plugins `plugin.json`; A2A Agent Card; GitAgent `agent.yaml`; Docker Agent `metadata` |
+| `project` | Yes | The framework name and version range, project root, and native entry points | 4, 12, 13 | kagent `Harness`; Docker Agent and Oracle Agent Spec version fields |
+| `components` | No | Instruction files, Agent Skills, subagents, tools, MCP configuration, knowledge, artifact definitions, and migrations, by path | 12.2, 19.2 | NVIDIA agent package file inventory; Agent Plugins `skills/` and `mcp.json` |
+| `dependencies` | No | Plugins by source, version, and optional digest; conventional package manifests | 8, 12.5, 13 | kagent `ArtifactSource`; GitAgent `dependencies`; Eve `package.json` |
+| `instances` | Yes | The privacy domain and the instance key | 6.1, 8 | None. Products decide this internally. |
+| `workspace` | No | Which state layers beyond durable data must persist, layout version, and size | 14, 14.5, D.7 | kagent `Harness` snapshot policy for Agent Substrate; Agent Substrate snapshot levels |
+| `environment` | No | OCI image, packages, setup script, and required capabilities | 14, D.1 | Claude Managed Agents environments; OpenAI Agents API `environment`; Agent Executor `Task.image`; Eve sandbox |
+| `triggers` | No | Messages, schedules, webhooks, and events | 17.2 | Claude Managed Agents scheduled deployments; Eve `schedules/`; IETF `draft-schemacommons-aaif` `events.triggers` |
+| `interfaces` | No | Widget, API, channel, A2A, or embedded surfaces | 7, 16.2 | Eve `channels/`; A2A `supportedInterfaces`; GitAgent `a2a` |
+| `authority.identity` | No | Whether the instance acts for its users or needs its own principal | 14.3 | Claude Managed Agents `execution_identity` |
+| `authority.connections` | No | External services the application asks to reach, with access level and scopes | 11.1, 19.1 | MCP authorization scopes |
+| `authority.secrets` | No | Secret names only; values are forbidden | 14.1, 19.3 | Claude Managed Agents and OpenAI `vault_ids`; GitAgent `credentials_ref`; `draft-schemacommons-aaif` `vault_ref` |
+| `authority.network` | No | Requested egress destinations | 19.3 | Claude Managed Agents `allowed_hosts`; OpenAI `allowed_domains`; Docker Agent `network_allowlist` |
+| `authority.spending` | No | Requested spending ceilings for paid actions | 19.1, 19.3 | Claude Managed Agents `budget`; Docker Agent `budgets` |
+| `authority.approvals` | No | The default rule for named classes of action: `silent`, `report`, `ask`, or `never` | 17.5 | Claude Managed Agents `permission_policy`; Eve `approval`; Docker Agent `permissions`; kagent `requireApproval` |
+| `evaluations` | No | Evaluation suites, their kind, and whether a release requires them | 11.6, 15.6 | Eve `defineEval`; `draft-schemacommons-aaif` `evaluation` |
+| `extensions` | No | Framework- or platform-specific settings under reverse-domain keys | 12.5 | Agent Plugins `extensions` |
+
+Durable data is always preserved; that is what makes the workspace durable.
+`workspace.persistence` states only the other layers: whether installed
+software must survive (`system`) and whether running processes must survive
+suspension (`process`). The paper's section 14.5 describes these layers.
+
+Model access for the harness is the platform's job and is not part of
+`authority.network.egress`.
+
+### Approval rules
+
+The four rules are the ones in section 17.5. Platforms translate them to their
+own settings. Docker Agent's `allow`, `ask`, and `deny` correspond to
+`silent`, `ask`, and `never`. Claude Managed Agents' `always_allow` and
+`always_ask` correspond to `silent` and `ask`. Settings in which a reviewer
+model decides, such as `auto`, have no equivalent in this draft.
+
+## The release record
+
+A release resolves what the manifest requests. Draft 0.1 does not define a
+release record format. A release record should state:
+
+- the manifest and source revision it was built from;
+- the exact framework, harness, and model versions it was tested with;
+- each plugin's source, version, and content digest;
+- a digest for every component in the inventory;
+- the evaluation results that gated the release.
+
+Existing precedents include `claude-lock.json` in Claude Managed Agents,
+kagent's prepared revisions, and the file inventory in NVIDIA's agent package
+proposal.
+
+## Platform behavior
+
+A platform that reads a manifest:
+
+- must create instances at the declared privacy domain and route by the
+  declared key;
+- must preserve every workspace layer marked `required`, or refuse to deploy;
+- must not grant authority because the manifest requests it; the user,
+  organization, or resource owner grants it;
+- must reject a manifest with unknown top-level fields, and must ignore
+  `extensions` keys it does not recognize;
+- should report each requirement it cannot satisfy by field name, rather than
+  deploy without it.
+
+## Relationship to other formats
+
+| Format | Relationship |
+|---|---|
+| Native projects (Goose recipes, Claude Code `.claude/`, Eve `agent/`, Claude Managed Agents `ant apply` files) | The manifest points to them and does not replace them |
+| [Agent Skills](https://agentskills.io/specification) and [Agent Plugins](https://agent-plugins.org/specification) | Components and dependencies the manifest lists |
+| [A2A Agent Card](https://a2a-protocol.org/latest/specification/) | Describes a running instance; an `a2a` interface means the instance publishes one |
+| OCI artifacts and [NVIDIA agent package](https://github.com/NVIDIA/agent-package-spec) | Ways to package and sign a release that contains the manifest |
+| [`draft-schemacommons-aaif`](https://datatracker.ietf.org/doc/draft-schemacommons-aaif/) and [Oracle Agent Spec](https://oracle.github.io/agent-spec/) | Define the agent program inline; the manifest deliberately does not |
+
+Vendor terms for projects, releases, instances, workspaces, and sessions
+differ. [Appendix E](/paper#appendix-e-vendor-terms) of the paper maps them.
+
+## Open issues for draft 0.2
+
+- A release record format and its signing.
+- Workspace export and lineage, as a separate contract.
+- Person-centered hosts where several published agents share one instance
+  (paper section 13.1).
+- Approval scopes and reviewer-model decisions.
+- Model requirements, such as required capabilities or data residency.
+- Artifact types and sharing rules.

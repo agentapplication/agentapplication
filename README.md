@@ -2,7 +2,7 @@
 
 [agentapplication.io](https://agentapplication.io) publishes a vendor-neutral
 reference architecture for building and operating AI agent systems. Current
-paper: [Working Draft 0.9.1](https://agentapplication.io/paper), August 2026.
+paper: [Working Draft 0.9.2](https://agentapplication.io/paper), October 2026.
 
 [Overview](https://agentapplication.io)
 · [Paper](https://agentapplication.io/paper)
@@ -157,7 +157,9 @@ can also send review notes to
 The Mintlify site lives in [`docs/`](docs/). Repository layout follows the same
 broad pattern as [Agent Skills](https://github.com/agentskills/agentskills):
 project and contribution material at the root, with the published documentation
-kept in its own directory.
+kept in its own directory. [`schemas/`](schemas/) holds the JSON Schema for the
+draft Agent Application Manifest, and [`examples/`](examples/) holds example
+projects.
 
 ## Cite
 

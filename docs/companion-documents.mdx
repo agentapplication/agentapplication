@@ -8,6 +8,7 @@ documents, each with a different job:
 
 | Document | Purpose | Status |
 |---|---|---|
+| [Agent Application Manifest](/manifest) | A portable declaration of what a platform needs to deploy a framework-native project and operate its instances | Draft 0.1 |
 | Programming Agent Applications | How to design, author, and evaluate a hybrid program of code, natural-language programs, tools, agents, workflows, dependencies, state, and policy | Planned |
 | Persistent Agent Instances: Workspace, Artifacts, and Lineage | Agent projects, instances, durable workspaces, state, overlays, upgrades, and recovery | Planned |
 | The Agent Application Platform: A Platform Architecture | Production infrastructure and operating services for long-lived agent instances | Planned |
@@ -24,6 +25,12 @@ The capability model lists the parts of an Agent Application so developers can
 compare frameworks and framework authors can see what developers may need.
 Each framework retains its own project files, APIs, build process, and release
 artifacts.
+
+One contract has started before that bar is met. The [Agent Application
+Manifest](/manifest) covers the boundary between a framework-native project
+and the platform that operates it, because independent platforms are appearing
+without a shared deployment declaration. It stays a draft until two
+independent platforms read it.
 
 Likely candidates for future standards include:
 

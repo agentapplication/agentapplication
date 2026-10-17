@@ -20,6 +20,13 @@ Application Store.
 
 An Agent Cloud can support more than one model, harness, or framework.
 
+[Agent Substrate](https://github.com/agent-substrate/substrate), an
+open-source Google project for Kubernetes, is a clear example of this layer.
+It runs stateful agent actors in sandboxes, suspends idle actors to object
+storage, gives each actor a short-lived identity, and injects credentials at
+an egress gateway. It does not define agents, build releases, or run
+evaluations; frameworks built on it supply those parts.
+
 Current platforms cover different parts of this layer. The paper's [platform
 section](/paper#18-the-agent-application-platform) compares Amazon Bedrock
 AgentCore, Vercel Eve, and Pickaxe.

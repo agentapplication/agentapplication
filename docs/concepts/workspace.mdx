@@ -24,6 +24,13 @@ artifacts, and unfinished work there without first defining a schema for each
 kind of state. The platform can snapshot and restore that environment, so an
 idle instance does not need a machine to keep running.
 
+A persistent computer has layers that persist differently: durable data,
+installed software, and running processes. Some platforms keep only the data
+when they replace the computer and reinstall software from a setup step.
+Others can snapshot process memory. An application should state which layers
+it needs; the paper's [section 14.5](/paper#14-5-computer-disk-and-process-state)
+explains the choices.
+
 The workspace is also the privacy boundary. It includes every file, database
 record, object, and session artifact the instance can retrieve. Information that
 must remain separate belongs in separate workspaces. Authentication controls
