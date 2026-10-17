@@ -157,9 +157,9 @@ can also send review notes to
 The Mintlify site lives in [`docs/`](docs/). Repository layout follows the same
 broad pattern as [Agent Skills](https://github.com/agentskills/agentskills):
 project and contribution material at the root, with the published documentation
-kept in its own directory. [`schemas/`](schemas/) holds the JSON Schema for the
-draft Agent Application Manifest, and [`examples/`](examples/) holds example
-projects.
+kept in its own directory. [`docs/schemas/`](docs/schemas/) holds the JSON
+Schema for the draft Agent Application Manifest, published on the site at the
+same path, and [`examples/`](examples/) holds example projects.
 
 ## Cite
 

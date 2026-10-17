@@ -68,10 +68,11 @@ Draft 0.1 does not cover:
 - The `$schema` field names the specification version. It is the only
   version field for the specification. `application.version` is the
   application's own version.
-- The JSON Schema is
-  [`schemas/agentapp/0.1/agentapp.schema.json`](https://github.com/agentapplication/agentapplication/blob/main/schemas/agentapp/0.1/agentapp.schema.json),
-  identified by `https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json`,
-  which redirects to the repository file.
+- The JSON Schema is published at
+  [`https://agentapplication.io/schemas/agentapp/0.1/agentapp.schema.json`](/schemas/agentapp/0.1/agentapp.schema.json),
+  which is also its `$id`. The source is
+  [`docs/schemas/agentapp/0.1/agentapp.schema.json`](https://github.com/agentapplication/agentapplication/blob/main/docs/schemas/agentapp/0.1/agentapp.schema.json)
+  in the repository.
 - Paths are relative to the manifest's directory and cannot leave it.
 - An Agent Application Manifest is not an OCI image manifest. A release
   packaged as an OCI artifact has both: the OCI manifest lists the artifact's
