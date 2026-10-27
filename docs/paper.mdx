@@ -626,6 +626,8 @@ these names: **Agent App Programming**, for example, is the shortened form of
 | **Agent Application Framework** | An agent harness that supports the application lifecycle from development through production runtime. It defines the native project model, extension conventions, evaluations, packaging, and deployment model. |
 | **Agent Application Platform** | A service that turns tested Agent Projects into immutable releases and operates long-lived instances with durable workspaces, identity management, security controls, governance, observability, evaluation, and fleet management. |
 | **Agent Application Store** | A catalog and commerce service through which people find, acquire, and pay for Agent Applications. It exchanges entitlements and usage records with compatible platforms. |
+| **Agent Registry** | A governance catalog inside one organization that records approved agents, tools, MCP servers, and skills, their owners, and where they run. It is not a store. Section 21.1 compares the two. |
+| **Meta-harness** | A layer that runs an agent program on one of several harnesses through a common interface. Section 12.6 describes it. |
 | **Agent Cloud** | Specialized cloud infrastructure for persistent agents, used when contrasting this runtime with ordinary cloud infrastructure. It may sit beneath or inside an Agent Application Platform. |
 | **Component** | A named unit that a project or dependency contributes, such as a skill, MCP server, tool, hook, subagent, trigger, renderer, or knowledge source. |
 | **Agent Application Manifest** | A draft portable file, `agentapp.yaml`, that declares what a platform needs to deploy a framework-native Agent Project and operate its instances. It points to the native project rather than restating the agent program. Section 20.1 introduces it. |
@@ -1179,6 +1181,35 @@ specification](https://github.com/NVIDIA/agent-package-spec) proposes
 packaging skills and plugins as signed OCI artifacts with file inventories
 and attestations.
 
+### 12.6 Meta-harnesses
+
+A **meta-harness** runs an agent program on one of several existing harnesses
+and gives them a common interface. Databricks released
+[Omnigent](https://github.com/omnigent-ai/omnigent) as an open-source alpha in
+June 2026. An Omnigent agent is a short YAML file with a prompt, tools, MCP
+servers, and subagents. Its `executor` setting picks the harness, such as
+Claude Code, Codex, Cursor, OpenCode, Hermes, or Pi, and one session can mix
+agents that run on different harnesses. Omnigent also applies allow, ask, and
+deny policies, including cost budgets, and lets people share, co-drive, and
+fork live sessions. Vercel's experimental
+[`HarnessAgent`](https://vercel.com/changelog/program-agent-harnesses-with-ai-sdk)
+in AI SDK 7 offers a similar single API with adapters for Claude Code, Codex,
+and Pi.
+
+A meta-harness works because coding harnesses now share conventions:
+`AGENTS.md` instructions, Agent Skills directories, and MCP servers. Features
+outside those conventions, such as hooks, permission modes, and memory, still
+differ by harness.
+
+In this paper's terms, a meta-harness belongs to the framework layer. Its
+agent file is a native project format, and the harness becomes a setting of
+the project rather than a fixed choice. That setting changes behavior, so a
+release still records the exact harness and its version, and an evaluation
+should cover each harness the release allows. A meta-harness does not by
+itself provide the platform's part of the architecture. Omnigent sessions
+belong to the user who starts them; it does not define releases, privacy
+domains, or instances for a team or customer.
+
 ---
 
 # Part IV: State, change, and results
@@ -1217,6 +1248,25 @@ A session is one period of execution or interaction within an instance. A user,
 event, or schedule starts it. The session may last one turn or many and need not
 have a formal finished state. It uses the release and active local changes
 attached to the instance when the session starts.
+
+Managed agent runtimes often keep durable state per session, not per
+instance. A [Microsoft Foundry hosted
+agent](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents)
+gives each session a VM-isolated sandbox with persistent `$HOME` and `/files`
+directories. The platform restores them when the session resumes and deletes
+the session after 30 days of inactivity. In [Amazon Bedrock AgentCore
+Runtime](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-sessions.html),
+the calling application supplies the session ID, and a session's compute
+stops after 15 minutes of inactivity or eight hours by default. These
+sessions keep work across many interactions, so they play part of the
+instance role. The runtime does not know whose session it is. The customer's
+own code maps each person, team, or account to a session ID, so the privacy
+domain is decided outside the platform, and nothing in the runtime checks
+it. Session lifetimes are also shorter than an instance that lasts for years,
+so an application built on them must save and restore its workspace itself.
+The `instances` field of the draft manifest in section 20.1 declares the
+privacy domain and the key that selects an instance, so a platform can take
+over that mapping.
 
 ```text
 Agent Application
@@ -1748,7 +1798,12 @@ injects credentials outside the sandbox. Substrate does not define an agent,
 build a release, schedule work, request approvals, or run evaluations.
 Frameworks such as [kagent](https://kagent.dev/blog/the-future-of-kagent) and
 Google's [Agent Executor](https://github.com/google/ax) build on it and add
-agent definitions, models, tools, and skills. The project is pre-1.0.
+agent definitions, models, tools, and skills. The project is pre-1.0. On
+October 22, 2026, Google also announced [Agent Compute
+Engine](https://cloud.google.com/blog/topics/ai-infrastructure/introducing-agent-compute-engine-and-expanded-agent-governance),
+a managed service that gives each agent a microVM with its own persistent
+disk for its workspace and pauses idle microVMs. It is expected in preview in
+the coming months.
 
 An Agent Application Platform provides these shared lifecycle services:
 
@@ -1765,11 +1820,13 @@ An Agent Application Platform provides these shared lifecycle services:
 | Cost management | Attributes model, tool, compute, storage, and review costs to each run, instance, customer, and release |
 | Usage control | Enforces entitlements and usage limits supplied by the publisher or an Agent Application Store |
 
-Amazon Bedrock AgentCore, Vercel Eve, and Pickaxe each cover part of this list in their public documentation:
+Each of these platforms covers part of this list in its public documentation:
 
 | Platform | Documented coverage |
 |---|---|
-| [Amazon Bedrock AgentCore](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/) | A managed harness and runtime, isolated sessions, memory, identity, tools, evaluations, observability, and payments in preview |
+| [Amazon Bedrock AgentCore](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/) | A managed harness with immutable versions, a runtime for the customer's own code, isolated sessions, memory, identity, Cedar policies, evaluations, observability, payments, and an agent registry |
+| [Microsoft Foundry Agent Service](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents) | Hosted agents for the customer's own code, immutable agent versions, per-session sandboxes with persistent files, Microsoft Entra agent identities, and publishing to Microsoft 365 and Teams |
+| [Google Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime) | Agent Runtime deployment for ADK, LangGraph, and other frameworks or containers, sessions, Memory Bank, agent identities, and an agent registry |
 | [Vercel Eve](https://vercel.com/blog/introducing-eve) | A filesystem-first framework with durable workflows, sandboxes, approvals, subagents, evaluations, channels, and ordinary Vercel deployment |
 | [Pickaxe](https://pickaxe.co/features) | A visual builder, links and embeds, APIs and messaging channels, user access, persistent memory, portals, usage limits, and built-in monetization |
 
@@ -2023,6 +2080,24 @@ entitlement record. They need a shared usage and billing boundary even when one
 provider operates both services. In-app purchases can add usage credits or move
 the customer to a plan with a larger allowance.
 
+### 21.1 Stores and registries
+
+A store is different from an **agent registry**. A store distributes
+applications from publishers to customers and handles payment. A registry is a
+governance catalog inside one organization. It records which agents, tools,
+MCP servers, and skills are approved, who owns them, and where they run.
+[AWS Agent
+Registry](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/release-notes.html)
+became generally available in August 2026 and detects AgentCore runtimes and
+gateways across an AWS organization. Google describes its [Agent
+Registry](https://cloud.google.com/blog/topics/ai-infrastructure/introducing-agent-compute-engine-and-expanded-agent-governance)
+as the source of truth for approved running agents, tools, MCP servers,
+skills, models, and endpoints.
+
+A registry lists releases and running instances as well as applications, so
+it belongs with the platform's governance services. An application acquired
+from a store may still need registry approval before an organization runs it.
+
 ---
 
 # Part VI: Open questions and conclusion
@@ -2224,8 +2299,10 @@ same parts would still exist somewhere in the project or platform.
 # Appendix B: Dated evidence
 
 This appendix records evidence that may change over time. Entries added or
-revised in the October 2026 update are current as of October 16, 2026; the
-other entries are current as of August 9, 2026. If an entry becomes stale, recheck the cited example; the main
+revised in the October 2026 update are current as of October 16, 2026, except
+the entries on managed agent runtimes, meta-harnesses, and agent registries,
+which are current as of October 27, 2026. The other entries are current as of
+August 9, 2026. If an entry becomes stale, recheck the cited example; the main
 argument should not depend on that example remaining current.
 
 **Web and mobile application comparison.** Common descriptions define a [web
@@ -2416,13 +2493,42 @@ Substrate](https://cloud.google.com/blog/products/containers-kubernetes/bringing
 on May 20, 2026 and tagged its first full release, v0.1.0, on September 10,
 2026. The [repository](https://github.com/agent-substrate/substrate) is
 Apache-2.0 licensed and describes the project as pre-1.0. A CNCF Sandbox vote
-passed on September 28, 2026; the contribution agreement was still unsigned on
-October 16. The [GKE
+passed on September 28, 2026, and the [sandbox
+application](https://github.com/cncf/sandbox/issues/523) closed with
+onboarding started on October 20. The [GKE
 documentation](https://docs.cloud.google.com/kubernetes-engine/ai-ml/about-agent-substrate)
 describes it as available for evaluation and non-production use. Its actor
 templates, actors, snapshot levels, worker pools, and egress gateway support
 sections 4, 14.5, 17.2, 18, and 19.3. Its roadmap uses "A2A" for
 actor-to-actor communication, not the Agent2Agent protocol.
+
+**Managed agent runtimes.** AWS made the [AgentCore
+harness](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/release-notes.html)
+generally available in July 2026 and AWS Agent Registry in August 2026.
+[AgentCore Runtime
+sessions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-sessions.html)
+take a session ID from the caller and stop after 15 minutes of inactivity or
+eight hours by default. [Microsoft Foundry hosted
+agents](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents)
+run each session in a VM-isolated sandbox with persistent `$HOME` and `/files`
+directories and delete a session after 30 days of inactivity. Foundry's
+[Agent
+Application](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/agent-applications)
+resource publishes one agent version with its own invocation URL and
+authentication. Google renamed Vertex AI Agent Engine to [Agent
+Runtime](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime)
+within the Gemini Enterprise Agent Platform, and on October 22, 2026
+announced [Agent Compute Engine and Agent
+Registry](https://cloud.google.com/blog/topics/ai-infrastructure/introducing-agent-compute-engine-and-expanded-agent-governance).
+Sections 13, 18, and 21.1 and Appendix E use these sources.
+
+**Meta-harnesses.** Databricks announced
+[Omnigent](https://www.databricks.com/blog/introducing-omnigent-meta-harness-combine-control-and-share-your-agents)
+on June 13, 2026. The [repository](https://github.com/omnigent-ai/omnigent)
+is Apache-2.0 licensed and marked alpha, and a Databricks-managed version is in
+beta. Vercel added the experimental
+[`HarnessAgent`](https://vercel.com/changelog/program-agent-harnesses-with-ai-sdk)
+to AI SDK on June 12, 2026. Section 12.6 uses these sources.
 
 **Persistent workspaces for sandboxes.** Cloudflare added [container
 filesystem snapshots](https://blog.cloudflare.com/faster-agent-sandboxes/) in
@@ -2498,8 +2604,8 @@ from guides and source code. The [manifest page](/manifest) lists the
 formats that carry each field.
 
 **Named systems and formats.** Claims about named systems in sections 1, 4, 6,
-7, 9, 11, 12, 13, 14, 15, 17, 18, 19, 20, and 22, as well as Appendices D and E, come from each vendor's own
-documentation as of August 9, 2026, or October 16, 2026 for material added in
+7, 9, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, and 22, as well as Appendices D and E, come from each vendor's own
+documentation as of August 9, 2026, or October 16 or 27, 2026 for material added in
 the October update, and should be rechecked before citation.
 
 ---
@@ -2709,7 +2815,9 @@ generated code, installed packages, and other material that must be interpreted.
 Current products and runtimes use different words for the parts of the
 architecture, and sometimes the same word for different parts. The table maps
 this paper's terms to the terms in each system's own documentation as of
-October 16, 2026. A dash means the system has no documented equivalent. The
+October 16, 2026, or October 27, 2026 for the Amazon Bedrock AgentCore,
+Microsoft Foundry, Google Agent Runtime, and Omnigent rows. A dash means the
+system has no documented equivalent. The
 mapping is approximate: it shows which concept plays each role, not that the
 concepts are identical.
 
@@ -2723,6 +2831,10 @@ concepts are identical.
 | [Vercel Eve](https://vercel.com/docs/eve/concepts) | `agent/` directory | Vercel deployment | Session | The agent's sandbox | Turn |
 | [Grok Bot](https://docs.x.ai/grok-bot/overview) | A Bot's setup: plugins, secrets, skills, and files | A published Team Bot, treated in section 13.1 as a component | A member's computer and Bots, or a Bot's Slack channel computer | Durable disk, plus memory for each Bot | A chat thread or routine run |
 | [OpenAI dots](https://learn.chatgpt.com/docs/dots) | — (defined by the vendor) | — | A dot | The dot's computer and memory notes | — |
+| [Amazon Bedrock AgentCore](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/) | A harness configuration (model, tools, skills, and instructions), or code or a container for AgentCore Runtime | Immutable harness version behind a named endpoint | Runtime session, named by a `runtimeSessionId` that the caller chooses | Session storage, or mounted Amazon S3 Files or EFS | An invocation |
+| [Microsoft Foundry hosted agents](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents) | Agent code and its `azure.yaml` service definition | Immutable agent version; an Agent Application resource publishes one version at an endpoint | Session, with its own VM-isolated sandbox | The session's `$HOME` and `/files` | A request over the Responses or Invocations protocol |
+| [Google Agent Runtime](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime) | Source packages or a container, with an `agent_framework` setting | Deployed Agent Runtime resource (`reasoningEngine` in the API) | — (a caller-supplied `user_id` scopes sessions and Memory Bank memories) | Memory Bank memories; no persistent filesystem documented | Session |
+| [Omnigent](https://github.com/omnigent-ai/omnigent) | Agent directory with a `config.yaml`, or one YAML file | — (an agent's version number increases on each update) | — (sessions belong to the user who starts them) | The session's working directory on its host | Session |
 
 Agent Substrate also names the tenant boundary: an `Atespace` is the
 isolation boundary an actor belongs to, separate from Kubernetes namespaces.
@@ -2731,16 +2843,31 @@ channel conversations.
 
 Several terms collide:
 
+- **Agent Application.** In Microsoft Foundry, an Agent Application is an
+  Azure resource that publishes one agent version with its own invocation URL,
+  authentication, and start and stop controls. It plays the role of a
+  deployed release at an endpoint. In this paper, an Agent Application is the
+  product category and the complete application, including all of its
+  releases and instances.
+- **Harness.** In this paper, a harness is the runtime software around the
+  model. An AgentCore harness is a managed resource that holds an agent's
+  model, tools, skills, and instructions, so it is closer to a project and
+  its releases. Omnigent calls itself a *meta-harness*, a layer above several
+  harnesses; section 12.6 describes the pattern.
 - **Session.** The OpenAI Agents API defines a session as "a durable instance
   of an agent." Claude Managed Agents and Vercel Eve also use *session* for a
-  unit that keeps conversation and work across many interactions. That is
-  closer to this paper's *instance*. Their *turn* is closer to this paper's
-  *session*.
+  unit that keeps conversation and work across many interactions. Foundry
+  hosted agents and AgentCore Runtime keep files for each session. These
+  sessions are closer to this paper's *instance*, except that the platform
+  does not know which privacy domain a session belongs to; section 13
+  discusses the difference. Their *turn* or invocation is closer to this
+  paper's *session*.
 - **Workspace.** An Agent Executor `Workspace` describes what to prepare in
   the agent's working directory: repositories, files such as `AGENTS.md`, MCP
   servers, and skills. It mixes project declarations with the workspace's
   starting contents. In Claude Managed Agents, *workspace* is an administrative
-  grouping of API resources.
+  grouping of API resources, and a Databricks workspace is a tenant. Omnigent
+  uses `workspace` for a session's working directory.
 - **Deployment.** A Claude Managed Agents deployment is a schedule that starts
   sessions with attached resources, not the act of deploying a release.
 - **Template.** An Agent Substrate `ActorTemplate` fixes compute and snapshot

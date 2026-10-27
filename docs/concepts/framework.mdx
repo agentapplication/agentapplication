@@ -34,6 +34,11 @@ An [Agent Project](/concepts/agent-project) keeps the native layout of its
 framework. An [Agent Application Platform](/concepts/platform) can support
 several frameworks without translating every project into one generic schema.
 
+A **meta-harness**, such as Databricks Omnigent, runs one agent definition on
+several harnesses, such as Claude Code, Codex, or Pi. It belongs to the
+framework layer: the harness becomes a project setting, and each release
+still records and tests the harness it uses.
+
 See the paper's [stack](/paper#4-the-agent-application-stack),
 [vocabulary](/paper#8-vocabulary), [build-and-operate
 method](/paper#9-a-build-and-operate-method), and [capability

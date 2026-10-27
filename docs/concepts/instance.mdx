@@ -43,6 +43,12 @@ agent project and its resolved dependency graph. Deployment creates instances
 from that release, and each period of activity becomes a session. The instance
 lasts across those sessions and may later move to a newer release.
 
+Many managed agent runtimes keep files and history per session and call that
+unit a session. Such a session plays part of the instance role, but the
+runtime does not know whose it is: the customer's code maps each person or
+team to a session. An instance makes that privacy domain part of the
+platform.
+
 Instances created from the same release diverge as their workspaces accumulate
 different information and instructions. [Lineage](/concepts/lineage) records
 those changes.
