@@ -2,7 +2,7 @@
 
 [agentapplication.io](https://agentapplication.io) publishes a vendor-neutral
 reference architecture for building and operating AI agent systems. Current
-paper: [Working Draft 0.9.2](https://agentapplication.io/paper), October 2026.
+paper: [Working Draft 0.9.3](https://agentapplication.io/paper), October 2026.
 
 [Overview](https://agentapplication.io)
 · [Paper](https://agentapplication.io/paper)

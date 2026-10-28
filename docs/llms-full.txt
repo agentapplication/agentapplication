@@ -10,7 +10,7 @@ Source: https://agentapplication.io/
 Persistent, tool-using agents that keep work across sessions are a distinct application category.
 
 <Note>
-  **A working paper** · Draft 0.9.2 · October 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
+  **A working paper** · Draft 0.9.3 · October 2026 · [Read the paper](/paper) · [Review the draft](/review) · [Cite](#cite)
 </Note>
 
 ChatGPT and Claude use agent widgets. An OpenClaw agent may appear as a
@@ -457,9 +457,9 @@ and it must pass the same persistence test.
 # Agent Applications: A Reference Architecture for Building and Operating AI Agent Systems
 Source: https://agentapplication.io/paper
 
-Working Draft 0.9.2, October 2026. A vendor-neutral reference architecture for building and operating AI agent systems.
+Working Draft 0.9.3, October 2026. A vendor-neutral reference architecture for building and operating AI agent systems.
 
-**Working Draft 0.9.2 · October 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
+**Working Draft 0.9.3 · October 2026** · [Plain text](https://agentapplication.io/llms-full.txt) · [Cite](/#cite)
 
 ---
 
@@ -4067,7 +4067,7 @@ Source: https://agentapplication.io/review
 
 First review: one product you know, then the definition against that product.
 
-Working Draft 0.9.2. Public at
+Working Draft 0.9.3. Public at
 [agentapplication/agentapplication](https://github.com/agentapplication/agentapplication).
 
 ## First review
